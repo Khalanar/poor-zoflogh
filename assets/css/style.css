@@ -1,0 +1,26 @@
+@font-face {
+    font-family: 'alien';
+    src: url("../fonts/wearealien.ttf") format("truetype");
+}
+ 
+*{
+    margin:0;
+}
+
+h1 {
+    font-family: 'alien';
+    color: rgb(165, 165, 165);
+    font-size: 3em;
+    text-align: center;
+    margin: 20px;
+}
+
+#game-area{
+    position: relative;
+    /* background-color: red; */
+    border: 1px solid rgb(165, 165, 165);
+    border-radius: 15px;
+    width:90%;
+    height:600px;
+    margin: auto;
+}
