@@ -3,7 +3,7 @@ let gameMessages = [
 ]
 
 let buildingDescriptions = {
-    ship: "Zoflogh's crashed ship.<br><br>Luckily some parts can be salvaged with some inventive and spare time.<br><br>You may need to access earthen materials to get out of there, build your way out of this planet.",
+    ship: "Zoflogh's crashed ship.<br><br>Luckily some parts can be salvaged with some inventive and spare time.<br><br>You may need to access earthen materials to get out of here, build your way out of this planet.",
     generator: "Solar Powered generator<br><br>Salvaged off some spare parts of Zoflogh's ship, this generator transforms photons emitted by the closest star into energy.<br><br>Can be upgraded for better energy output",
     nursery: "Nursery and Incubator<br><br>Froongkians edited their genome for asexual reproduction, leisurly sex is however encouraged as a bonding exercise<br><br>Use DNA to lay eggs, and energy to incubate them.",
     printer: "A recycler and 3D printer by Uglog Industries.<br><br>Insert any type of matter to be recycled into metamaterial, the only material used in planet Froongk. For walls and electronics to clothing, it is incredibly poisonous, do not ingest.",
