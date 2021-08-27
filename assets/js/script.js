@@ -1,7 +1,6 @@
 let gameMessages = [
-    "message1",
-    "message2",
-    "message3"
+    "Oh no... an alien has crashed into Planet Earth.<br><br> Poor Zoflogh.",
+
 ]
 
 document.addEventListener("DOMContentLoaded", start())

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap');
+
 @font-face {
     font-family: 'alien';
     src: url("../fonts/wearealien.ttf") format("truetype");
@@ -5,6 +7,7 @@
  
 *{
     margin:0;
+    border: none;
 }
 
 h1 {
@@ -45,4 +48,14 @@ h1 {
           -ms-user-select: none; /* Internet Explorer/Edge */
               user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
-  }
+}
+
+#game-log p{
+    color:rgb(173, 173, 173);
+    padding: 5px 0px 20px 0px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+hr{
+    border-top: 1px solid rgb(241, 241, 241);
+}
