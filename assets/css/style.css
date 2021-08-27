@@ -25,7 +25,7 @@ h1 {
 #game-area{
     position: relative;
     /* background-color: red; */
-    border: 1px solid rgb(165, 165, 165);
+    border: 1px solid rgb(200, 200, 200);
     border-radius: 15px;
     width:90%;
     height:600px;
@@ -41,7 +41,7 @@ h1 {
     top: 10px;
     bottom: 10px;
     display: block;
-    border-right: 1px solid rgb(165, 165, 165);
+    border-right: 1px solid rgb(200, 200, 200);
 }
 
 #game-screen{
@@ -73,7 +73,7 @@ h1 {
     top: 400px;
     bottom: 0px;
     display: block;
-    border-top: 1px solid rgb(165, 165, 165);
+    border-top: 1px solid rgb(200, 200, 200);
 }
 
 #resource-box{
@@ -84,7 +84,7 @@ h1 {
     width: 200px;
     top: 10px;
     right: 10px;
-    border: 1px solid rgb(165, 165, 165);
+    border: 1px solid rgb(200, 200, 200);
     border-top-right-radius: 10px;
     display: grid;
     grid-template-columns: auto auto;
@@ -92,14 +92,39 @@ h1 {
 }
 
 #ship{
-    margin: auto;
     grid-column: 3;
     grid-row: 3;
+}
+
+#generator{
+    grid-column: 2;
+    grid-row: 3;
+}
+
+#nursery{
+    grid-column: 4;
+    grid-row: 3;
+}
+
+#printer{
+    grid-column: 2;
+    grid-row: 2;
+}
+
+#biopsy_room{
+    grid-column: 3;
+    grid-row: 2;
+}
+
+
+
+.building{
+    margin: auto;
     height: 80px;
     transition: all 0.1s;
 }
 
-#ship:hover{
+.building:hover{
     height: 95px;
 }
 
@@ -122,7 +147,7 @@ h1 {
 }
 
 .resource-name{
-color:red;
+    color: rgb(173, 173, 173);
 }
 
 .resource-number{
