@@ -10,12 +10,27 @@
     border: none;
 }
 
+body{
+    font-family: 'Montserrat', sans-serif;
+}
+
 h1 {
     font-family: 'alien';
     color: rgb(165, 165, 165);
     font-size: 3em;
     text-align: center;
     margin: 20px;
+}
+
+#game-area{
+    position: relative;
+    /* background-color: red; */
+    border: 1px solid rgb(165, 165, 165);
+    border-radius: 15px;
+    width:90%;
+    height:600px;
+    margin: auto;
+    overflow: hidden;
 }
 
 #game-log{
@@ -29,16 +44,66 @@ h1 {
     border-right: 1px solid rgb(165, 165, 165);
 }
 
-#game-area{
-    position: relative;
-    /* background-color: red; */
-    border: 1px solid rgb(165, 165, 165);
-    border-radius: 15px;
-    width:90%;
-    height:600px;
-    margin: auto;
-    overflow: hidden;
+#game-screen{
+    height:auto;
+    width: auto;
+    position: absolute;
+    padding: 0 15px;
+    right:0px;
+    left:230px;
+    top: 0px;
+    bottom: 0px;
+    display: block;
 }
+
+#game-grid{
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-template-rows: 33% 33% 33%;
+    height:400px;
+}
+
+#upgrade-area{
+    height:auto;
+    width: auto;
+    position: absolute;
+    padding: 0 15px;
+    right:0px;
+    left:0px;
+    top: 400px;
+    bottom: 0px;
+    display: block;
+    border-top: 1px solid rgb(165, 165, 165);
+}
+
+#resource-box{
+    color:rgb(173, 173, 173);
+    padding: 10px;
+    position: absolute;
+    height: 80px;
+    width: 200px;
+    top: 10px;
+    right: 10px;
+    border: 1px solid rgb(165, 165, 165);
+    border-top-right-radius: 10px;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto auto auto;
+}
+
+#ship{
+    margin: auto;
+    grid-column: 3;
+    grid-row: 3;
+    height: 80px;
+    transition: all 0.1s;
+}
+
+#ship:hover{
+    height: 95px;
+}
+
+
 
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
@@ -54,6 +119,14 @@ h1 {
     color:rgb(173, 173, 173);
     padding: 5px 0px 20px 0px;
     font-family: 'Montserrat', sans-serif;
+}
+
+.resource-name{
+color:red;
+}
+
+.resource-number{
+    text-align: right;
 }
 
 hr{
