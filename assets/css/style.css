@@ -23,6 +23,10 @@ h1 {
     margin: 20px;
 }
 
+#logo{
+    height:37px;
+}
+
 #game-area{
     position: relative;
     /* background-color: red; */
