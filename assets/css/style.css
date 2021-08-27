@@ -12,6 +12,7 @@
 
 body{
     font-family: 'Montserrat', sans-serif;
+    color:rgb(173, 173, 173);
 }
 
 h1 {
@@ -28,7 +29,7 @@ h1 {
     border: 1px solid rgb(200, 200, 200);
     border-radius: 15px;
     width:90%;
-    height:600px;
+    height:620px;
     margin: auto;
     overflow: hidden;
 }
@@ -67,13 +68,26 @@ h1 {
     height:auto;
     width: auto;
     position: absolute;
-    padding: 0 15px;
+    padding: 0 ;
     right:0px;
     left:0px;
     top: 400px;
     bottom: 0px;
-    display: block;
+    display: grid;
+    grid-template-columns: 30% auto;
     border-top: 1px solid rgb(200, 200, 200);
+    font-size: 0.9em;
+}
+
+#building-description{
+    /* background-color: red; */
+    padding: 20px;
+
+}
+
+#building-upgrades{
+    /* background-color: orange; */
+    padding: 20px;
 }
 
 #resource-box{
