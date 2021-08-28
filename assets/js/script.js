@@ -14,6 +14,7 @@ let resources = {
     energy: 0,
     metamaterials: 20.0,
     dna: 0,
+    availableAliens: 0,
 }
 
 let updateMillis = 100;
@@ -53,6 +54,7 @@ class Building{
         this.maxLevel = 5;
         this.upgradeRequirements = upgradeRequirements;
         this.resourceGeneration = resourceGeneration;
+        this.assignedWorkers = 0;
 
         this.enoughEnergy = this.upgradeRequirements[this.level].energy <= resources.energy
         this.enoughMetamaterials = this.upgradeRequirements[this.level].metamaterials <= resources.metamaterials
@@ -72,10 +74,7 @@ class Building{
     upgrade(){
         this.updateRequirements()
         if (this.level < this.maxLevel){
-            console.log(`e: ${this.upgradeRequirements[this.level].energy}
-            m: ${this.upgradeRequirements[this.level].metamaterials}
-            d: ${this.upgradeRequirements[this.level].dna}
-            ${this.enoughResources}`)
+            
             if (this.enoughResources){
                 spendResources(this.upgradeRequirements[this.level].energy,
                     this.upgradeRequirements[this.level].metamaterials,
@@ -84,13 +83,10 @@ class Building{
                 console.log("Upgraded this building to " + this.level)
             }else{
                 let msg = `Not enough resources to upgrade the ${this.name}, poor Zoflogh`
-                // gameMessages.unshift(msg)
                 updateGameLog(msg)
             }
         }
     }
-
-   
 
     showRequirementsTable(){
         
@@ -133,6 +129,26 @@ class Building{
         `
         return reqTable
     }
+
+    assignWorker(){
+        if (resources.availableAliens > 0){
+            this.assignedWorkers ++
+            resources.availableAliens --
+            updateGameLog(`Alien assigned to the ${this.name}<br><br>Output greatly increased`)
+        }else{
+            updateGameLog(`Not enough comrade aliens to help at the ${this.name}<br><br>Poor Zoflogh`)
+        }
+    }
+
+    removeWorker(){
+        if (this.assignedWorkers > 0){
+            this.assignedWorkers --
+            resources.availableAliens ++
+            updateGameLog(`An alien left the ${this.name}<br><br>Reassign it soon!`)
+        }else{
+            updateGameLog(`Noone is working at the ${this.name}`)
+        }
+    }
 }
 
 let printer = new Building("printer", 0, [
@@ -145,7 +161,7 @@ let printer = new Building("printer", 0, [
 
 let generator = new Building("generator", 0, [
     {energy: 0, metamaterials: 10, dna:0}, //Upgrade from 0 to 1
-    {energy: 0, metamaterials: 100, dna:0}, //Upgrade from 1 to 2
+    {energy: 0, metamaterials: 50, dna:0}, //Upgrade from 1 to 2
     {energy: 0, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
     {energy: 0, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
     {energy: 0, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
@@ -209,9 +225,9 @@ function buildIcons(building, name){
 }
 
 function showBuildingUpgrades(b){
-
+    
+    let upgradesHTML = ""
     if (b.id == "ship"){
-        let upgradesHTML = ""
         upgradesHTML += buildIcons(generator, "generator")
         upgradesHTML += buildIcons(printer, "printer")
         upgradesHTML += buildIcons(biopsyRoom, "biopsy_room")
@@ -222,6 +238,23 @@ function showBuildingUpgrades(b){
         document.getElementById("printer-build").addEventListener(      "click", function(){buildPrinter(b)})
         document.getElementById("biopsy_room-build").addEventListener(  "click", function(){buildBiopsyRoom(b)})
         document.getElementById("nursery-build").addEventListener(      "click", function(){buildNursery(b)})
+
+    }else if(b.id == "generator"){
+        upgradesHTML += `   
+        <div>
+            <img id="generator-upgrade" class="build-button" src="./assets/images/generator.svg" alt="">
+            <p>${generator.showRequirementsTable()}</p>
+        </div>
+        <div>
+            <img id="assign-alien" class="build-button" src="./assets/images/assign_alien.svg" alt="">
+        </div>
+        <div>
+            <img id="remove-alien" class="build-button" src="./assets/images/remove_alien.svg" alt="">
+        </div>
+        `
+        document.getElementById("building-upgrades").innerHTML = upgradesHTML
+        document.getElementById("assign-alien").addEventListener(    "click", function(){generator.assignWorker()})
+        document.getElementById("remove-alien").addEventListener(    "click", function(){generator.removeWorker()})
     }
 }
 
@@ -240,6 +273,10 @@ function buildGenerator(b){
     }else if(generator.level > "0"){
         updateGameLog("This building is already up and running. Open the building for more options")
     }
+}
+
+function upgradeGenerator(b){
+    generator.upgrade()
 }
 
 function buildPrinter(b){
