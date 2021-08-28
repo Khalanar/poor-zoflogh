@@ -398,7 +398,7 @@ function start(){
     getBuildings()
     resourceRefresh()
     setInterval(update, updateMillis)
-    setInterval(redrawScreen, 1000)
+    //setInterval(redrawScreen, 1000)
 }
 
 function update(){
