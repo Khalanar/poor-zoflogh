@@ -178,11 +178,13 @@ h1 {
 }
 
 .red{
-    color: rgb(202, 118, 118);
+    color: rgb(255, 147, 147);
+    font-weight: 600;
 }
 
 .green{
-    color: rgb(92, 146, 132)
+    color: rgb(79, 206, 172);
+    font-weight: 600;
     
 }
 
