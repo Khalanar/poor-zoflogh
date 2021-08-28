@@ -18,6 +18,8 @@ let resources = {
     availableAliens: 3,
 }
 
+let currentScreen = ""
+
 let updateMillis = 100;
 
 document.addEventListener("DOMContentLoaded", start())
@@ -82,6 +84,7 @@ class Building{
                     this.upgradeRequirements[this.level].dna)
                 this.level++;
                 console.log("Upgraded this building to " + this.level)
+                updateGameLog("Upgrade successful")
             }else{
                 let msg = `Not enough resources to upgrade the ${this.name}, poor Zoflogh`
                 updateGameLog(msg)
@@ -185,19 +188,18 @@ let nursery = new Building("nursery", 0, [
 function getBuildings(){
     let buildings = document.getElementsByClassName("building");
     
-    for (let building of buildings){
-        building.addEventListener("click", function(){
-            clickBuilding(building)
+    for (let b of buildings){
+        b.addEventListener("click", function(){
+            clickBuilding(b)
         })
-        console.log(`${building.id} initialised`);
+        console.log(`${b.id} initialised`);
     }
 }
 
 function clickBuilding(b){
     console.log("clicked " + b.id)
-    clearUpgradeArea()
-    showBuildingDescription(b)
-    showBuildingUpgrades(b)
+    currentScreen = b.id
+    redrawScreen(currentScreen)
 }
 
 function clearUpgradeArea(){
@@ -226,7 +228,7 @@ function buildIcons(building, name){
 function showBuildingUpgrades(b){
     
     let upgradesHTML = ""
-    if (b.id == "ship"){
+    if (currentScreen == "ship"){
         upgradesHTML += buildIcons(generator, "generator")
         upgradesHTML += buildIcons(printer, "printer")
         upgradesHTML += buildIcons(biopsyRoom, "biopsy_room")
@@ -238,7 +240,7 @@ function showBuildingUpgrades(b){
         document.getElementById("biopsy_room-build").addEventListener(  "click", function(){buildBiopsyRoom(b)})
         document.getElementById("nursery-build").addEventListener(      "click", function(){buildNursery(b)})
 
-    }else if(b.id == "generator"){
+    }else if(currentScreen == "generator"){
         upgradesHTML += `   
         <div>
             <img id="generator-upgrade" class="build-button" src="./assets/images/generator.svg" alt="">
@@ -256,7 +258,8 @@ function showBuildingUpgrades(b){
         </div>
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
-    }else if(b.id == "printer"){
+        document.getElementById("generator-upgrade").addEventListener("click", function(){upgradeBuilding(b, generator)})
+    }else if(currentScreen == "printer"){
         upgradesHTML += `   
         <div>
             <img id="printer-upgrade" class="build-button" src="./assets/images/printer.svg" alt="">
@@ -269,6 +272,9 @@ function showBuildingUpgrades(b){
             <img id="remove-alien" class="build-button" src="./assets/images/remove_alien.svg" alt="">
         </div>
         <div>
+            <p>Base output:</p>
+            <p>${printer.resourceGeneration[printer.level]}</p>
+
             <p>Assigned aliens:</p>
             <p>${printer.assignedWorkers}</p>
             <br>
@@ -277,6 +283,7 @@ function showBuildingUpgrades(b){
         </div>
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
+        document.getElementById("printer-upgrade").addEventListener("click", function(){upgradeBuilding(b, printer)})
         document.getElementById("assign-alien").addEventListener("click", function(){updateWorkers(b, printer, this.id)})
         document.getElementById("remove-alien").addEventListener("click", function(){updateWorkers(b, printer, this.id)})
 
@@ -309,8 +316,10 @@ function buildGenerator(b){
     }
 }
 
-function upgradeGenerator(b){
-    generator.upgrade()
+function upgradeBuilding(b, building){
+    building.upgrade()
+    recalculateEnergyOutput()
+    console.log("upgrade - " + building.name) 
 }
 
 function buildPrinter(b){
@@ -358,7 +367,7 @@ function buildNursery(b){
 }
 
 function showBuildingDescription(b){
-    document.getElementById("building-description").innerHTML = buildingDescriptions[b.id]
+    document.getElementById("building-description").innerHTML = buildingDescriptions[currentScreen]
 }
 
 function updateGameLog(m){
@@ -377,12 +386,19 @@ function updateGameLog(m){
     document.getElementById("game-log").innerHTML = msgLog
 }
 
+function redrawScreen(currentScreen){
+    clearUpgradeArea()
+    showBuildingDescription(currentScreen)
+    showBuildingUpgrades(currentScreen)
+}
+
 function start(){
     console.log("start")
     updateGameLog()
     getBuildings()
     resourceRefresh()
     setInterval(update, updateMillis)
+    setInterval(redrawScreen, 500)
 }
 
 function update(){
