@@ -49,6 +49,18 @@ h1 {
     display: block;
     border-right: 1px solid rgb(200, 200, 200);
 }
+#game-log p{
+    padding: 5px 0px 20px 0px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.highlight{
+    color:rgb(133, 133, 133);
+}
+
+.normal{
+    color:rgb(197, 197, 197);
+}
 
 #game-screen{
     height:auto;
@@ -147,8 +159,6 @@ h1 {
     height: 95px;
 }
 
-
-
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Safari */
@@ -159,11 +169,7 @@ h1 {
                                     supported by Chrome, Edge, Opera and Firefox */
 }
 
-#game-log p{
-    color:rgb(173, 173, 173);
-    padding: 5px 0px 20px 0px;
-    font-family: 'Montserrat', sans-serif;
-}
+
 
 .resource-name{
     color: rgb(173, 173, 173);

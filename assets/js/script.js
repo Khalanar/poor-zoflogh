@@ -89,10 +89,13 @@ function showBuildingDescription(b){
 
 function updateGameLog(){
     let msgLog = ""
+    index = 0
     for (let msg of gameMessages){
+        let color = index == 0 ? "highlight" : "normal";
         msgLog += `
-        <p>${msg}</p><hr>
+        <p class="${color}">${msg}</p><hr>
         `
+        index++
     }
     document.getElementById("game-log").innerHTML = msgLog
 }
