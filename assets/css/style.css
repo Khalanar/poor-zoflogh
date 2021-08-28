@@ -155,6 +155,12 @@ h1 {
     transition: all 0.1s;
 }
 
+.build-button{
+    margin: auto;
+    height: 80px;
+    transition: all 0.1s; 
+}
+
 .building:hover{
     height: 95px;
 }
@@ -178,6 +184,16 @@ h1 {
 .resource-number{
     text-align: right;
 }
+
+.disabled{
+    display: none;
+}
+
+.enabled{
+    display: block;
+}
+
+
 
 hr{
     border-top: 1px solid rgb(241, 241, 241);
