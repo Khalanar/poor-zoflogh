@@ -18,6 +18,8 @@ let resources = {
 
 document.addEventListener("DOMContentLoaded", start())
 
+
+
 function resourceRefresh(){
     document.getElementById("energy").innerText = resources.energy
     document.getElementById("metamaterials").innerText = resources.metamaterials
@@ -49,6 +51,27 @@ class Building{
             }
         }
     }
+
+    showRequirementsTable(){
+        //change color if enough materials
+        let reqTable = `
+        <table>
+            <tr>
+                <td>${Object.keys(this.upgradeRequirements[this.level])[0]}</td>
+                <td>${this.upgradeRequirements[this.level].energy}</td>
+            </tr>
+            <tr>
+                <td>metamat.</td>
+                <td>${this.upgradeRequirements[this.level].metamaterials}</td>
+            </tr>
+            <tr>
+                <td>${Object.keys(this.upgradeRequirements[this.level])[2]}</td>
+                <td>${this.upgradeRequirements[this.level].dna}</td>
+            </tr>
+        </table>
+        `
+        return reqTable
+    }
 }
 
 let printer = new Building("printer", 0, [
@@ -59,7 +82,23 @@ let printer = new Building("printer", 0, [
     {energy: 400, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
 ])
 
-let generator = new Building("printer", 0, [
+let generator = new Building("generator", 0, [
+    {energy: 10, metamaterials: 10, dna:0}, //Upgrade from 0 to 1
+    {energy: 50, metamaterials: 100, dna:0}, //Upgrade from 1 to 2
+    {energy: 100, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
+    {energy: 200, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
+    {energy: 400, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
+])
+
+let nursery = new Building("nursery", 0, [
+    {energy: 10, metamaterials: 10, dna:0}, //Upgrade from 0 to 1
+    {energy: 50, metamaterials: 100, dna:0}, //Upgrade from 1 to 2
+    {energy: 100, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
+    {energy: 200, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
+    {energy: 400, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
+])
+
+let biopsyRoom = new Building("biopsyRoom", 0, [
     {energy: 10, metamaterials: 10, dna:0}, //Upgrade from 0 to 1
     {energy: 50, metamaterials: 100, dna:0}, //Upgrade from 1 to 2
     {energy: 100, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
@@ -98,26 +137,47 @@ function clearUpgradeArea(){
 function showBuildingUpgrades(b){
     console.log("showBuildingUpgrades")
     if (b.id == "ship"){
+    
+        let generatorIcon = generator.level == 0 ? "generator.svg" : "generator_built.svg"
+        let generatorTooltip = generator.level == 0 ? generator.showRequirementsTable() : "Open building to upgrade"
+        let printerIcon = printer.level == 0 ? "printer.svg" : "printer_built.svg"
+        let nurseryIcon = nursery.level == 0 ? "nursery.svg" : "nursery_built.svg"
+        let biopsyRoomIcon = biopsyRoom.level == 0 ? "biopsy_room.svg" : "biopsy_room_built.svg"
         let upgradesHTML = `
-        <img id="generator-build" class="build-button" src="./assets/images/generator.svg" alt="">
-        <img id="printer-build" class="build-button" src="./assets/images/printer.svg" alt="">
-        <img id="nursery-build" class="build-button" src="./assets/images/nursery.svg" alt="">
-        <img id="biopsy_room-build" class="build-button" src="./assets/images/biopsy_room.svg" alt="">
+        <div>
+            <img id="generator-build" class="build-button" src="./assets/images/${generatorIcon}" alt="">
+            <p>${generatorTooltip}</p>
+        </div>
+        <div>
+            <img id="printer-build" class="build-button" src="./assets/images/${printerIcon}" alt="">
+        </div>
+        <div>
+            <img id="nursery-build" class="build-button" src="./assets/images/${nurseryIcon}" alt="">
+        </div>
+        <div>
+            <img id="biopsy_room-build" class="build-button" src="./assets/images/${biopsyRoomIcon}" alt="">
+        </div>
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
         document.getElementById("generator-build").addEventListener("click", function(){
-            if(generator.level == "0"){
-                document.getElementById("generator").classList.remove("disabled")
-                document.getElementById("generator").classList.add("enabled")
-                generator.upgrade()
-                updateGameLog(`You managed to salvage the ship's energy generator.<br>               
-                It's in a sorry state but it should get you up and running. 
-                You should be able to upgrade it eventually for Zoflogh to leave this planet.`)
-            }else{
-                updateGameLog("This building is already up and running. Open the building for more options")
-            }
+            upgradeGenerator(b)
         })
     }
+}
+
+function upgradeGenerator(b){
+    if(generator.level == "0"){
+        document.getElementById("generator").classList.remove("disabled")
+        document.getElementById("generator").classList.add("enabled")
+        generator.upgrade()
+        showBuildingUpgrades(b)
+        updateGameLog(`You managed to salvage the ship's energy generator.<br>               
+        It's in a sorry state but it should get you up and running. 
+        You should be able to upgrade it eventually for Zoflogh to leave this planet.`)
+    }else{
+        updateGameLog("This building is already up and running. Open the building for more options")
+    }
+    
 }
 
 function showBuildingDescription(b){
