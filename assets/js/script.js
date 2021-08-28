@@ -12,9 +12,10 @@ let buildingDescriptions = {
 
 let resources = {
     energy: 0,
+    energyConsumed: 0,
     metamaterials: 20.0,
     dna: 0,
-    availableAliens: 0,
+    availableAliens: 3,
 }
 
 let updateMillis = 100;
@@ -22,28 +23,28 @@ let updateMillis = 100;
 document.addEventListener("DOMContentLoaded", start())
 
 function resourceRefresh(){
-    document.getElementById("energy").innerText = resources.energy
+    document.getElementById("energy").innerText = resources.energy - resources.energyConsumed
     document.getElementById("metamaterials").innerText = parseInt(resources.metamaterials)
     document.getElementById("dna").innerText = resources.dna
+    document.getElementById("aliens").innerText = resources.availableAliens
 }
 
 function recalculateEnergyOutput(){
     console.log(`Generator output is ${generator.resourceGeneration[generator.level]}`)
-    resources.energy += generator.resourceGeneration[generator.level]
+    resources.energy = generator.resourceGeneration[generator.level]
     resourceRefresh()
 }
 
 function generateMetamaterials(){
-    let generated = printer.resourceGeneration[printer.level]/1000*updateMillis
+    let generated = printer.resourceGeneration[printer.level]*(printer.assignedWorkers+1)/1000*updateMillis
     resources.metamaterials += generated;
     resourceRefresh()
 }
 
 function spendResources(e, m, d){
-    resources.energy -= e
+    resources.energyConsumed += e
     resources.metamaterials -= m
     resources.dna -= d
-
     resourceRefresh()
 }
 
@@ -89,10 +90,7 @@ class Building{
     }
 
     showRequirementsTable(){
-        
-        //change color if enough materials
         this.updateRequirements()
-        
         let reqEnergy = this.upgradeRequirements[this.level].energy
         let reqMetamaterials = this.upgradeRequirements[this.level].metamaterials
         let reqDNA = this.upgradeRequirements[this.level].dna
@@ -135,6 +133,7 @@ class Building{
             this.assignedWorkers ++
             resources.availableAliens --
             updateGameLog(`Alien assigned to the ${this.name}<br><br>Output greatly increased`)
+         
         }else{
             updateGameLog(`Not enough comrade aliens to help at the ${this.name}<br><br>Poor Zoflogh`)
         }
@@ -246,16 +245,51 @@ function showBuildingUpgrades(b){
             <p>${generator.showRequirementsTable()}</p>
         </div>
         <div>
+        </div>
+        <div>
+        </div>
+        <div>
+            <p>Total energy output:</p>
+            <p>${resources.energy}</p><br>
+            <p>Total consumed by buildings:</p>
+            <p>${resources.energyConsumed}</p>
+        </div>
+        `
+        document.getElementById("building-upgrades").innerHTML = upgradesHTML
+    }else if(b.id == "printer"){
+        upgradesHTML += `   
+        <div>
+            <img id="printer-upgrade" class="build-button" src="./assets/images/printer.svg" alt="">
+            <p>${printer.showRequirementsTable()}</p>
+        </div>
+        <div>
             <img id="assign-alien" class="build-button" src="./assets/images/assign_alien.svg" alt="">
         </div>
         <div>
             <img id="remove-alien" class="build-button" src="./assets/images/remove_alien.svg" alt="">
         </div>
+        <div>
+            <p>Assigned aliens:</p>
+            <p>${printer.assignedWorkers}</p>
+            <br>
+            <p>Current Output:</p>
+            <p>${printer.resourceGeneration[printer.level]*(printer.assignedWorkers+1)} p/s</p>
+        </div>
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
-        document.getElementById("assign-alien").addEventListener(    "click", function(){generator.assignWorker()})
-        document.getElementById("remove-alien").addEventListener(    "click", function(){generator.removeWorker()})
+        document.getElementById("assign-alien").addEventListener("click", function(){updateWorkers(b, printer, this.id)})
+        document.getElementById("remove-alien").addEventListener("click", function(){updateWorkers(b, printer, this.id)})
+
     }
+}
+
+function updateWorkers(b, building, c){
+    if (c == "assign-alien") {
+        building.assignWorker()
+    }else{
+        building.removeWorker()
+    }
+    showBuildingUpgrades(b)
 }
 
 function buildGenerator(b){
