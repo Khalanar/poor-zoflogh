@@ -177,6 +177,15 @@ h1 {
     height: 80px;
 }
 
+.red{
+    color: rgb(202, 118, 118);
+}
+
+.green{
+    color: rgb(92, 146, 132)
+    
+}
+
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Safari */
