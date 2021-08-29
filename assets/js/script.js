@@ -77,14 +77,13 @@ class Building{
     upgrade(){
         this.updateRequirements()
         if (this.level < this.maxLevel){
-            
             if (this.enoughResources){
                 spendResources(this.upgradeRequirements[this.level].energy,
                     this.upgradeRequirements[this.level].metamaterials,
                     this.upgradeRequirements[this.level].dna)
                 this.level++;
                 console.log("Upgraded this building to " + this.level)
-                updateGameLog("Upgrade successful")
+                if (this.level>1)updateGameLog("Upgrade successful")
             }else{
                 let msg = `Not enough resources to upgrade the ${this.name}, poor Zoflogh`
                 updateGameLog(msg)
@@ -92,21 +91,25 @@ class Building{
         }
     }
 
-    showRequirementsTable(){
+    requirementsTable(c){
+        console.log("showreq")
         this.updateRequirements()
         let reqEnergy = this.upgradeRequirements[this.level].energy
         let reqMetamaterials = this.upgradeRequirements[this.level].metamaterials
         let reqDNA = this.upgradeRequirements[this.level].dna
         let colorClass;
 
+
         colorClass = this.enoughEnergy ? "green" : "red"
+        colorClass = c ? colorClass : ""
         let energyRow = reqEnergy > 0 ? `
-            <tr class="${colorClass}">
+             <tr class="${colorClass}">
                 <td>${Object.keys(this.upgradeRequirements[this.level])[0]}</td>
                 <td>${this.upgradeRequirements[this.level].energy}</td>
             </tr>` : ""
 
         colorClass = this.enoughMetamaterials ? "green" : "red"
+        colorClass = c ? colorClass : ""
         let metaRow = reqMetamaterials > 0 ? `
             <tr class="${colorClass}">
                 <td>metamat.</td>
@@ -114,15 +117,15 @@ class Building{
             </tr>` : ""
 
         colorClass = this.enoughDna ? "green" : "red"
+        colorClass = c ? colorClass : ""
         let dnaRow = reqDNA > 0 ? `
             <tr class="${colorClass}">
                 <td>${Object.keys(this.upgradeRequirements[this.level])[2]}</td>
                 <td>${this.upgradeRequirements[this.level].dna}</td>
             </tr>` : ""
 
-        let reqTable = `
-        
-        <table>
+        let reqTable = 
+        `<table>
             ${energyRow}
             ${metaRow}
             ${dnaRow}
@@ -135,7 +138,7 @@ class Building{
         if (resources.availableAliens > 0){
             this.assignedWorkers ++
             resources.availableAliens --
-            updateGameLog(`Alien assigned to the ${this.name}<br><br>Output greatly increased`)
+            updateGameLog(`Alien assigned to the ${this.name}, output close to optimal performance`)
          
         }else{
             updateGameLog(`Not enough comrade aliens to help at the ${this.name}<br><br>Poor Zoflogh`)
@@ -215,36 +218,61 @@ function clearUpgradeArea(){
  */
 function buildIcons(building, name){
     let icon = building.level == 0 ? `${name}.svg` : `${name}_built.svg`
-    let tooltip = building.level == 0 ? building.showRequirementsTable() : "Open building to upgrade"
+    let tooltip = building.level == 0 ? building.requirementsTable(false) : "Open building to upgrade"
+
     let iconHTML = `
     <div>
         <img id="${name}-build" class="build-button" src="./assets/images/${icon}" alt="">
-        <p>${tooltip}</p>
+        <div id="${name}-build-requirements">${tooltip}</div>
     </div>
     `
-    return iconHTML
+    // return iconHTML
+
+    document.getElementById("building-upgrades").innerHTML += iconHTML
 }
 
 function showBuildingUpgrades(b){
-    
     let upgradesHTML = ""
+    document.getElementById("building-upgrades").innerHTML = upgradesHTML
     if (currentScreen == "ship"){
-        upgradesHTML += buildIcons(generator, "generator")
-        upgradesHTML += buildIcons(printer, "printer")
-        upgradesHTML += buildIcons(biopsyRoom, "biopsy_room")
-        upgradesHTML += buildIcons(nursery, "nursery")
-        document.getElementById("building-upgrades").innerHTML = upgradesHTML
+        // upgradesHTML += buildIcons(generator, "generator")
+        // upgradesHTML += buildIcons(printer, "printer")
+        // upgradesHTML += buildIcons(biopsyRoom, "biopsy_room")
+        // upgradesHTML += buildIcons(nursery, "nursery")
 
-        document.getElementById("generator-build").addEventListener(    "click", function(){buildGenerator(b)})
-        document.getElementById("printer-build").addEventListener(      "click", function(){buildPrinter(b)})
-        document.getElementById("biopsy_room-build").addEventListener(  "click", function(){buildBiopsyRoom(b)})
-        document.getElementById("nursery-build").addEventListener(      "click", function(){buildNursery(b)})
+        buildIcons(generator,   "generator")
+        buildIcons(printer,     "printer")
+        buildIcons(biopsyRoom,  "biopsy_room")
+        buildIcons(nursery,     "nursery")
+        
+        // document.getElementById("building-upgrades").innerHTML = upgradesHTML
 
+   
+        if (generator.level == 0){
+            document.getElementById("generator-build").addEventListener(    "click", function(){buildGenerator(b)})
+            document.getElementById("generator-build").addEventListener(    "mouseenter", function(){ document.getElementById("generator-build-requirements").innerHTML = generator.requirementsTable(true) })
+            document.getElementById("generator-build").addEventListener(    "mouseleave", function(){ document.getElementById("generator-build-requirements").innerHTML = generator.requirementsTable(false) })
+        }
+        if (printer.level == 0){
+            document.getElementById("printer-build").addEventListener(      "click", function(){buildPrinter(b)})
+            document.getElementById("printer-build").addEventListener(      "mouseenter", function(){ document.getElementById("printer-build-requirements").innerHTML = printer.requirementsTable(true) })
+            document.getElementById("printer-build").addEventListener(      "mouseleave", function(){ document.getElementById("printer-build-requirements").innerHTML = printer.requirementsTable(false) })
+        }
+        if (biopsyRoom.level == 0){
+            document.getElementById("biopsy_room-build").addEventListener(  "click", function(){buildBiopsyRoom(b)})
+            document.getElementById("biopsy_room-build").addEventListener(  "mouseenter", function(){ document.getElementById("biopsy_room-build-requirements").innerHTML = biopsyRoom.requirementsTable(true) })
+            document.getElementById("biopsy_room-build").addEventListener(  "mouseleave", function(){ document.getElementById("biopsy_room-build-requirements").innerHTML = biopsyRoom.requirementsTable(false) })
+        }
+        if (nursery.level == 0){
+            document.getElementById("nursery-build").addEventListener(      "click", function(){buildNursery(b)})
+            document.getElementById("nursery-build").addEventListener(      "mouseenter", function(){ document.getElementById("nursery-build-requirements").innerHTML = nursery.requirementsTable(true) })
+            document.getElementById("nursery-build").addEventListener(      "mouseleave", function(){ document.getElementById("nursery-build-requirements").innerHTML = nursery.requirementsTable(false) })
+        }
     }else if(currentScreen == "generator"){
         upgradesHTML += `   
         <div>
             <img id="generator-upgrade" class="build-button" src="./assets/images/generator.svg" alt="">
-            <p>${generator.showRequirementsTable()}</p>
+            <div id="generator-requirements">${generator.requirementsTable(false)}</div>
         </div>
         <div>
         </div>
@@ -259,11 +287,20 @@ function showBuildingUpgrades(b){
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
         document.getElementById("generator-upgrade").addEventListener("click", function(){upgradeBuilding(b, generator)})
+        document.getElementById("generator-upgrade").addEventListener("mouseenter", function(){
+
+            document.getElementById("generator-requirements").innerHTML = generator.requirementsTable(true)
+        })
+        document.getElementById("generator-upgrade").addEventListener("mouseleave", function(){
+
+            document.getElementById("generator-requirements").innerHTML = generator.requirementsTable(false)
+        })
+    
     }else if(currentScreen == "printer"){
         upgradesHTML += `   
         <div>
             <img id="printer-upgrade" class="build-button" src="./assets/images/printer.svg" alt="">
-            <p>${printer.showRequirementsTable()}</p>
+            <div id="printer-requirements">${printer.requirementsTable(false)}</div>
         </div>
         <div>
             <img id="assign-alien" class="build-button" src="./assets/images/assign_alien.svg" alt="">
@@ -284,6 +321,14 @@ function showBuildingUpgrades(b){
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
         document.getElementById("printer-upgrade").addEventListener("click", function(){upgradeBuilding(b, printer)})
+        
+        document.getElementById("printer-upgrade").addEventListener("mouseenter", function(){
+            document.getElementById("printer-requirements").innerHTML = printer.requirementsTable(true)
+        })
+        document.getElementById("printer-upgrade").addEventListener("mouseleave", function(){
+            document.getElementById("printer-requirements").innerHTML = printer.requirementsTable(false)
+        })
+        
         document.getElementById("assign-alien").addEventListener("click", function(){updateWorkers(b, printer, this.id)})
         document.getElementById("remove-alien").addEventListener("click", function(){updateWorkers(b, printer, this.id)})
 
@@ -307,9 +352,8 @@ function buildGenerator(b){
             document.getElementById("generator").classList.add("enabled")
             recalculateEnergyOutput()
             showBuildingUpgrades(b)
-            updateGameLog(`You managed to salvage the ship's energy generator.<br>               
-            It's in a sorry state but it should get you up and running. 
-            You will have to upgrade it eventually for Zoflogh to leave this planet.`)
+            updateGameLog(`You managed to salvage the ship's energy generator.<br><br>               
+            It's in a sorry state but it should get you up and running.`)
         }
     }else if(generator.level > "0"){
         updateGameLog("This building is already up and running. Open the building for more options")
@@ -329,9 +373,8 @@ function buildPrinter(b){
             document.getElementById("printer").classList.remove("disabled")
             document.getElementById("printer").classList.add("enabled")
             showBuildingUpgrades(b)
-            updateGameLog(`With what little was to be found in the cargo bay, you managed to build a recycler.<br>               
-            Zoflogh can now recycle whatever he finds into metamaterials, used for pretty much everything.  
-            Upgrade this device to increase the output.`)
+            updateGameLog(`With what little was to be found in the cargo bay, you managed to build a recycler.<br><br>  
+            Upgrade building or assign an idle alien to this device to increase the output.`)
         }
     }else if(generator.level > "0"){
         updateGameLog("This building is already up and running. Open the building for more options")
