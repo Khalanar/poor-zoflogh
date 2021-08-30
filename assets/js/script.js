@@ -59,13 +59,6 @@ class Building{
         this.maxLevel = 5;
         this.upgradeRequirements = upgradeRequirements;
         this.resourceGeneration = resourceGeneration;
-        
-
-        this.enoughEnergy = this.upgradeRequirements[this.level].energy  <= resources.energy - resources.energyConsumed
-        this.enoughMetamaterials = this.upgradeRequirements[this.level].metamaterials <= resources.metamaterials
-        this.enoughDna = this.upgradeRequirements[this.level].dna <= resources.dna
-        
-        this.enoughResources = this.enoughEnergy && this.enoughMetamaterials && this.enoughDna
     }
 
     updateRequirements(){
@@ -175,7 +168,6 @@ class Building{
             this.#buildMessage = m;
         }
     }
-
 }
 
 let printer = new Building("printer", 0,
@@ -184,8 +176,7 @@ let printer = new Building("printer", 0,
         {energy: 100, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
         {energy: 200, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
         {energy: 400, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
-    ], 
-    [0, 1, 10, 100, 200, 500])
+    ],  [0, 1, 10, 100, 200, 500])
 
 printer.buildMessage = `With what little was to be found in the cargo bay, you managed to build a recycler.<br><br>  
 Upgrade building or assign an idle alien to this device to increase the output.`
@@ -196,8 +187,7 @@ let generator = new Building("generator", 0,
         {energy: 0, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
         {energy: 0, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
         {energy: 0, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
-    ],
-    [0, 100, 500, 2000, 3000, 5000])
+    ],  [0, 100, 500, 2000, 3000, 5000])
 
 generator.buildMessage = `You managed to salvage the ship's energy generator.<br><br>It's in a sorry state but it should get you up and running.`
 
@@ -257,13 +247,23 @@ function buildIcons(building, name){
     let buttonId = `${name}-build`
     let reqId = `${name}-build-requirements`
     let iconHTML = `
-    <div>
+    
         <img id="${buttonId}" class="build-button" src="./assets/images/${icon}" alt="">
         <div id="${reqId}">${tooltip}</div>
-    </div>
+    
     `
-    document.getElementById("building-upgrades").innerHTML += iconHTML
+    let newDiv = document.createElement('div')
+    newDiv.innerHTML = iconHTML
+    document.getElementById("building-upgrades").appendChild(newDiv)
 
+    
+    if (building.level == 0){
+        document.getElementById(buttonId).addEventListener("click", function(){build(building)})
+        document.getElementById(buttonId).addEventListener("mouseenter", function(){ document.getElementById(reqId).innerHTML = building.requirementsTable(true) })
+        document.getElementById(buttonId).addEventListener("mouseleave", function(){ document.getElementById(reqId).innerHTML = building.requirementsTable(false) })
+    
+        console.log(`created ${buttonId} with events that change ${reqId}`)
+    }
 }
 
 function showBuildingUpgrades(){
@@ -275,30 +275,6 @@ function showBuildingUpgrades(){
         buildIcons(biopsyRoom,  "biopsy_room")
         buildIcons(nursery,     "nursery")
         
-        let buttons = document.getElementsByClassName("build-button")
-        for(let button of buttons){
-            // console.log(button.id)
-            let b
-            if (button.id == "generator-build"){
-                b = generator
-            }
-            if (button.id == "printer-build"){
-                b = printer
-            }
-            if (button.id == "biopsy_room-build"){
-                b = biopsyRoom
-            }
-            if (button.id == "nursery-build"){
-                b = nursery
-            }
-
-            let reqId = `${button.id}-requirements`
-            if (b.level == 0){
-                button.addEventListener("click", function(){build(b)})
-                button.addEventListener("mouseenter", function(){ document.getElementById(reqId).innerHTML = b.requirementsTable(true) })
-                button.addEventListener("mouseleave", function(){ document.getElementById(reqId).innerHTML = b.requirementsTable(false) })
-            }
-        }
     }else if(currentScreen == "generator"){
         let upgradesHTML = ""
         upgradesHTML += `   
