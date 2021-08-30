@@ -51,6 +51,7 @@ function spendResources(e, m, d){
 }
 
 class Building{
+    #buildMessage;
     constructor(name, level, upgradeRequirements, resourceGeneration){
         this.name = name;
         this.level = level;
@@ -58,6 +59,7 @@ class Building{
         this.upgradeRequirements = upgradeRequirements;
         this.resourceGeneration = resourceGeneration;
         this.assignedWorkers = 0;
+        
 
         this.enoughEnergy = this.upgradeRequirements[this.level].energy <= resources.energy
         this.enoughMetamaterials = this.upgradeRequirements[this.level].metamaterials <= resources.metamaterials
@@ -92,13 +94,11 @@ class Building{
     }
 
     requirementsTable(c){
-        console.log("showreq")
         this.updateRequirements()
         let reqEnergy = this.upgradeRequirements[this.level].energy
         let reqMetamaterials = this.upgradeRequirements[this.level].metamaterials
         let reqDNA = this.upgradeRequirements[this.level].dna
         let colorClass;
-
 
         colorClass = this.enoughEnergy ? "green" : "red"
         colorClass = c ? colorClass : ""
@@ -154,25 +154,53 @@ class Building{
             updateGameLog(`Noone is working at the ${this.name}`)
         }
     }
+
+    showBuilding(){
+        document.getElementById(this.name).classList.remove("disabled")
+        document.getElementById(this.name).classList.add("enabled")
+    }
+
+    get buildMessageLog(){
+        updateGameLog(this.#buildMessage)
+        return this.#buildMessage
+    }
+
+    set buildMessageLog(m){
+        if (m != ""){
+            this.#buildMessage = m;
+        }
+    }
+
 }
 
-let printer = new Building("printer", 0, [
-    {energy: 10, metamaterials: 10, dna:0}, //Upgrade from 0 to 1
-    {energy: 50, metamaterials: 100, dna:0}, //Upgrade from 1 to 2
-    {energy: 100, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
-    {energy: 200, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
-    {energy: 400, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
-], [0, 1, 10, 100, 1000])
+let printer = new Building(
+    "printer",
+    0,
+    [   {energy: 10, metamaterials: 10, dna:0}, //Upgrade from 0 to 1
+        {energy: 50, metamaterials: 100, dna:0}, //Upgrade from 1 to 2
+        {energy: 100, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
+        {energy: 200, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
+        {energy: 400, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
+    ], 
+    [0, 1, 10, 100, 1000])
 
-let generator = new Building("generator", 0, [
-    {energy: 0, metamaterials: 10, dna:0}, //Upgrade from 0 to 1
-    {energy: 0, metamaterials: 50, dna:0}, //Upgrade from 1 to 2
-    {energy: 0, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
-    {energy: 0, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
-    {energy: 0, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
-], [0, 100, 500, 2000, 5000])
+printer.buildMessageLog = `You managed to salvage the ship's energy generator.<br><br>It's in a sorry state but it should get you up and running.`
 
-let biopsyRoom = new Building("biopsyRoom", 0, [
+let generator = new Building(
+    "generator",
+    0,
+    [   {energy: 0, metamaterials: 10, dna:0}, //Upgrade from 0 to 1
+        {energy: 0, metamaterials: 50, dna:0}, //Upgrade from 1 to 2
+        {energy: 0, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
+        {energy: 0, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
+        {energy: 0, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
+    ],
+    [0, 100, 500, 2000, 5000])
+
+generator.buildMessageLog = `With what little was to be found in the cargo bay, you managed to build a recycler.<br><br>  
+Upgrade building or assign an idle alien to this device to increase the output.`
+
+let biopsyRoom = new Building("biopsy_room", 0, [
     {energy: 200, metamaterials: 500, dna:0}, //Upgrade from 0 to 1
     {energy: 400, metamaterials: 1000, dna:0}, //Upgrade from 1 to 2
     {energy: 800, metamaterials: 2000, dna:0}, //Upgrade from 2 to 3
@@ -219,65 +247,74 @@ function clearUpgradeArea(){
 function buildIcons(building, name){
     let icon = building.level == 0 ? `${name}.svg` : `${name}_built.svg`
     let tooltip = building.level == 0 ? building.requirementsTable(false) : "Open building to upgrade"
-
+    let buttonId = `${name}-build`
+    let reqId = `${name}-build-requirements`
     let iconHTML = `
     <div>
-        <img id="${name}-build" class="build-button" src="./assets/images/${icon}" alt="">
-        <div id="${name}-build-requirements">${tooltip}</div>
+        <img id="${buttonId}" class="build-button" src="./assets/images/${icon}" alt="">
+        <div id="${reqId}">${tooltip}</div>
     </div>
     `
-    // return iconHTML
-
     document.getElementById("building-upgrades").innerHTML += iconHTML
+
 }
 
-function showBuildingUpgrades(b){
-    let upgradesHTML = ""
-    document.getElementById("building-upgrades").innerHTML = upgradesHTML
+function showBuildingUpgrades(){
+    document.getElementById("building-upgrades").innerHTML = ""
     if (currentScreen == "ship"){
-        // upgradesHTML += buildIcons(generator, "generator")
-        // upgradesHTML += buildIcons(printer, "printer")
-        // upgradesHTML += buildIcons(biopsyRoom, "biopsy_room")
-        // upgradesHTML += buildIcons(nursery, "nursery")
-
         buildIcons(generator,   "generator")
         buildIcons(printer,     "printer")
         buildIcons(biopsyRoom,  "biopsy_room")
         buildIcons(nursery,     "nursery")
         
-        // document.getElementById("building-upgrades").innerHTML = upgradesHTML
+        let buttons = document.getElementsByClassName("build-button")
+        for(let button of buttons){
+            console.log(button.id)
+            let b
+            if (button.id == "generator-build"){
+                b = generator
+            }
+            if (button.id == "printer-build"){
+                b = printer
+            }
+            if (button.id == "biopsy_room-build"){
+                b = biopsyRoom
+            }
+            if (button.id == "nursery-build"){
+                b = nursery
+            }
 
-   
-        if (generator.level == 0){
-            document.getElementById("generator-build").addEventListener(    "click", function(){buildGenerator(b)})
-            document.getElementById("generator-build").addEventListener(    "mouseenter", function(){ document.getElementById("generator-build-requirements").innerHTML = generator.requirementsTable(true) })
-            document.getElementById("generator-build").addEventListener(    "mouseleave", function(){ document.getElementById("generator-build-requirements").innerHTML = generator.requirementsTable(false) })
-        }
-        if (printer.level == 0){
-            document.getElementById("printer-build").addEventListener(      "click", function(){buildPrinter(b)})
-            document.getElementById("printer-build").addEventListener(      "mouseenter", function(){ document.getElementById("printer-build-requirements").innerHTML = printer.requirementsTable(true) })
-            document.getElementById("printer-build").addEventListener(      "mouseleave", function(){ document.getElementById("printer-build-requirements").innerHTML = printer.requirementsTable(false) })
-        }
-        if (biopsyRoom.level == 0){
-            document.getElementById("biopsy_room-build").addEventListener(  "click", function(){buildBiopsyRoom(b)})
-            document.getElementById("biopsy_room-build").addEventListener(  "mouseenter", function(){ document.getElementById("biopsy_room-build-requirements").innerHTML = biopsyRoom.requirementsTable(true) })
-            document.getElementById("biopsy_room-build").addEventListener(  "mouseleave", function(){ document.getElementById("biopsy_room-build-requirements").innerHTML = biopsyRoom.requirementsTable(false) })
-        }
-        if (nursery.level == 0){
-            document.getElementById("nursery-build").addEventListener(      "click", function(){buildNursery(b)})
-            document.getElementById("nursery-build").addEventListener(      "mouseenter", function(){ document.getElementById("nursery-build-requirements").innerHTML = nursery.requirementsTable(true) })
-            document.getElementById("nursery-build").addEventListener(      "mouseleave", function(){ document.getElementById("nursery-build-requirements").innerHTML = nursery.requirementsTable(false) })
+            let reqId = `${button.id}-requirements`
+            if (b.level == 0){
+                button.addEventListener("click", function(){build(b)})
+                button.addEventListener("mouseenter", function(){ document.getElementById(reqId).innerHTML = b.requirementsTable(true) })
+                button.addEventListener("mouseleave", function(){ document.getElementById(reqId).innerHTML = b.requirementsTable(false) })
+
+                /*
+
+
+
+
+                IMPORTANT CHANGE HOW BUILD WORKS TO 1 METHOD THAT TAKES IN A BUILDING CLASS
+
+                for this, build message should be declared in the class as building.builtMessage
+
+
+
+
+                */
+
+            }
         }
     }else if(currentScreen == "generator"){
+       
+        let upgradesHTML = ""
         upgradesHTML += `   
         <div>
             <img id="generator-upgrade" class="build-button" src="./assets/images/generator.svg" alt="">
             <div id="generator-requirements">${generator.requirementsTable(false)}</div>
         </div>
-        <div>
-        </div>
-        <div>
-        </div>
+        <div></div><div></div>
         <div>
             <p>Total energy output:</p>
             <p>${resources.energy}</p><br>
@@ -344,41 +381,25 @@ function updateWorkers(b, building, c){
     showBuildingUpgrades(b)
 }
 
-function buildGenerator(b){
-    if (generator.level == "0"){
-        generator.upgrade()
-        if (generator.enoughResources){
-            document.getElementById("generator").classList.remove("disabled")
-            document.getElementById("generator").classList.add("enabled")
+function build(building){
+    if (building.level == "0"){
+        building.upgrade()
+        if (building.enoughResources){
+            building.showBuilding()
             recalculateEnergyOutput()
-            showBuildingUpgrades(b)
-            updateGameLog(`You managed to salvage the ship's energy generator.<br><br>               
-            It's in a sorry state but it should get you up and running.`)
+            showBuildingUpgrades()
+            updateGameLog(building.buildMessageLog)
         }
-    }else if(generator.level > "0"){
+    }else if(building.level > "0"){
         updateGameLog("This building is already up and running. Open the building for more options")
     }
 }
+
 
 function upgradeBuilding(b, building){
     building.upgrade()
     recalculateEnergyOutput()
     console.log("upgrade - " + building.name) 
-}
-
-function buildPrinter(b){
-    if (printer.level == "0"){
-        printer.upgrade()
-        if(printer.enoughResources){
-            document.getElementById("printer").classList.remove("disabled")
-            document.getElementById("printer").classList.add("enabled")
-            showBuildingUpgrades(b)
-            updateGameLog(`With what little was to be found in the cargo bay, you managed to build a recycler.<br><br>  
-            Upgrade building or assign an idle alien to this device to increase the output.`)
-        }
-    }else if(generator.level > "0"){
-        updateGameLog("This building is already up and running. Open the building for more options")
-    }
 }
 
 function buildBiopsyRoom(b){
