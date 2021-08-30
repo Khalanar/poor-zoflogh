@@ -177,7 +177,6 @@ let printer = new Building("printer", 0,
         {energy: 200, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
         {energy: 400, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
     ],  [0, 1, 10, 100, 200, 500])
-
 printer.buildMessage = `With what little was to be found in the cargo bay, you managed to build a recycler.<br><br>  
 Upgrade building or assign an idle alien to this device to increase the output.`
 
@@ -188,7 +187,6 @@ let generator = new Building("generator", 0,
         {energy: 0, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
         {energy: 0, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
     ],  [0, 100, 500, 2000, 3000, 5000])
-
 generator.buildMessage = `You managed to salvage the ship's energy generator.<br><br>It's in a sorry state but it should get you up and running.`
 
 let biopsyRoom = new Building("biopsy_room", 0, 
@@ -199,7 +197,6 @@ let biopsyRoom = new Building("biopsy_room", 0,
     {energy: 1500, metamaterials: 5000, dna:0}, //Upgrade from 3 to 4
     {energy: 2000, metamaterials: 10000, dna:0}, //Upgrade from 4 to 5
 ])
-
 biopsyRoom.buildMessage = `Sweet biopsy room built, go abduce some stuff!`
 
 let nursery = new Building("nursery", 0, 
@@ -210,7 +207,6 @@ let nursery = new Building("nursery", 0,
     {energy: 1250, metamaterials: 3200, dna:0}, //Upgrade from 3 to 4
     {energy: 2000, metamaterials: 9000, dna:0}, //Upgrade from 4 to 5
 ])
-
 nursery.buildMessage = `Reproduce and conquer!`
 
 function getBuildings(){
@@ -220,14 +216,12 @@ function getBuildings(){
         b.addEventListener("click", function(){
             clickBuilding(b)
         })
-        // console.log(`${b.id} initialised`);
     }
 }
 
 function clickBuilding(b){
-    console.log("clicked " + b.id)
     currentScreen = b.id
-    redrawScreen(currentScreen)
+    redrawScreen()
 }
 
 function clearUpgradeArea(){
@@ -246,37 +240,33 @@ function buildIcons(building, name){
     let tooltip = building.level == 0 ? building.requirementsTable(false) : "Open building to upgrade"
     let buttonId = `${name}-build`
     let reqId = `${name}-build-requirements`
-    let iconHTML = `
-    
-        <img id="${buttonId}" class="build-button" src="./assets/images/${icon}" alt="">
-        <div id="${reqId}">${tooltip}</div>
-    
-    `
-    let newDiv = document.createElement('div')
-    newDiv.innerHTML = iconHTML
-    document.getElementById("building-upgrades").appendChild(newDiv)
+    let iconHTML = `<img id="${buttonId}" class="build-button" src="./assets/images/${icon}" alt="">
+                    <div id="${reqId}">${tooltip}</div>`
 
-    
+    let wrapperDiv = document.createElement('div')
+    wrapperDiv.innerHTML = iconHTML
+    document.getElementById("building-upgrades").appendChild(wrapperDiv)
+
     if (building.level == 0){
         document.getElementById(buttonId).addEventListener("click", function(){build(building)})
         document.getElementById(buttonId).addEventListener("mouseenter", function(){ document.getElementById(reqId).innerHTML = building.requirementsTable(true) })
         document.getElementById(buttonId).addEventListener("mouseleave", function(){ document.getElementById(reqId).innerHTML = building.requirementsTable(false) })
-    
-        console.log(`created ${buttonId} with events that change ${reqId}`)
     }
 }
 
-function showBuildingUpgrades(){
+function drawBuildingScreen(){
     let upgradesHTML = ""
     document.getElementById("building-upgrades").innerHTML = ""
     if (currentScreen == "ship"){
+        showBuildingDescription()
+
         buildIcons(generator,   "generator")
         buildIcons(printer,     "printer")
         buildIcons(biopsyRoom,  "biopsy_room")
         buildIcons(nursery,     "nursery")
-        
+
     }else if(currentScreen == "generator"){
-        let upgradesHTML = ""
+        showBuildingDescription()
         upgradesHTML += `   
         <div>
             <img id="generator-upgrade" class="build-button" src="./assets/images/generator.svg" alt="">
@@ -302,6 +292,7 @@ function showBuildingUpgrades(){
         })
     
     }else if(currentScreen == "printer"){
+        showBuildingDescription()
         upgradesHTML += `   
         <div>
             <img id="printer-upgrade" class="build-button" src="./assets/images/printer.svg" alt="">
@@ -346,7 +337,7 @@ function updateWorkers(building, c){
     }else{
         building.removeWorker()
     }
-    showBuildingUpgrades()
+    drawBuildingScreen()
 }
 
 function build(building){
@@ -356,7 +347,7 @@ function build(building){
             building.upgrade()
             building.showBuilding()
             recalculateEnergyOutput()
-            showBuildingUpgrades()
+            drawBuildingScreen()
             updateGameLog(building.buildMessage)
         }else{
             updateGameLog("Not enough resources to build, poor Zoflogh")
@@ -370,36 +361,8 @@ function build(building){
 function upgradeBuilding(building){
     building.upgrade()
     recalculateEnergyOutput()
-    showBuildingUpgrades()
+    drawBuildingScreen()
     console.log("upgrade - " + building.name) 
-}
-
-function buildBiopsyRoom(b){
-    if (biopsyRoom.level == "0"){
-        biopsyRoom.upgrade()
-        if(biopsyRoom.enoughResources){
-            document.getElementById("biopsy_room").classList.remove("disabled")
-            document.getElementById("biopsy_room").classList.add("enabled")
-            showBuildingUpgrades(b)
-            updateGameLog(`Created biopsy room`)
-        }
-    }else if(biopsyRoom.level > "0"){
-        updateGameLog("This building is already up and running. Open the building for more options")
-    }
-}
-
-function buildNursery(b){
-    if (nursery.level == "0"){
-        nursery.upgrade()
-        if(nursery.enoughResources){
-            document.getElementById("nursery-build").classList.remove("disabled")
-            document.getElementById("nursery-build").classList.add("enabled")
-            showBuildingUpgrades(b)
-            updateGameLog(`Created biopsy room`)
-        }
-    }else if(nursery.level > "0"){
-        updateGameLog("This building is already up and running. Open the building for more options")
-    }
 }
 
 function showBuildingDescription(b){
@@ -422,10 +385,9 @@ function updateGameLog(m){
     document.getElementById("game-log").innerHTML = msgLog
 }
 
-function redrawScreen(currentScreen){
+function redrawScreen(){
     clearUpgradeArea()
-    showBuildingDescription(currentScreen)
-    showBuildingUpgrades(currentScreen)
+    drawBuildingScreen()
 }
 
 function start(){
@@ -434,7 +396,6 @@ function start(){
     getBuildings()
     resourceRefresh()
     setInterval(update, updateMillis)
-    //setInterval(redrawScreen, 1000)
 }
 
 function update(){
