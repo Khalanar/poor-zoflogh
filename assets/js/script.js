@@ -535,8 +535,21 @@ function redrawScreen(){
 
 document.addEventListener("DOMContentLoaded", start())
 
+function setHelpHover(){
+    document.getElementById("help-icon").addEventListener("mouseenter", function(){
+        document.getElementById("help-card").classList.add("enabled")
+        document.getElementById("help-card").classList.remove("disabled")
+    })
+    document.getElementById("help-icon").addEventListener("mouseleave", function(){
+        document.getElementById("help-card").classList.add("disabled")
+        document.getElementById("help-card").classList.remove("enabled")
+    })
+
+}
+
 function start(){
     console.log("start")
+    setHelpHover()
     updateGameLog()
     getBuildings()
     resources.reload()
