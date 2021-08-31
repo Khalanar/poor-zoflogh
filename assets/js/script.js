@@ -1,3 +1,7 @@
+// import {testModular} from "/assets/js/gameManager.js"
+
+// testModular();
+
 let gameMessages = [
     "Oh no... an alien has crashed into Planet Earth.<br><br> Poor Zoflogh.",
 ]
@@ -52,8 +56,6 @@ let resources = {
         this.dna -= d
         this.reload()
     },
-    
-
 }
 
 let currentScreen = ""
@@ -97,8 +99,8 @@ let abduction = {
     
     changeAbductionStatus: function(n) {
         if (document.getElementById("abduction-stage")){
-            this.currentPhase = 0
-            document.getElementById("abduction-stage").innerText = this.phase[n]
+            this.currentPhase = n
+            document.getElementById("abduction-stage").innerText = this.phase[this.currentPhase]
         }
     },
     
@@ -119,7 +121,6 @@ let abduction = {
 
     calculateAbductionProgress: function(){
         if (this.inProgress && this.progress < 100){
-
             this.progress += 1000/updateMillis/this.totalTime
 
             if (document.getElementById("abduction-progress-bar")){
@@ -461,7 +462,6 @@ function drawBuildingScreen(){
         //redraw progress bar   
     }else if(currentScreen == "nursery"){
         showBuildingDescription()
-
     }
 }
 
@@ -505,7 +505,7 @@ function updateGameLog(m){
     if (m){
         gameMessages.unshift(m)
     }
-    index = 0
+    let index = 0
     for (let msg of gameMessages){
         let color = index == 0 ? "highlight" : "normal";
         msgLog += `
