@@ -1,7 +1,11 @@
-import {gameManager as gm} from "/assets/js/gameManager.js"
+// import {gameManager as gm} from "/assets/js/gameManager.js"
 // import {Building} from "/assets/js/building.js" in order to do this, need to pass resource object to the buildings
 
-
+let gameManager = {
+    testmode: true,
+    currentScreen: "",
+    updateMillis: 100,
+}
 
 let gameMessages = [
     "Oh no... an alien has crashed into Planet Earth.<br><br> Poor Zoflogh.",
@@ -23,7 +27,7 @@ let resources = {
     availableAliens: 0,
 
     reload: function(){
-        if (gm.testmode) {
+        if (gameManager.testmode) {
             this.energy = 5000
             this.metamaterials = 5000
             this.availableAliens = 10
@@ -40,7 +44,7 @@ let resources = {
     },
     
     generateMetamaterials: function (){
-        let generated = printer.resourceGeneration[printer.level]*(printer.assignedWorkers+1)/1000*gm.updateMillis
+        let generated = printer.resourceGeneration[printer.level]*(printer.assignedWorkers+1)/1000*gameManager.updateMillis
         this.metamaterials += generated;
         this.reload()
     },
@@ -117,7 +121,7 @@ let abduction = {
 
     calculateAbductionProgress: function(){
         if (this.inProgress && this.progress < 100){
-            this.progress += 1000/gm.updateMillis/this.totalTime
+            this.progress += 1000/gameManager.updateMillis/this.totalTime
 
             if (document.getElementById("abduction-progress-bar")){
                 document.getElementById("abduction-progress-bar").style.width = `${this.progress}%`
@@ -313,7 +317,7 @@ function getBuildings(){
 }
 
 function clickBuilding(b){
-    gm.currentScreen = b.id
+    gameManager.currentScreen = b.id
     redrawScreen()
 }
 
@@ -350,7 +354,7 @@ function buildIcons(building, name){
 function drawBuildingScreen(){
     let upgradesHTML = ""
     document.getElementById("building-upgrades").innerHTML = ""
-    if (gm.currentScreen == "ship"){
+    if (gameManager.currentScreen == "ship"){
         showBuildingDescription()
 
         buildIcons(generator,   "generator")
@@ -358,7 +362,7 @@ function drawBuildingScreen(){
         buildIcons(biopsyRoom,  "biopsy_room")
         buildIcons(nursery,     "nursery")
 
-    }else if(gm.currentScreen == "generator"){
+    }else if(gameManager.currentScreen == "generator"){
 
         showBuildingDescription()
 
@@ -388,7 +392,7 @@ function drawBuildingScreen(){
             document.getElementById("generator-requirements").innerHTML = generator.requirementsTable(false)
         })
     
-    }else if(gm.currentScreen == "printer"){
+    }else if(gameManager.currentScreen == "printer"){
         showBuildingDescription()
         upgradesHTML += `   
         <div>
@@ -425,7 +429,7 @@ function drawBuildingScreen(){
         document.getElementById("assign-alien").addEventListener("click", function(){updateWorkers(printer, this.id)})
         document.getElementById("remove-alien").addEventListener("click", function(){updateWorkers(printer, this.id)})
 
-    }else if(gm.currentScreen == "biopsy_room"){
+    }else if(gameManager.currentScreen == "biopsy_room"){
         showBuildingDescription()
         let abductionButtonName = abduction.inProgress ? "Harvest" : "Abduct"
         upgradesHTML += `   
@@ -456,7 +460,7 @@ function drawBuildingScreen(){
             document.getElementById("biopsy_room-requirements").innerHTML = biopsyRoom.requirementsTable(false)
         })
         //redraw progress bar   
-    }else if(gm.currentScreen == "nursery"){
+    }else if(gameManager.currentScreen == "nursery"){
         showBuildingDescription()
     }
 }
@@ -493,7 +497,7 @@ function upgradeBuilding(building){
 }
 
 function showBuildingDescription(b){
-    document.getElementById("building-description").innerHTML = buildingDescriptions[gm.currentScreen]
+    document.getElementById("building-description").innerHTML = buildingDescriptions[gameManager.currentScreen]
 }
 
 function updateGameLog(m){
@@ -524,7 +528,7 @@ function start(){
     updateGameLog()
     getBuildings()
     resources.reload()
-    setInterval(update, gm.updateMillis)
+    setInterval(update, gameManager.updateMillis)
 }
 
 function update(){
