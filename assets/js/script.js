@@ -2,7 +2,7 @@
 // import {Building} from "/assets/js/building.js" in order to do this, need to pass resource object to the buildings
 
 let gameManager = {
-    testmode: true,
+    testmode: false,
     currentScreen: "",
     updateMillis: 100,
 }
@@ -275,7 +275,7 @@ let printer = new Building("printer", 0,
         {energy: 100, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
         {energy: 200, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
         {energy: 400, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
-    ],  [0, 1, 10, 100, 200, 500])
+    ],  [0, 5, 10, 50, 100, 200])
 printer.buildMessage = `With what little was to be found in the cargo bay, you managed to build a recycler.<br><br>  
 Upgrade building or assign an idle alien to this device to increase the output.`
 
@@ -285,7 +285,7 @@ let generator = new Building("generator", 0,
         {energy: 0, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
         {energy: 0, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
         {energy: 0, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
-    ],  [0, 100, 500, 2000, 3000, 5000])
+    ],  [0, 50, 500, 2000, 3000, 5000])
 generator.buildMessage = `You managed to salvage the ship's energy generator.<br><br>It's in a sorry state but it's got enough juice to kickstart the <i>3D Recycler</i>`
 
 let biopsyRoom = new Building("biopsy_room", 0, 
