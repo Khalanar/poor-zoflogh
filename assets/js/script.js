@@ -306,6 +306,9 @@ let nursery = new Building("nursery", 0,
 ])
 nursery.buildMessage = `Reproduce and conquer!`
 
+let radio = new Building("nursery", 0, [{energy: 5000, metamaterials: 5000, dna:0}], 0)
+radio.buildMessage = `Reproduce and conquer!`
+
 function getBuildings(){
     let buildings = document.getElementsByClassName("building");
     
@@ -334,7 +337,7 @@ function clearUpgradeArea(){
  */
 function buildIcons(building, name){
     let icon = building.level == 0 ? `${name}.svg` : `${name}_built.svg`
-    let tooltip = building.level == 0 ? building.requirementsTable(false) : "Open building to upgrade"
+    let tooltip = building.level == 0 ? building.requirementsTable(false) : "Construction complete"
     let buttonId = `${name}-build`
     let reqId = `${name}-build-requirements`
     let iconHTML = `<img id="${buttonId}" class="build-button" src="./assets/images/${icon}" alt="">
@@ -353,17 +356,19 @@ function buildIcons(building, name){
 
 function drawBuildingScreen(){
     let upgradesHTML = ""
+    console.log("draw buildings")
     document.getElementById("building-upgrades").innerHTML = ""
     if (gameManager.currentScreen == "ship"){
         showBuildingDescription()
 
         buildIcons(generator,   "generator")
-        buildIcons(printer,     "printer")
-        buildIcons(biopsyRoom,  "biopsy_room")
-        buildIcons(nursery,     "nursery")
+        if (generator.level > 0){   buildIcons(printer,     "printer") }
+        if (printer.level > 0){     buildIcons(biopsyRoom,  "biopsy_room")}
+        if (biopsyRoom.level > 0){  buildIcons(nursery,     "nursery")}
+        if (nursery.level > 0){     buildIcons(radio,     "radio")}
+        
 
     }else if(gameManager.currentScreen == "generator"){
-
         showBuildingDescription()
 
         //Show Buttons
@@ -373,11 +378,13 @@ function drawBuildingScreen(){
             <div id="generator-requirements">${generator.requirementsTable(false)}</div>
         </div>
         <div></div><div></div>
-        <div>
-            <p>Total energy output:</p>
-            <p>${resources.energy}</p><br>
-            <p>Total consumed by buildings:</p>
-            <p>${resources.energyConsumed}</p>
+        <div class="double-col-span">
+            <p>Total output:</p>
+            <p>${resources.energy}</p>
+            <p>Total consumed:</p>
+            <p>${resources.energyConsumed}</p><br>
+            <p>Available energy:</p>
+            <p>${resources.energy-resources.energyConsumed}</p>
         </div>
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
@@ -405,14 +412,15 @@ function drawBuildingScreen(){
         <div>
             <img id="remove-alien" class="build-button" src="./assets/images/remove_alien.svg" alt="">
         </div>
-        <div>
+    
+        <div class="double-col-span">
             <p>Base output:</p>
             <p>${printer.resourceGeneration[printer.level]}</p>
 
             <p>Assigned aliens:</p>
             <p>${printer.assignedWorkers}</p>
             <br>
-            <p>Current Output:</p>
+            <p>Total output:</p>
             <p>${printer.resourceGeneration[printer.level]*(printer.assignedWorkers+1)} p/s</p>
         </div>
         `
