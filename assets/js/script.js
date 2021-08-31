@@ -20,11 +20,19 @@ let resources = {
 
 let currentScreen = ""
 
+let testmode = true;
+
 let updateMillis = 100;
 
 document.addEventListener("DOMContentLoaded", start())
 
+
+
 function resourceRefresh(){
+    if (testmode) {
+        resources.energy = 5000
+        resources.metamaterials = 5000
+    }
     document.getElementById("energy").innerText = resources.energy - resources.energyConsumed
     document.getElementById("metamaterials").innerText = parseInt(resources.metamaterials)
     document.getElementById("dna").innerText = resources.dna
@@ -40,6 +48,10 @@ function generateMetamaterials(){
     let generated = printer.resourceGeneration[printer.level]*(printer.assignedWorkers+1)/1000*updateMillis
     resources.metamaterials += generated;
     resourceRefresh()
+}
+
+function harvestDNA(n){
+    resources.dna += n
 }
 
 function spendResources(e, m, d){
@@ -196,7 +208,7 @@ let biopsyRoom = new Building("biopsy_room", 0,
     {energy: 800, metamaterials: 2000, dna:0}, //Upgrade from 2 to 3
     {energy: 1500, metamaterials: 5000, dna:0}, //Upgrade from 3 to 4
     {energy: 2000, metamaterials: 10000, dna:0}, //Upgrade from 4 to 5
-])
+], [999, 30, 25, 15, 10, 5])
 biopsyRoom.buildMessage = `Sweet biopsy room built, go abduce some stuff!`
 
 let nursery = new Building("nursery", 0, 
@@ -266,7 +278,10 @@ function drawBuildingScreen(){
         buildIcons(nursery,     "nursery")
 
     }else if(currentScreen == "generator"){
+
         showBuildingDescription()
+
+        //Show Buttons
         upgradesHTML += `   
         <div>
             <img id="generator-upgrade" class="build-button" src="./assets/images/generator.svg" alt="">
@@ -281,6 +296,7 @@ function drawBuildingScreen(){
         </div>
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
+
         document.getElementById("generator-upgrade").addEventListener("click", function(){upgradeBuilding(generator)})
         document.getElementById("generator-upgrade").addEventListener("mouseenter", function(){
 
@@ -328,6 +344,40 @@ function drawBuildingScreen(){
         document.getElementById("assign-alien").addEventListener("click", function(){updateWorkers(printer, this.id)})
         document.getElementById("remove-alien").addEventListener("click", function(){updateWorkers(printer, this.id)})
 
+    }else if(currentScreen == "biopsy_room"){
+        showBuildingDescription()
+        let abductionButtonName = abduction.inProgress ? "Harvest" : "Abduct"
+        upgradesHTML += `   
+        <div>
+            <img id="biopsy_room-upgrade" class="build-button" src="./assets/images/biopsy_room.svg" alt="">
+            <div id="biopsy_room-requirements">${biopsyRoom.requirementsTable(false)}</div>
+        </div>
+        <div id="abduction-progress-area">
+            <p id="abduction-stage">${abduction.phase[abduction.currentPhase]}</p>
+            <div id="abduction-progress-container">
+                <div id="abduction-progress-bar"></div>
+            </div>
+            <p id="abduct" class="abduction-button">${abductionButtonName}</p>
+        </div>
+        `
+        document.getElementById("building-upgrades").innerHTML = upgradesHTML
+        document.getElementById("abduction-progress-bar").style.width = `${abduction.progress}%`
+        document.getElementById("abduct").addEventListener("click", function(){
+            abduct()
+        })
+
+        document.getElementById("biopsy_room-upgrade").addEventListener("click", function(){upgradeBuilding(biopsyRoom)})
+        
+        document.getElementById("biopsy_room-upgrade").addEventListener("mouseenter", function(){
+            document.getElementById("biopsy_room-requirements").innerHTML = biopsyRoom.requirementsTable(true)
+        })
+        document.getElementById("biopsy_room-upgrade").addEventListener("mouseleave", function(){
+            document.getElementById("biopsy_room-requirements").innerHTML = biopsyRoom.requirementsTable(false)
+        })
+        //redraw progress bar   
+    }else if(currentScreen == "nursery"){
+        showBuildingDescription()
+
     }
 }
 
@@ -342,7 +392,6 @@ function updateWorkers(building, c){
 
 function build(building){
     if (building.level == "0"){
-    
         if (building.enoughResources){
             building.upgrade()
             building.showBuilding()
@@ -357,12 +406,10 @@ function build(building){
     }
 }
 
-
 function upgradeBuilding(building){
     building.upgrade()
     recalculateEnergyOutput()
     drawBuildingScreen()
-    console.log("upgrade - " + building.name) 
 }
 
 function showBuildingDescription(b){
@@ -390,6 +437,89 @@ function redrawScreen(){
     drawBuildingScreen()
 }
 
+
+let abduction = {
+    inProgress: false,
+    progress: 0,
+    totalTime: biopsyRoom.resourceGeneration[biopsyRoom.level],
+    currentPhase: 0,
+    maxYield: 5,
+    gameLog: "Abduction complete, head over to the biopsy room to harvest DNA samples",
+    phase: [
+        "No abduction in progress",
+        "Finding target to abduct...",
+        "Transporting target to biopsy room...",
+        "Sticking needles in places...",
+        "Complete, harvest DNA samples",
+    ],
+}
+
+function changeAbductionStatus(t){
+    if (document.getElementById("abduction-stage")){
+        document.getElementById("abduction-stage").innerText = t
+    }
+}
+
+function abduct(){
+    if(document.getElementById("abduct").innerText == "Harvest"){
+        console.log("HARVEST SEASON")
+        //increment dna samples as per building class
+
+        document.getElementById("abduction-progress-bar").style.width = "0%"
+        document.getElementById("abduct").innerText = "Abduct"
+        abduction.currentPhase = 0
+        abduction.inProgress = false;
+        abduction.progress = 0;
+        changeAbductionStatus(abduction.phase[0])
+
+        let yield = Math.floor(Math.random() * abduction.maxYield)
+        harvestDNA(yield)
+        updateGameLog(`Harvest complete:<br><br>${yield} DNA samples acquired.`)
+        resourceRefresh()
+
+    }else{
+        if(!abduction.inProgress){
+            abduction.inProgress = true
+            abduction.totalTime = biopsyRoom.resourceGeneration[biopsyRoom.level]
+
+            console.log("abduct!" + abduction.totalTime)
+        }else{
+            console.log("Abduction already in progress")
+        }
+    }
+}
+
+function calculateAbductionProgress(){
+    abduction.progress += 1000/updateMillis/abduction.totalTime
+
+    if (document.getElementById("abduction-progress-bar")){
+        document.getElementById("abduction-progress-bar").style.width = `${abduction.progress}%`
+    }
+
+ 
+    if(abduction.progress >= 100){
+        if (document.getElementById("abduct")){
+            document.getElementById("abduct").innerText = "Harvest"
+        }
+
+        abduction.currentPhase = 4
+        changeAbductionStatus(abduction.phase[abduction.currentPhase])
+        updateGameLog(abduction.gameLog)
+
+    }else if(abduction.progress >= 60){
+        abduction.currentPhase = 3
+        changeAbductionStatus(abduction.phase[abduction.currentPhase])
+    
+    }else if(abduction.progress >= 30){
+        abduction.currentPhase = 2
+        changeAbductionStatus(abduction.phase[abduction.currentPhase])
+    
+    }else if(abduction.progress >= 0){
+        abduction.currentPhase = 1
+        changeAbductionStatus(abduction.phase[abduction.currentPhase])
+    }
+}
+
 function start(){
     console.log("start")
     updateGameLog()
@@ -400,4 +530,7 @@ function start(){
 
 function update(){
     generateMetamaterials()
+    if (abduction.inProgress && abduction.progress < 100){
+        calculateAbductionProgress();
+    }
 }
