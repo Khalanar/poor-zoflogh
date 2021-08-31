@@ -1,3 +1,5 @@
-export function testModular(){
-    console.log("This in gamemamanger")
+export let gameManager = {
+    testmode: true,
+    currentScreen: "",
+    updateMillis: 100,
 }

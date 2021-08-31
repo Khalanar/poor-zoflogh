@@ -1,6 +1,7 @@
-// import {testModular} from "/assets/js/gameManager.js"
+import {gameManager as gm} from "/assets/js/gameManager.js"
+// import {Building} from "/assets/js/building.js" in order to do this, need to pass resource object to the buildings
 
-// testModular();
+
 
 let gameMessages = [
     "Oh no... an alien has crashed into Planet Earth.<br><br> Poor Zoflogh.",
@@ -14,19 +15,18 @@ let buildingDescriptions = {
     biopsy_room:"Biopsy Room.<br><br>Start abduction missions to collect DNA samples from creatures around the planet.<br><br>Froongkian laws strongly advise against bonding with abductees, however it's not forbidden.",
 }
 
-let testmode = true;
-
 let resources = {
     energy: 0,
     energyConsumed: 0,
-    metamaterials: 2000.0,
+    metamaterials: 20.0,
     dna: 0,
-    availableAliens: 3,
+    availableAliens: 0,
 
     reload: function(){
-        if (testmode) {
-            resources.energy = 5000
-            resources.metamaterials = 5000
+        if (gm.testmode) {
+            this.energy = 5000
+            this.metamaterials = 5000
+            this.availableAliens = 10
         }
         document.getElementById("energy").innerText = this.energy - this.energyConsumed
         document.getElementById("metamaterials").innerText = parseInt(this.metamaterials)
@@ -40,7 +40,7 @@ let resources = {
     },
     
     generateMetamaterials: function (){
-        let generated = printer.resourceGeneration[printer.level]*(printer.assignedWorkers+1)/1000*updateMillis
+        let generated = printer.resourceGeneration[printer.level]*(printer.assignedWorkers+1)/1000*gm.updateMillis
         this.metamaterials += generated;
         this.reload()
     },
@@ -57,10 +57,6 @@ let resources = {
         this.reload()
     },
 }
-
-let currentScreen = ""
-
-let updateMillis = 100;
 
 let abduction = {
     inProgress: false,
@@ -121,7 +117,7 @@ let abduction = {
 
     calculateAbductionProgress: function(){
         if (this.inProgress && this.progress < 100){
-            this.progress += 1000/updateMillis/this.totalTime
+            this.progress += 1000/gm.updateMillis/this.totalTime
 
             if (document.getElementById("abduction-progress-bar")){
                 document.getElementById("abduction-progress-bar").style.width = `${this.progress}%`
@@ -317,7 +313,7 @@ function getBuildings(){
 }
 
 function clickBuilding(b){
-    currentScreen = b.id
+    gm.currentScreen = b.id
     redrawScreen()
 }
 
@@ -354,7 +350,7 @@ function buildIcons(building, name){
 function drawBuildingScreen(){
     let upgradesHTML = ""
     document.getElementById("building-upgrades").innerHTML = ""
-    if (currentScreen == "ship"){
+    if (gm.currentScreen == "ship"){
         showBuildingDescription()
 
         buildIcons(generator,   "generator")
@@ -362,7 +358,7 @@ function drawBuildingScreen(){
         buildIcons(biopsyRoom,  "biopsy_room")
         buildIcons(nursery,     "nursery")
 
-    }else if(currentScreen == "generator"){
+    }else if(gm.currentScreen == "generator"){
 
         showBuildingDescription()
 
@@ -392,7 +388,7 @@ function drawBuildingScreen(){
             document.getElementById("generator-requirements").innerHTML = generator.requirementsTable(false)
         })
     
-    }else if(currentScreen == "printer"){
+    }else if(gm.currentScreen == "printer"){
         showBuildingDescription()
         upgradesHTML += `   
         <div>
@@ -429,7 +425,7 @@ function drawBuildingScreen(){
         document.getElementById("assign-alien").addEventListener("click", function(){updateWorkers(printer, this.id)})
         document.getElementById("remove-alien").addEventListener("click", function(){updateWorkers(printer, this.id)})
 
-    }else if(currentScreen == "biopsy_room"){
+    }else if(gm.currentScreen == "biopsy_room"){
         showBuildingDescription()
         let abductionButtonName = abduction.inProgress ? "Harvest" : "Abduct"
         upgradesHTML += `   
@@ -460,7 +456,7 @@ function drawBuildingScreen(){
             document.getElementById("biopsy_room-requirements").innerHTML = biopsyRoom.requirementsTable(false)
         })
         //redraw progress bar   
-    }else if(currentScreen == "nursery"){
+    }else if(gm.currentScreen == "nursery"){
         showBuildingDescription()
     }
 }
@@ -497,7 +493,7 @@ function upgradeBuilding(building){
 }
 
 function showBuildingDescription(b){
-    document.getElementById("building-description").innerHTML = buildingDescriptions[currentScreen]
+    document.getElementById("building-description").innerHTML = buildingDescriptions[gm.currentScreen]
 }
 
 function updateGameLog(m){
@@ -528,7 +524,7 @@ function start(){
     updateGameLog()
     getBuildings()
     resources.reload()
-    setInterval(update, updateMillis)
+    setInterval(update, gm.updateMillis)
 }
 
 function update(){
