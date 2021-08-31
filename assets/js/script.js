@@ -10,55 +10,139 @@ let buildingDescriptions = {
     biopsy_room:"Biopsy Room.<br><br>Start abduction missions to collect DNA samples from creatures around the planet.<br><br>Froongkian laws strongly advise against bonding with abductees, however it's not forbidden.",
 }
 
+let testmode = true;
+
 let resources = {
     energy: 0,
     energyConsumed: 0,
     metamaterials: 2000.0,
     dna: 0,
     availableAliens: 3,
+
+    reload: function(){
+        if (testmode) {
+            resources.energy = 5000
+            resources.metamaterials = 5000
+        }
+        document.getElementById("energy").innerText = this.energy - this.energyConsumed
+        document.getElementById("metamaterials").innerText = parseInt(this.metamaterials)
+        document.getElementById("dna").innerText = this.dna
+        document.getElementById("aliens").innerText = this.availableAliens
+    },
+    
+    recalculateEnergyOutput: function (){
+        this.energy = generator.resourceGeneration[generator.level]
+        this.reload()
+    },
+    
+    generateMetamaterials: function (){
+        let generated = printer.resourceGeneration[printer.level]*(printer.assignedWorkers+1)/1000*updateMillis
+        this.metamaterials += generated;
+        this.reload()
+    },
+    
+    incrementDNA: function (n){
+        this.dna += n
+        this.reload()
+    },
+    
+    spend: function (e, m, d){
+        this.energyConsumed += e
+        this.metamaterials -= m
+        this.dna -= d
+        this.reload()
+    },
+    
+
 }
 
 let currentScreen = ""
 
-let testmode = true;
-
 let updateMillis = 100;
 
-document.addEventListener("DOMContentLoaded", start())
+let abduction = {
+    inProgress: false,
+    progress: 0,
+    totalTime: 1,
+    currentPhase: 0,
+    maxYield: 5,
+    gameLog: "Abduction complete, head over to the biopsy room to harvest DNA samples",
+    phase: [
+        "No abduction in progress",
+        "Finding target to abduct...",
+        "Transporting target to biopsy room...",
+        "Sticking needles in places...",
+        "Complete, harvest DNA samples",
+    ],
 
+    abductionCheck: function(){
+        if(document.getElementById("abduct").innerText == "Harvest"){
+            this.harvest()
+            
+        }else{
+            this.begin()
+        }
+    },
 
+    begin: function(){
+        if(!this.inProgress){
+            this.inProgress = true
+            this.totalTime = biopsyRoom.resourceGeneration[biopsyRoom.level]
 
-function resourceRefresh(){
-    if (testmode) {
-        resources.energy = 5000
-        resources.metamaterials = 5000
+            console.log("abduct!" + this.totalTime)
+        }else{
+            console.log("Abduction already in progress")
+        }
+    },
+    
+    changeAbductionStatus: function(n) {
+        if (document.getElementById("abduction-stage")){
+            this.currentPhase = 0
+            document.getElementById("abduction-stage").innerText = this.phase[n]
+        }
+    },
+    
+    harvest: function(){
+        let harvestYield = Math.floor(Math.random() * this.maxYield)
+        resources.incrementDNA(harvestYield)
+        updateGameLog(`Harvest complete:<br><br>${harvestYield} DNA samples acquired.`)
+        this.reset()
+    },
+    
+    reset: function(){
+        this.inProgress = false;
+        this.progress = 0;
+        document.getElementById("abduction-progress-bar").style.width = "0%"
+        document.getElementById("abduct").innerText = "Abduct"
+        this.changeAbductionStatus(0)
+    },
+
+    calculateAbductionProgress: function(){
+        if (this.inProgress && this.progress < 100){
+
+            this.progress += 1000/updateMillis/this.totalTime
+
+            if (document.getElementById("abduction-progress-bar")){
+                document.getElementById("abduction-progress-bar").style.width = `${this.progress}%`
+            }
+            if(this.progress >= 100){
+                if (document.getElementById("abduct")){
+                    document.getElementById("abduct").innerText = "Harvest"
+                }
+                this.changeAbductionStatus(4)
+                updateGameLog(this.gameLog)
+        
+            }else if(this.progress >= 60){
+                this.changeAbductionStatus(3)
+            
+            }else if(this.progress >= 30){
+                this.changeAbductionStatus(2)
+            
+            }else if(this.progress >= 0){
+                this.changeAbductionStatus(1)
+            }
+        }
     }
-    document.getElementById("energy").innerText = resources.energy - resources.energyConsumed
-    document.getElementById("metamaterials").innerText = parseInt(resources.metamaterials)
-    document.getElementById("dna").innerText = resources.dna
-    document.getElementById("aliens").innerText = resources.availableAliens
-}
-
-function recalculateEnergyOutput(){
-    resources.energy = generator.resourceGeneration[generator.level]
-    resourceRefresh()
-}
-
-function generateMetamaterials(){
-    let generated = printer.resourceGeneration[printer.level]*(printer.assignedWorkers+1)/1000*updateMillis
-    resources.metamaterials += generated;
-    resourceRefresh()
-}
-
-function harvestDNA(n){
-    resources.dna += n
-}
-
-function spendResources(e, m, d){
-    resources.energyConsumed += e
-    resources.metamaterials -= m
-    resources.dna -= d
-    resourceRefresh()
 }
 
 class Building{
@@ -87,7 +171,7 @@ class Building{
         this.updateRequirements()
         if (this.level < this.maxLevel){
             if (this.enoughResources){
-                spendResources(this.upgradeRequirements[this.level].energy,
+                resources.spend(this.upgradeRequirements[this.level].energy,
                     this.upgradeRequirements[this.level].metamaterials,
                     this.upgradeRequirements[this.level].dna)
                 this.level++;
@@ -363,7 +447,7 @@ function drawBuildingScreen(){
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
         document.getElementById("abduction-progress-bar").style.width = `${abduction.progress}%`
         document.getElementById("abduct").addEventListener("click", function(){
-            abduct()
+            abduction.abductionCheck()
         })
 
         document.getElementById("biopsy_room-upgrade").addEventListener("click", function(){upgradeBuilding(biopsyRoom)})
@@ -395,7 +479,7 @@ function build(building){
         if (building.enoughResources){
             building.upgrade()
             building.showBuilding()
-            recalculateEnergyOutput()
+            resources.recalculateEnergyOutput()
             drawBuildingScreen()
             updateGameLog(building.buildMessage)
         }else{
@@ -408,7 +492,7 @@ function build(building){
 
 function upgradeBuilding(building){
     building.upgrade()
-    recalculateEnergyOutput()
+    resources.recalculateEnergyOutput()
     drawBuildingScreen()
 }
 
@@ -437,100 +521,17 @@ function redrawScreen(){
     drawBuildingScreen()
 }
 
-
-let abduction = {
-    inProgress: false,
-    progress: 0,
-    totalTime: biopsyRoom.resourceGeneration[biopsyRoom.level],
-    currentPhase: 0,
-    maxYield: 5,
-    gameLog: "Abduction complete, head over to the biopsy room to harvest DNA samples",
-    phase: [
-        "No abduction in progress",
-        "Finding target to abduct...",
-        "Transporting target to biopsy room...",
-        "Sticking needles in places...",
-        "Complete, harvest DNA samples",
-    ],
-}
-
-function changeAbductionStatus(t){
-    if (document.getElementById("abduction-stage")){
-        document.getElementById("abduction-stage").innerText = t
-    }
-}
-
-function abduct(){
-    if(document.getElementById("abduct").innerText == "Harvest"){
-        console.log("HARVEST SEASON")
-        //increment dna samples as per building class
-
-        document.getElementById("abduction-progress-bar").style.width = "0%"
-        document.getElementById("abduct").innerText = "Abduct"
-        abduction.currentPhase = 0
-        abduction.inProgress = false;
-        abduction.progress = 0;
-        changeAbductionStatus(abduction.phase[0])
-
-        let yield = Math.floor(Math.random() * abduction.maxYield)
-        harvestDNA(yield)
-        updateGameLog(`Harvest complete:<br><br>${yield} DNA samples acquired.`)
-        resourceRefresh()
-
-    }else{
-        if(!abduction.inProgress){
-            abduction.inProgress = true
-            abduction.totalTime = biopsyRoom.resourceGeneration[biopsyRoom.level]
-
-            console.log("abduct!" + abduction.totalTime)
-        }else{
-            console.log("Abduction already in progress")
-        }
-    }
-}
-
-function calculateAbductionProgress(){
-    abduction.progress += 1000/updateMillis/abduction.totalTime
-
-    if (document.getElementById("abduction-progress-bar")){
-        document.getElementById("abduction-progress-bar").style.width = `${abduction.progress}%`
-    }
-
- 
-    if(abduction.progress >= 100){
-        if (document.getElementById("abduct")){
-            document.getElementById("abduct").innerText = "Harvest"
-        }
-
-        abduction.currentPhase = 4
-        changeAbductionStatus(abduction.phase[abduction.currentPhase])
-        updateGameLog(abduction.gameLog)
-
-    }else if(abduction.progress >= 60){
-        abduction.currentPhase = 3
-        changeAbductionStatus(abduction.phase[abduction.currentPhase])
-    
-    }else if(abduction.progress >= 30){
-        abduction.currentPhase = 2
-        changeAbductionStatus(abduction.phase[abduction.currentPhase])
-    
-    }else if(abduction.progress >= 0){
-        abduction.currentPhase = 1
-        changeAbductionStatus(abduction.phase[abduction.currentPhase])
-    }
-}
+document.addEventListener("DOMContentLoaded", start())
 
 function start(){
     console.log("start")
     updateGameLog()
     getBuildings()
-    resourceRefresh()
+    resources.reload()
     setInterval(update, updateMillis)
 }
 
 function update(){
-    generateMetamaterials()
-    if (abduction.inProgress && abduction.progress < 100){
-        calculateAbductionProgress();
-    }
+    resources.generateMetamaterials()
+    abduction.calculateAbductionProgress()
 }
