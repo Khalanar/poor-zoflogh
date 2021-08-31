@@ -1,5 +1,5 @@
-export let gameManager = {
-    testmode: true,
-    currentScreen: "",
-    updateMillis: 100,
-}
+// export let gameManager = {
+//     testmode: true,
+//     currentScreen: "",
+//     updateMillis: 100,
+// }
