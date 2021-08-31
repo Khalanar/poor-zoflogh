@@ -8,7 +8,7 @@ let gameManager = {
 }
 
 let gameMessages = [
-    "Oh no... an alien has crashed into Planet Earth.<br><br> Poor Zoflogh.",
+    "Oh no... an alien has crashed into Planet Earth.<br><br>Zoflogh is alone and counting on you to get him out of this planet.<br><br><i>Flursh Energy Drinks</i> don't even deliver to this rock, poor Zoflogh...",
 ]
 
 let buildingDescriptions = {
@@ -17,6 +17,7 @@ let buildingDescriptions = {
     nursery: "Nursery and Incubator.<br><br>Froongkians edited their genome for asexual reproduction, leisurly sex is however encouraged as a bonding exercise.<br><br>Use DNA to lay eggs, and energy to incubate them.",
     printer: "A Recycler and 3D Printer by Uglog Industries.<br><br>Insert any type of matter to be recycled into metamaterial, the only material used in planet Froongk. For walls and electronics to clothing, it is incredibly poisonous, do not ingest.",
     biopsy_room:"Biopsy Room.<br><br>Start abduction missions to collect DNA samples from creatures around the planet.<br><br>Froongkian laws strongly advise against bonding with abductees, however it's not forbidden.",
+    radio:"A makeshift radio. Rudimentary and objectively ugly, but it works.<br><br>Get Zoflogh to send an S.O.S and hope for the best!!",
 }
 
 let resources = {
@@ -24,11 +25,11 @@ let resources = {
     energyConsumed: 0,
     metamaterials: 20.0,
     dna: 0,
-    availableAliens: 0,
+    availableAliens: 1,
 
     reload: function(){
         if (gameManager.testmode) {
-            this.energy = 5000
+            this.energy = 10000
             this.metamaterials = 5000
             this.availableAliens = 10
         }
@@ -254,6 +255,7 @@ class Building{
     showBuilding(){
         document.getElementById(this.name).classList.remove("disabled")
         document.getElementById(this.name).classList.add("enabled")
+
     }
 
     get buildMessage(){
@@ -284,7 +286,7 @@ let generator = new Building("generator", 0,
         {energy: 0, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
         {energy: 0, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
     ],  [0, 100, 500, 2000, 3000, 5000])
-generator.buildMessage = `You managed to salvage the ship's energy generator.<br><br>It's in a sorry state but it should get you up and running.`
+generator.buildMessage = `You managed to salvage the ship's energy generator.<br><br>It's in a sorry state but it's got enough juice to kickstart the <i>3D Recycler</i>`
 
 let biopsyRoom = new Building("biopsy_room", 0, 
 [
@@ -304,10 +306,10 @@ let nursery = new Building("nursery", 0,
     {energy: 1250, metamaterials: 3200, dna:0}, //Upgrade from 3 to 4
     {energy: 2000, metamaterials: 9000, dna:0}, //Upgrade from 4 to 5
 ])
-nursery.buildMessage = `Reproduce and conquer!`
+nursery.buildMessage = `Nursery built. No time to waste, get some eggs in the hatchery to grow your workforce!`
 
-let radio = new Building("nursery", 0, [{energy: 5000, metamaterials: 5000, dna:0}], 0)
-radio.buildMessage = `Reproduce and conquer!`
+let radio = new Building("radio", 0, [{energy: 5000, metamaterials: 5000, dna:0}], 0)
+radio.buildMessage = `Radio built! You're one step closer to getting your message out. Hopefully mother ship will pick your communication!`
 
 function getBuildings(){
     let buildings = document.getElementsByClassName("building");
@@ -469,6 +471,8 @@ function drawBuildingScreen(){
         })
         //redraw progress bar   
     }else if(gameManager.currentScreen == "nursery"){
+        showBuildingDescription()
+    }else if(gameManager.currentScreen == "radio"){
         showBuildingDescription()
     }
 }
