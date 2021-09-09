@@ -1,8 +1,5 @@
-// import {gameManager as gm} from "/assets/js/gameManager.js"
-// import {Building} from "/assets/js/building.js" in order to do this, need to pass resource object to the buildings
-
 let gameManager = {
-    testmode: false,
+    testmode: true,
     currentScreen: "",
     updateMillis: 100,
 }
@@ -31,6 +28,7 @@ let resources = {
         if (gameManager.testmode) {
             this.energy = 10000
             this.metamaterials = 5000
+            this.dna = 50
             this.availableAliens = 10
         }
         document.getElementById("energy").innerText = this.energy - this.energyConsumed
@@ -285,30 +283,30 @@ let generator = new Building("generator", 0,
         {energy: 0, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
         {energy: 0, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
         {energy: 0, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
-    ],  [0, 50, 500, 2000, 3000, 5000])
-generator.buildMessage = `You managed to salvage the ship's energy generator.<br><br>It's in a sorry state but it's got enough juice to kickstart the <i>3D Recycler</i>`
+    ],  [0, 50, 250, 1000, 2500, 10000])
+generator.buildMessage = `You managed to salvage the ship's energy generator.<br><br>It's in a sorry state but it has got enough juice to kickstart the <i>3D Recycler</i>`
 
 let biopsyRoom = new Building("biopsy_room", 0, 
 [
-    {energy: 200, metamaterials: 500, dna:0}, //Upgrade from 0 to 1
-    {energy: 400, metamaterials: 1000, dna:0}, //Upgrade from 1 to 2
-    {energy: 800, metamaterials: 2000, dna:0}, //Upgrade from 2 to 3
-    {energy: 1500, metamaterials: 5000, dna:0}, //Upgrade from 3 to 4
-    {energy: 2000, metamaterials: 10000, dna:0}, //Upgrade from 4 to 5
+    {energy: 200,   metamaterials: 500,      dna:0}, //Upgrade from 0 to 1
+    {energy: 400,   metamaterials: 1000,     dna:5}, //Upgrade from 1 to 2
+    {energy: 800,   metamaterials: 2000,     dna:5}, //Upgrade from 2 to 3
+    {energy: 1500,  metamaterials: 5000,     dna:5}, //Upgrade from 3 to 4
+    {energy: 2000,  metamaterials: 10000,    dna:5}, //Upgrade from 4 to 5
 ], [999, 30, 25, 15, 10, 5])
 biopsyRoom.buildMessage = `Sweet biopsy room built, go abduce some stuff!`
 
 let nursery = new Building("nursery", 0, 
 [
-    {energy: 500, metamaterials: 600, dna:0}, //Upgrade from 0 to 1
-    {energy: 650, metamaterials: 1000, dna:0}, //Upgrade from 1 to 2
-    {energy: 1000, metamaterials: 1500, dna:0}, //Upgrade from 2 to 3
-    {energy: 1250, metamaterials: 3200, dna:0}, //Upgrade from 3 to 4
-    {energy: 2000, metamaterials: 9000, dna:0}, //Upgrade from 4 to 5
+    {energy: 500,   metamaterials: 600,     dna:5}, //Upgrade from 0 to 1
+    {energy: 650,   metamaterials: 1000,    dna:5}, //Upgrade from 1 to 2
+    {energy: 1000,  metamaterials: 1500,    dna:5}, //Upgrade from 2 to 3
+    {energy: 1250,  metamaterials: 3200,    dna:5}, //Upgrade from 3 to 4
+    {energy: 2000,  metamaterials: 9000,    dna:5}, //Upgrade from 4 to 5
 ])
 nursery.buildMessage = `Nursery built. No time to waste, get some eggs in the hatchery to grow your workforce!`
 
-let radio = new Building("radio", 0, [{energy: 5000, metamaterials: 5000, dna:0}], 0)
+let radio = new Building("radio", 0, [{energy: 5000, metamaterials: 5000, dna:20}], 0)
 radio.buildMessage = `Radio built! You're one step closer to getting your message out. Hopefully mother ship will pick your communication!`
 
 function getBuildings(){
@@ -354,6 +352,26 @@ function buildIcons(building, name){
         document.getElementById(buttonId).addEventListener("mouseenter", function(){ document.getElementById(reqId).innerHTML = building.requirementsTable(true) })
         document.getElementById(buttonId).addEventListener("mouseleave", function(){ document.getElementById(reqId).innerHTML = building.requirementsTable(false) })
     }
+}
+
+function calculateEggProgress(){
+    let progress = 1
+
+    return progress
+}
+
+function drawCircle(){
+    let origin = 0
+    let end = calculateEggProgress()
+
+    let c = document.getElementById("hatchery-button-1");
+    let ctx = c.getContext("2d");
+    ctx.rotate(270 * (Math.PI / 180));
+    ctx.beginPath();
+    ctx.arc(-35, 35, 25, origin * Math.PI, end * Math.PI);
+    ctx.lineWidth = 7
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.3)";
+    ctx.stroke();
 }
 
 function drawBuildingScreen(){
@@ -426,6 +444,9 @@ function drawBuildingScreen(){
             <p>${printer.resourceGeneration[printer.level]*(printer.assignedWorkers+1)} p/s</p>
         </div>
         `
+
+        // All these events can be refactored to be reused in all screens
+
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
         document.getElementById("printer-upgrade").addEventListener("click", function(){upgradeBuilding(printer)})
         
@@ -472,6 +493,17 @@ function drawBuildingScreen(){
         //redraw progress bar   
     }else if(gameManager.currentScreen == "nursery"){
         showBuildingDescription()
+        // <div class="sq-button"></div>
+        upgradesHTML += `   
+        <div class="sq-button">      
+        <canvas id="hatchery-button-1">
+    
+        </div>
+        `
+        document.getElementById("building-upgrades").innerHTML = upgradesHTML
+        document.getElementById("hatchery-button-1").addEventListener("click", function(){drawCircle()})
+
+
     }else if(gameManager.currentScreen == "radio"){
         showBuildingDescription()
     }
@@ -533,8 +565,6 @@ function redrawScreen(){
     drawBuildingScreen()
 }
 
-document.addEventListener("DOMContentLoaded", start())
-
 function setHelpHover(){
     document.getElementById("help-icon").addEventListener("mouseenter", function(){
         document.getElementById("help-card").classList.add("enabled")
@@ -544,8 +574,9 @@ function setHelpHover(){
         document.getElementById("help-card").classList.add("disabled")
         document.getElementById("help-card").classList.remove("enabled")
     })
-
 }
+
+document.addEventListener("DOMContentLoaded", start())
 
 function start(){
     console.log("start")
