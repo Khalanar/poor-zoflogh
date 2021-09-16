@@ -1,5 +1,5 @@
 let gameManager = {
-    testmode: true,
+    testmode: false,
     currentScreen: "",
     updateMillis: 100,
 }
@@ -48,15 +48,15 @@ let resources = {
         this.reload()
     },
     
-    incrementDNA: function (n){
+    addDNA: function (n){
         this.dna += n
         this.reload()
     },
     
-    spend: function (e, m, d){
-        this.energyConsumed += e
-        this.metamaterials -= m
-        this.dna -= d
+    spend: function (energy, metamaterials, dna){
+        this.energyConsumed += energy
+        this.metamaterials -= metamaterials
+        this.dna -= dna
         this.reload()
     },
 }
@@ -105,7 +105,7 @@ let abduction = {
     
     harvest: function(){
         let harvestYield = Math.floor(Math.random() * this.maxYield)
-        resources.incrementDNA(harvestYield)
+        resources.addDNA(harvestYield)
         updateGameLog(`Harvest complete:<br><br>${harvestYield} DNA samples acquired.`)
         this.reset()
     },
@@ -542,6 +542,7 @@ function upgradeBuilding(building){
 
 function showBuildingDescription(b){
     document.getElementById("building-description").innerHTML = buildingDescriptions[gameManager.currentScreen]
+    // document.getElementById("building-description").innerHTML = b.description
 }
 
 function updateGameLog(m){
