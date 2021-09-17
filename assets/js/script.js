@@ -1,7 +1,7 @@
 let gameManager = {
     testmode: true,
     currentScreen: "",
-    updateMillis: 100,
+    updateMillis: 10,
 }
 
 let gameMessages = [
@@ -120,7 +120,7 @@ let abduction = {
 
     calculateAbductionProgress: function(){
         if (this.inProgress && this.progress < 100){
-            this.progress += 1000/gameManager.updateMillis/this.totalTime
+            this.progress += 1000/gameManager.updateMillis/this.totalTime/100
 
             if (document.getElementById("abduction-progress-bar")){
                 document.getElementById("abduction-progress-bar").style.width = `${this.progress}%`
@@ -354,25 +354,63 @@ function buildIcons(building, name){
     }
 }
 
-function calculateEggProgress(){
-    let progress = 1
+let hatchery = {
+    running: false,
+    totalTime: 10,
+    currentProgress: 0,
+    dnaCost: 10,
 
-    return progress
+    start: function(){
+        if (!this.running){
+            console.log("Hatchery Start")
+            this.running = true;
+            this.currentProgress = 0;
+        }else{
+            if (this.currentProgress > 2){
+                this.reset()
+            }
+        }
+    },
+    
+    getProgress: function(){
+        if (this.running){
+            this.currentProgress += (gameManager.updateMillis / 1000) / this.totalTime 
+ 
+        }
+        // this.currentProgress += 1/100
+        return this.currentProgress
+    },
+
+    reset: function() {
+        console.log("RESET")
+        this.running = false
+        this.currentProgress = 0
+    },
+
+    drawProgress: function(){
+        if (document.getElementById("hatchery-button-1")){
+        
+            let c = document.getElementById("hatchery-button-1");
+            let ctx = c.getContext("2d");
+
+            ctx.clearRect(0, 0, c.width, c.height);
+            ctx.rotate(270 * (Math.PI / 180));
+            ctx.beginPath();
+            ctx.arc(-35, 35, 25, 0 * Math.PI, this.getProgress() * Math.PI);
+            console.log(this.getProgress() * Math.PI)
+            ctx.lineWidth = 7
+            let col = Math.floor(Math.random() * 255)
+            let col2 = Math.floor(Math.random() * 255)
+            ctx.strokeStyle = `rgba(${col}, ${col2}, 0, 0.3)`;
+            ctx.stroke();
+            
+        }
+    }
 }
 
-function drawCircle(){
-    let origin = 0
-    let end = calculateEggProgress()
 
-    let c = document.getElementById("hatchery-button-1");
-    let ctx = c.getContext("2d");
-    ctx.rotate(270 * (Math.PI / 180));
-    ctx.beginPath();
-    ctx.arc(-35, 35, 25, origin * Math.PI, end * Math.PI);
-    ctx.lineWidth = 7
-    ctx.strokeStyle = "rgba(0, 0, 0, 0.3)";
-    ctx.stroke();
-}
+
+
 
 function drawBuildingScreen(){
     let upgradesHTML = ""
@@ -501,8 +539,10 @@ function drawBuildingScreen(){
         </div>
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
-        document.getElementById("hatchery-button-1").addEventListener("click", function(){drawCircle()})
-
+        document.getElementById("hatchery-button-1").addEventListener("click", function(){
+            hatchery.start()
+        })
+        
 
     }else if(gameManager.currentScreen == "radio"){
         showBuildingDescription()
@@ -590,4 +630,5 @@ function start(){
 function update(){
     resources.generateMetamaterials()
     abduction.calculateAbductionProgress()
+    hatchery.drawProgress()
 }
