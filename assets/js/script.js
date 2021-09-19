@@ -5,13 +5,13 @@ let gameManager = {
 }
 
 let gameMessages = [
-    "Oh no... an alien has crashed into Planet Earth.<br><br>Zoflogh is alone and counting on you to get him out of this planet.<br><br><i>Flursh Energy Drinks</i> don't even deliver to this rock, poor Zoflogh...",
+    "Oh no... an alien has crashed into Planet Earth.<br><br>Zoflogh is counting on you to get him out of this planet.<br><br><i>Poor Zoflogh...",
 ]
 
 let buildingDescriptions = {
-    ship: "Zoflogh's crashed ship.<br><br>Luckily some parts can be salvaged with enough creativity and spare time.<br><br>You may need to access earthen materials to get out of here, build your way out of this planet.",
-    generator: "Solar Powered Generator.<br><br>Salvaged off some spare parts of Zoflogh's ship, this generator transforms photons emitted by the closest star into energy.<br><br>Can be upgraded for better energy output",
-    nursery: "Nursery and Incubator.<br><br>Froongkians edited their genome for asexual reproduction, leisurly sex is however encouraged as a bonding exercise.<br><br>Use DNA to lay eggs, and energy to incubate them.",
+    ship: "Zoflogh's crashed ship.<br><br>Luckily some parts can be salvaged with creativity and spare time.<br><br>Build your way out of this planet!",
+    generator: "Solar Power Generator.<br><br>Salvaged off some spare parts of Zoflogh's ship, this generator transforms photons into energy.<br><br>Can be upgraded for better energy output",
+    nursery: "Nursery and Incubator.<br><br>Froongkians edited their genome for asexual reproduction centuries ago<br><br>Use DNA to lay eggs, and energy to incubate them.",
     printer: "A Recycler and 3D Printer by Uglog Industries.<br><br>Insert any type of matter to be recycled into metamaterial, the only material used in planet Froongk. For walls and electronics to clothing, it is incredibly poisonous, do not ingest.",
     biopsy_room:"Biopsy Room.<br><br>Start abduction missions to collect DNA samples from creatures around the planet.<br><br>Froongkian laws strongly advise against bonding with abductees, however it's not forbidden.",
     radio:"A makeshift radio. Rudimentary and objectively ugly, but it works.<br><br>Get Zoflogh to send an S.O.S and hope for the best!!",
@@ -20,16 +20,13 @@ let buildingDescriptions = {
 let resources = {
     energy: 0,
     energyConsumed: 0,
-    metamaterials: 20.0,
+    metamaterials: 30.0,
     dna: 0,
     availableAliens: 1,
 
     reload: function(){
         if (gameManager.testmode) {
-            this.energy = 10000
-            this.metamaterials = 5000
-            this.dna = 50
-            this.availableAliens = 10
+            this.setTestModeValues()
         }
         document.getElementById("energy").innerText = this.energy - this.energyConsumed
         document.getElementById("metamaterials").innerText = parseInt(this.metamaterials)
@@ -37,6 +34,13 @@ let resources = {
         document.getElementById("aliens").innerText = this.availableAliens
     },
     
+    setTestModeValues: function(){
+        this.energy = 10000
+        this.metamaterials = 5000
+        this.dna = 50
+        this.availableAliens = 10
+    },
+
     recalculateEnergyOutput: function (){
         this.energy = generator.resourceGeneration[generator.level]
         this.reload()
@@ -278,12 +282,12 @@ printer.buildMessage = `With what little was to be found in the cargo bay, you m
 Upgrade building or assign an idle alien to this device to increase the output.`
 
 let generator = new Building("generator", 0,
-    [   {energy: 0, metamaterials: 10, dna:0}, //Upgrade from 0 to 1
-        {energy: 0, metamaterials: 50, dna:0}, //Upgrade from 1 to 2
+    [   {energy: 0, metamaterials: 5, dna:0}, //Upgrade from 0 to 1
+        {energy: 0, metamaterials: 15, dna:0}, //Upgrade from 1 to 2
         {energy: 0, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
         {energy: 0, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
         {energy: 0, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
-    ],  [0, 50, 250, 1000, 2500, 10000])
+    ],  [0, 10, 50, 500, 1000, 5000])
 generator.buildMessage = `You managed to salvage the ship's energy generator.<br><br>It's in a sorry state but it has got enough juice to kickstart the <i>3D Recycler</i>`
 
 let biopsyRoom = new Building("biopsy_room", 0, 
@@ -408,10 +412,6 @@ let hatchery = {
     }
 }
 
-
-
-
-
 function drawBuildingScreen(){
     let upgradesHTML = ""
     console.log("draw buildings")
@@ -420,10 +420,11 @@ function drawBuildingScreen(){
         showBuildingDescription()
 
         buildIcons(generator,   "generator")
-        if (generator.level > 0){   buildIcons(printer,     "printer") }
-        if (printer.level > 0){     buildIcons(biopsyRoom,  "biopsy_room")}
-        if (biopsyRoom.level > 0){  buildIcons(nursery,     "nursery")}
-        if (nursery.level > 0){     buildIcons(radio,     "radio")}
+        //REQUIREMENTS This code needs to be refactored
+        if (generator.level > 1){   buildIcons(printer,     "printer") }
+        if (printer.level > 1){     buildIcons(biopsyRoom,  "biopsy_room")}
+        if (biopsyRoom.level > 1){  buildIcons(nursery,     "nursery")}
+        if (nursery.level > 1){     buildIcons(radio,     "radio")}
         
 
     }else if(gameManager.currentScreen == "generator"){
