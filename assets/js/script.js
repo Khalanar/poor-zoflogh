@@ -4,12 +4,56 @@ let gameManager = {
     updateMillis: 10,
 }
 
+let saveData = {
+    // buildingLevel: {
+        // "generator": 1,
+        // "printer": 1,
+        // "biopsyRoom": 1,
+        // "nursery": 1,
+        // "radio": 1,
+    // },
+}
+
 function saveGame(){
     //Save object to json in localstorage
+    if (Object.keys(saveData).length > 0){
+        console.log("saveData is not empty")
+        localStorage.setItem("save_data", JSON.stringify(saveData))
+        console.log(`Game saved`)
+    }else{
+        console.log("saveData is empty")
+    }
+
 }
 
 function loadGame(){
-    //get json in localstorage if any and fill up certain globals
+    if (Object.keys(saveData).length <= 0){
+        saveData.buildingLevel = {
+            "generator": 1,
+            "printer": 1,
+            "biopsyRoom": 1,
+            "nursery": 1,
+            "radio": 1,
+        }
+        saveGame()
+        console.log("GAMEDATA WRITTEN")
+    }else{
+        //get json in localstorage if any and fill up certain globals
+        saveData = JSON.parse(localStorage.getItem("save_data"))
+        console.log("GAMEDATA LOADED")
+    }
+
+    generator.setLevel(saveData.buildingLevel["generator"])
+    printer.setLevel(saveData.buildingLevel["printer"])
+    biopsyRoom.setLevel(saveData.buildingLevel["biopsyRoom"])
+    nursery.setLevel(saveData.buildingLevel["nursery"])
+    radio.setLevel(saveData.buildingLevel["radio"])
+
+}
+
+function resetGameData(){
+    console.log("RESET")
+    localStorage.clear()
 }
 
 let gameMessages = [
@@ -278,6 +322,13 @@ class Building{
             this.#buildMessage = m;
         }
     }
+
+    setLevel(level){
+        this.level = level;
+        console.log("set level")
+ 
+        this.showBuilding()
+    }
 }
 
 let printer = new Building("printer", 0,
@@ -318,6 +369,10 @@ let nursery = new Building("nursery", 0,
     {energy: 2000,  metamaterials: 9000,    dna:5}, //Upgrade from 4 to 5
 ])
 nursery.buildMessage = `Nursery built. No time to waste, get some eggs in the hatchery to grow your workforce!`
+
+let radio = new Building("radio", 0, [{energy: 5000, metamaterials: 5000, dna:20}], 0)
+radio.buildMessage = `Radio built! You're one step closer to getting your message out. Hopefully mother ship will pick your communication!`
+
 
 let hatchery = {
     running: false,
@@ -364,15 +419,13 @@ let hatchery = {
             ctx.lineWidth = 7
             // let col = Math.floor(Math.random() * 255)
             // let col2 = Math.floor(Math.random() * 255)
-            ctx.strokeStyle = `rgba(${col}, ${col2}, 0, 0.3)`;
+            // ctx.strokeStyle = `rgba(${col}, ${col2}, 0, 0.3)`;
             ctx.stroke();
         }
     }
 }
 
 
-let radio = new Building("radio", 0, [{energy: 5000, metamaterials: 5000, dna:20}], 0)
-radio.buildMessage = `Radio built! You're one step closer to getting your message out. Hopefully mother ship will pick your communication!`
 
 function getBuildings(){
     let buildings = document.getElementsByClassName("building");
@@ -639,8 +692,16 @@ function setHelpHover(){
 
 document.addEventListener("DOMContentLoaded", start())
 
+function setupButtons(){
+    document.getElementById("reset-data").addEventListener("click", function(){
+        resetGameData()
+    })
+}
+
 function start(){
     console.log("start")
+    loadGame()
+    setupButtons()
     setHelpHover()
     updateGameLog()
     getBuildings()

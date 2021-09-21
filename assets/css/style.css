@@ -28,6 +28,14 @@ h1 {
     height:37px;
 }
 
+#reset-data{
+    position: absolute;
+    font-size: 0.8em;
+    right:10px;
+    top: 10px;
+  
+}
+
 .far{
     font-size: 20px;
     margin: 10px 0px;
