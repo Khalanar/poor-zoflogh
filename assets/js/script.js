@@ -318,7 +318,7 @@ class Building{
             resources.availableAliens ++
             // updateGameLog(`An alien left the ${this.name}<br><br>Reassign it soon!`)
         }else{
-            updateGameLog(`Noone is working at the ${this.name}`)
+            updateGameLog(`No one is working at the ${this.name}`)
         }
     }
 
@@ -719,19 +719,21 @@ function showBuildingDescription(b){
 }
 
 function updateGameLog(m){
-    let msgLog = ""
-    if (m){
-        gameMessages.unshift(m)
+    if (m != gameMessages[0]){
+        let msgLog = ""
+        if (m){
+            gameMessages.unshift(m)
+        }
+        let index = 0
+        for (let msg of gameMessages){
+            let color = index == 0 ? "highlight" : "normal";
+            msgLog += `
+            <p class="${color}">${msg}</p><hr>
+            `
+            index++
+        }
+        document.getElementById("game-log").innerHTML = msgLog
     }
-    let index = 0
-    for (let msg of gameMessages){
-        let color = index == 0 ? "highlight" : "normal";
-        msgLog += `
-        <p class="${color}">${msg}</p><hr>
-        `
-        index++
-    }
-    document.getElementById("game-log").innerHTML = msgLog
 }
 
 function redrawScreen(){
