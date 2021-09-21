@@ -258,7 +258,7 @@ class Building{
 
     requirementsTable(c){
         this.updateRequirements()
-        if(this.level + 1 < this.maxLevel){
+        if(this.level + 1 <= this.maxLevel){
             let reqEnergy = this.upgradeRequirements[this.level].energy
             let reqMetamaterials = this.upgradeRequirements[this.level].metamaterials
             let reqDNA = this.upgradeRequirements[this.level].dna
@@ -417,7 +417,9 @@ let hatchery = {
             this.currentProgress += (gameManager.updateMillis/1000) / this.totalTime * 2
 
             if(this.currentProgress > 2){
-                document.getElementById("hatchery-canvas-1").style.backgroundImage="url('assets/images/egg-ready.svg')"
+                if (document.getElementById("hatchery-canvas-1")){
+                    document.getElementById("hatchery-canvas-1").style.backgroundImage="url('assets/images/egg-ready.svg')"
+                }
             }
         }
         return this.currentProgress
@@ -555,7 +557,7 @@ function drawBuildingScreen(){
             <div id="printer-requirements" class="requirements">${printer.requirementsTable(false)}</div>
         </div>
         <div id="assigned-aliens">
-            <div>
+            <div id="assigned-aliens-board">
                 ${alienicon}
             </div>
             <div>

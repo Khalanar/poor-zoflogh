@@ -297,6 +297,7 @@ i{
     transition: all 0.1s;
     border: 1px solid rgb(133, 133, 133);
     border-radius: 5px;
+    text-align: center;
 }
 
 .assign-button:hover{
@@ -310,13 +311,17 @@ i{
    grid-template-columns: 80% auto;
 }
 
+#assigned-aliens-board{
+    margin: 7px 10px;
+}
+
 .alien-icon{
     display: inline-block;
     width: 25px;
     height: 25px;
     /* background-color: rgba(0, 0, 0, 0.185); */
     border-radius: 50%;
-    margin: 5px;
+    margin: 2px;
 }
 
 .red{
