@@ -360,7 +360,7 @@ let generator = new Building("generator", 0,
         {energy: 0, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
         {energy: 0, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
         {energy: 0, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
-    ],  [0, 10, 50, 500, 1000, 5000])
+    ],  [0, 10, 50, 500, 2000, 7500])
 generator.buildMessage = `You managed to salvage the ship's energy generator.<br><br>It's in a sorry state but it has got enough juice to kickstart the <i>3D Recycler</i>`
 
 let biopsyRoom = new Building("biopsy_room", 0, 
@@ -406,6 +406,7 @@ let hatchery = {
             if (this.currentProgress > 2){
                 this.reset()
                 resources.addAlien()
+                updateGameLog("An egg has hatched! Zoflogh has a new companion!")
             }
         }
     },
@@ -433,14 +434,13 @@ let hatchery = {
             context.beginPath();
             context.arc(-75, 75, 55, 0 * Math.PI, this.getProgress() * Math.PI);
 
-            context.lineWidth = 12
-            context.strokeStyle = "rgba(0, 0, 0, 0.2)";
+            context.lineWidth = 15
+            // context.strokeStyle = "rgba(0, 0, 0, 0.2)";
+            context.strokeStyle = "rgb(152, 207, 195)";
             context.stroke();
         }
     }
 }
-
-
 
 function getBuildings(){
     let buildings = document.getElementsByClassName("building");
@@ -489,6 +489,7 @@ function buildIcons(building, name){
 
 function drawBuildingScreen(){
     let upgradesHTML = ""
+    let alienicon =""
     console.log("draw buildings")
     document.getElementById("building-upgrades").innerHTML = ""
     if (gameManager.currentScreen == "ship"){
@@ -535,18 +536,29 @@ function drawBuildingScreen(){
     
     }else if(gameManager.currentScreen == "printer"){
         showBuildingDescription()
+
+        for (let i=0; i<printer.assignedWorkers; i++){
+            alienicon += `<div class="alien-icon"></div>`
+        }
+
+        // src="./assets/images/assign_alien.svg"
         upgradesHTML += `   
         <div>
             <img id="printer-upgrade" class="build-button" src="./assets/images/printer.svg" alt="">
             <div id="printer-requirements">${printer.requirementsTable(false)}</div>
         </div>
-        <div>
-            <img id="assign-alien" class="build-button" src="./assets/images/assign_alien.svg" alt="">
+        <div id="assigned-aliens">
+            <div>
+                ${alienicon}
+            </div>
+            <div>
+                <div id="assign-alien" class="assign-button" alt="">++</div>
+                <div id="remove-alien" class="assign-button" alt="">--</div>
+            </div>
         </div>
-        <div>
-            <img id="remove-alien" class="build-button" src="./assets/images/remove_alien.svg" alt="">
-        </div>
-    
+
+   
+   
         <div class="double-col-span">
             <p>Base output:</p>
             <p>${printer.resourceGeneration[printer.level]}</p>
@@ -618,7 +630,7 @@ function drawBuildingScreen(){
         <canvas id="hatchery-canvas-1"></canvas>
      
         </div>
-        <p>100 DNA</p> 
+        <p id="egg-requirements">${hatchery.dnaCost} DNA</p> 
         </div>
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML

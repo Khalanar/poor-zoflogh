@@ -145,6 +145,10 @@ h1 {
 
 }
 
+#egg-requirements{
+    margin: 13px 30px;
+}
+
 #abduction-progress-container{
     overflow: hidden;
     height: 12px;
@@ -271,6 +275,36 @@ h1 {
 .build-button:hover{
     /* height: 80px; */
     box-shadow: 1px 2px 3px -1px rgb(120, 120, 120);
+}
+
+.assign-button{
+    display: block;
+    margin: 10px auto;
+    height: 20px;
+    width: 35px;
+    transition: all 0.1s;
+    border: 1px solid rgb(133, 133, 133);
+    border-radius: 5px;
+}
+
+.assign-button:hover{
+    box-shadow: 1px 2px 3px -1px rgb(120, 120, 120);
+}
+
+
+#assigned-aliens{
+   grid-column: span 2;
+   display: grid;
+   grid-template-columns: 80% auto;
+}
+
+.alien-icon{
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    background-color: rgba(0, 0, 0, 0.185);
+    border-radius: 50%;
+    margin: 5px;
 }
 
 .red{
