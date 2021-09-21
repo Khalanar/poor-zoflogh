@@ -75,13 +75,10 @@ let resources = {
     energy: 0,
     energyConsumed: 0,
     metamaterials: 30.0,
-    dna: 0,
+    dna: 50,
     availableAliens: 1,
 
     reload: function(){
-        if (gameManager.testmode) {
-            this.setTestModeValues()
-        }
         document.getElementById("energy").innerText = this.energy - this.energyConsumed
         document.getElementById("metamaterials").innerText = parseInt(this.metamaterials)
         document.getElementById("dna").innerText = this.dna
@@ -93,6 +90,7 @@ let resources = {
         this.metamaterials = 5000
         this.dna = 50
         this.availableAliens = 10
+        this.reload()
     },
 
     recalculateEnergyOutput: function (){
@@ -110,13 +108,28 @@ let resources = {
         this.dna += n
         this.reload()
     },
+
+    useDNA: function (n){
+        console.log(`Current DNA: ${this.dna} | spend: ${n}`)
+        this.dna -= n
+        console.log(`Current DNA: ${this.dna}`)
+        this.reload()
+    },
     
+    addAlien(){
+        this.availableAliens ++
+        this.reload()
+    },
+
     spend: function (energy, metamaterials, dna){
         this.energyConsumed += energy
         this.metamaterials -= metamaterials
         this.dna -= dna
         this.reload()
     },
+
+
+
 }
 
 let abduction = {
@@ -327,7 +340,6 @@ class Building{
 
     setLevel(level){
         this.level = level;
-        console.log("set level")
         if (level > 0) this.showBuilding()
     }
 }
@@ -368,7 +380,7 @@ let nursery = new Building("nursery", 0,
     {energy: 1000,  metamaterials: 1500,    dna:5}, //Upgrade from 2 to 3
     {energy: 1250,  metamaterials: 3200,    dna:5}, //Upgrade from 3 to 4
     {energy: 2000,  metamaterials: 9000,    dna:5}, //Upgrade from 4 to 5
-])
+], [999, 20, 15, 10, 5, 2, 1])
 nursery.buildMessage = `Nursery built. No time to waste, get some eggs in the hatchery to grow your workforce!`
 
 let radio = new Building("radio", 0, [{energy: 5000, metamaterials: 5000, dna:20}], 0)
@@ -383,21 +395,25 @@ let hatchery = {
 
     start: function(){
         if (!this.running){
-            console.log("Hatchery Start")
-            this.running = true;
-            this.currentProgress = 0;
+            if (resources.dna - this.dnaCost >= 0){
+                resources.useDNA(this.dnaCost)
+                resources.dna
+                this.totalTime = nursery.resourceGeneration[nursery.level]
+                this.running = true;
+                this.currentProgress = 0;
+            }
         }else{
             if (this.currentProgress > 2){
                 this.reset()
+                resources.addAlien()
             }
         }
     },
     
     getProgress: function(){
         if (this.running){
-            this.currentProgress += (gameManager.updateMillis / 1000) / this.totalTime 
+            this.currentProgress += (gameManager.updateMillis/1000) / this.totalTime * 2
         }
-        // this.currentProgress += 1/100
         return this.currentProgress
     },
 
@@ -408,20 +424,18 @@ let hatchery = {
     },
 
     drawProgress: function(){
-        if (document.getElementById("hatchery-button-1")){
-            let c = document.getElementById("hatchery-button-1");
-            let ctx = c.getContext("2d");
+        if (document.getElementById("hatchery-canvas-1")){
+            let canvas = document.getElementById("hatchery-canvas-1");
+            let context = canvas.getContext("2d");
 
-            ctx.clearRect(0, 0, c.width, c.height);
-            ctx.rotate(270 * (Math.PI / 180));
-            ctx.beginPath();
-            ctx.arc(-35, 35, 25, 0 * Math.PI, this.getProgress() * Math.PI);
-            console.log(this.getProgress() * Math.PI)
-            ctx.lineWidth = 7
-            // let col = Math.floor(Math.random() * 255)
-            // let col2 = Math.floor(Math.random() * 255)
-            // ctx.strokeStyle = `rgba(${col}, ${col2}, 0, 0.3)`;
-            ctx.stroke();
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.rotate(270 * (Math.PI / 180));
+            context.beginPath();
+            context.arc(-75, 75, 55, 0 * Math.PI, this.getProgress() * Math.PI);
+
+            context.lineWidth = 12
+            context.strokeStyle = "rgba(0, 0, 0, 0.2)";
+            context.stroke();
         }
     }
 }
@@ -482,9 +496,9 @@ function drawBuildingScreen(){
 
         buildIcons(generator,   "generator")
         //REQUIREMENTS This code needs to be refactored
-        if (generator.level > 1){   buildIcons(printer,     "printer") }
-        if (printer.level > 1){     buildIcons(biopsyRoom,  "biopsy_room")}
-        if (biopsyRoom.level > 1){  buildIcons(nursery,     "nursery")}
+        if (generator.level > 1){   buildIcons(printer,   "printer") }
+        if (printer.level > 1){     buildIcons(biopsyRoom,"biopsy_room")}
+        if (biopsyRoom.level > 1){  buildIcons(nursery,   "nursery")}
         if (nursery.level > 1){     buildIcons(radio,     "radio")}
         
 
@@ -598,8 +612,13 @@ function drawBuildingScreen(){
         <img id="nursery-upgrade" class="build-button" src="./assets/images/nursery.svg" alt="">
         <div id="nursery-requirements">${nursery.requirementsTable(false)}</div>
         </div>
-        <div class="sq-button">      
-        <canvas id="hatchery-button-1">
+        <div>
+        <div class="sq-button">     
+        
+        <canvas id="hatchery-canvas-1"></canvas>
+     
+        </div>
+        <p>100 DNA</p> 
         </div>
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
@@ -607,14 +626,15 @@ function drawBuildingScreen(){
         document.getElementById("nursery-upgrade").addEventListener("click", function(){upgradeBuilding(nursery)})
         
         document.getElementById("nursery-upgrade").addEventListener("mouseenter", function(){
+            console.log("mouseenter nursery")
             document.getElementById("nursery-requirements").innerHTML = nursery.requirementsTable(true)
+            
         })
         document.getElementById("nursery-upgrade").addEventListener("mouseleave", function(){
             document.getElementById("nursery-requirements").innerHTML = nursery.requirementsTable(false)
         })
 
-        document.getElementById("building-upgrades").innerHTML = upgradesHTML
-        document.getElementById("hatchery-button-1").addEventListener("click", function(){
+        document.getElementById("hatchery-canvas-1").addEventListener("click", function(){
             hatchery.start()
         })
 
@@ -706,8 +726,12 @@ function start(){
     setHelpHover()
     updateGameLog()
     getBuildings()
-    resources.reload()
     setInterval(update, gameManager.updateMillis)
+
+    if (gameManager.testmode) {
+        resources.setTestModeValues()
+        console.log(`Test Mode ON: Resources reset `)
+    }
 }
 
 function update(){

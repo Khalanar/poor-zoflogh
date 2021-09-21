@@ -140,6 +140,11 @@ h1 {
     
 }
 
+#hatchery-canvas-1{
+    height: 70px;
+
+}
+
 #abduction-progress-container{
     overflow: hidden;
     height: 12px;
