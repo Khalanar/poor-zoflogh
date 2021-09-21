@@ -75,7 +75,7 @@ let resources = {
     energy: 0,
     energyConsumed: 0,
     metamaterials: 30.0,
-    dna: 50,
+    dna: 0,
     availableAliens: 1,
 
     reload: function(){
@@ -438,7 +438,7 @@ let hatchery = {
             // context.drawImage("/assets/images/egg.svg", 0, 0)
             context.rotate(270 * (Math.PI / 180));
             context.beginPath();
-            context.arc(-75.5, 75.5, 65, 0 * Math.PI, this.getProgress() * Math.PI);
+            context.arc(-75, 75, 60, 0 * Math.PI, this.getProgress() * Math.PI);
 
             context.lineWidth = 15
             // context.strokeStyle = "rgba(0, 0, 0, 0.2)";
@@ -637,13 +637,30 @@ function drawBuildingScreen(){
         
      
         </div>
-        <p id="egg-requirements">${hatchery.dnaCost} DNA</p> 
+        <p id="egg-requirements"><i class="fas fa-dna"></i> ${hatchery.dnaCost}</p> 
         </div>
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
 
         document.getElementById("nursery-upgrade").addEventListener("click", function(){upgradeBuilding(nursery)})
         
+        document.getElementById("hatchery-canvas-1").addEventListener("mouseenter", function(){
+            if (hatchery.dnaCost < resources.dna){
+                document.getElementById("egg-requirements").classList.add("green")
+                document.getElementById("egg-requirements").classList.remove("red")
+           
+            }else{
+                document.getElementById("egg-requirements").classList.add("red")
+                document.getElementById("egg-requirements").classList.remove("green")
+           
+            }
+        })
+        document.getElementById("hatchery-canvas-1").addEventListener("mouseleave", function(){
+            document.getElementById("egg-requirements").classList.remove("red")
+            document.getElementById("egg-requirements").classList.remove("green")
+        
+        })
+
         document.getElementById("nursery-upgrade").addEventListener("mouseenter", function(){
             console.log("mouseenter nursery")
             document.getElementById("nursery-requirements").innerHTML = nursery.requirementsTable(true)
