@@ -1,5 +1,6 @@
 let gameManager = {
     testmode: true,
+    forcedBuildingLevel: 2,
     currentScreen: "",
     updateMillis: 10,
 }
@@ -28,12 +29,13 @@ function saveGame(){
 
 function loadGame(){
     if (Object.keys(saveData).length <= 0){
+        let level = gameManager.testmode ? gameManager.forcedBuildingLevel : 0
         saveData.buildingLevel = {
-            "generator": 1,
-            "printer": 1,
-            "biopsyRoom": 1,
-            "nursery": 1,
-            "radio": 1,
+            "generator":    level,
+            "printer":      level,
+            "biopsyRoom":   level,
+            "nursery":      level,
+            "radio":        level,
         }
         saveGame()
         console.log("GAMEDATA WRITTEN")
@@ -326,8 +328,7 @@ class Building{
     setLevel(level){
         this.level = level;
         console.log("set level")
- 
-        this.showBuilding()
+        if (level > 0) this.showBuilding()
     }
 }
 
