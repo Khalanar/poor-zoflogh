@@ -430,6 +430,7 @@ let hatchery = {
     },
 
     drawProgress: function(){
+        let progress = this.getProgress()
         if (document.getElementById("hatchery-canvas-1")){
             let canvas = document.getElementById("hatchery-canvas-1");
             let context = canvas.getContext("2d");
@@ -438,7 +439,7 @@ let hatchery = {
             // context.drawImage("/assets/images/egg.svg", 0, 0)
             context.rotate(270 * (Math.PI / 180));
             context.beginPath();
-            context.arc(-75, 75, 60, 0 * Math.PI, this.getProgress() * Math.PI);
+            context.arc(-75, 75, 60, 0 * Math.PI, progress * Math.PI);
 
             context.lineWidth = 15
             // context.strokeStyle = "rgba(0, 0, 0, 0.2)";
