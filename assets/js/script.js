@@ -268,24 +268,24 @@ class Building{
             colorClass = c ? colorClass : ""
             let energyRow = reqEnergy > 0 ? `
                 <tr class="${colorClass}">
-                    <td>${Object.keys(this.upgradeRequirements[this.level])[0]}</td>
-                    <td>${this.upgradeRequirements[this.level].energy}</td>
+                    <td><i class="fas fa-bolt"></i></td>
+                    <td class="j-right">${this.upgradeRequirements[this.level].energy}</td>
                 </tr>` : ""
 
             colorClass = this.enoughMetamaterials ? "green" : "red"
             colorClass = c ? colorClass : ""
             let metaRow = reqMetamaterials > 0 ? `
                 <tr class="${colorClass}">
-                    <td>metamat.</td>
-                    <td>${this.upgradeRequirements[this.level].metamaterials}</td>
+                    <td><i class="fas fa-tools"></i></td>
+                    <td class="j-right">${this.upgradeRequirements[this.level].metamaterials}</td>
                 </tr>` : ""
 
             colorClass = this.enoughDna ? "green" : "red"
             colorClass = c ? colorClass : ""
             let dnaRow = reqDNA > 0 ? `
                 <tr class="${colorClass}">
-                    <td>${Object.keys(this.upgradeRequirements[this.level])[2]}</td>
-                    <td>${this.upgradeRequirements[this.level].dna}</td>
+                    <td><i class="fas fa-dna"></i></td>
+                    <td class="j-right">${this.upgradeRequirements[this.level].dna}</td>
                 </tr>` : ""
 
             let reqTable = 
@@ -316,7 +316,7 @@ class Building{
         if (this.assignedWorkers > 0){
             this.assignedWorkers --
             resources.availableAliens ++
-            updateGameLog(`An alien left the ${this.name}<br><br>Reassign it soon!`)
+            // updateGameLog(`An alien left the ${this.name}<br><br>Reassign it soon!`)
         }else{
             updateGameLog(`Noone is working at the ${this.name}`)
         }
@@ -406,6 +406,7 @@ let hatchery = {
             if (this.currentProgress > 2){
                 this.reset()
                 resources.addAlien()
+                document.getElementById("hatchery-canvas-1").style.backgroundImage="url('assets/images/egg.svg')"
                 updateGameLog("An egg has hatched! Zoflogh has a new companion!")
             }
         }
@@ -414,6 +415,10 @@ let hatchery = {
     getProgress: function(){
         if (this.running){
             this.currentProgress += (gameManager.updateMillis/1000) / this.totalTime * 2
+
+            if(this.currentProgress > 2){
+                document.getElementById("hatchery-canvas-1").style.backgroundImage="url('assets/images/egg-ready.svg')"
+            }
         }
         return this.currentProgress
     },
@@ -430,13 +435,14 @@ let hatchery = {
             let context = canvas.getContext("2d");
 
             context.clearRect(0, 0, canvas.width, canvas.height);
+            // context.drawImage("/assets/images/egg.svg", 0, 0)
             context.rotate(270 * (Math.PI / 180));
             context.beginPath();
-            context.arc(-75, 75, 55, 0 * Math.PI, this.getProgress() * Math.PI);
+            context.arc(-75.5, 75.5, 65, 0 * Math.PI, this.getProgress() * Math.PI);
 
             context.lineWidth = 15
             // context.strokeStyle = "rgba(0, 0, 0, 0.2)";
-            context.strokeStyle = "rgb(152, 207, 195)";
+            context.strokeStyle = "rgba(152, 207, 195, 0.7)";
             context.stroke();
         }
     }
@@ -510,7 +516,7 @@ function drawBuildingScreen(){
         upgradesHTML += `   
         <div>
             <img id="generator-upgrade" class="build-button" src="./assets/images/generator.svg" alt="">
-            <div id="generator-requirements">${generator.requirementsTable(false)}</div>
+            <div id="generator-requirements" class="requirements">${generator.requirementsTable(false)}</div>
         </div>
         <div></div><div></div>
         <div class="double-col-span">
@@ -538,14 +544,14 @@ function drawBuildingScreen(){
         showBuildingDescription()
 
         for (let i=0; i<printer.assignedWorkers; i++){
-            alienicon += `<div class="alien-icon"></div>`
+            alienicon += `<div class="alien-icon"><img src="assets/images/alien-icon-light.svg"></div>`
         }
 
         // src="./assets/images/assign_alien.svg"
         upgradesHTML += `   
         <div>
             <img id="printer-upgrade" class="build-button" src="./assets/images/printer.svg" alt="">
-            <div id="printer-requirements">${printer.requirementsTable(false)}</div>
+            <div id="printer-requirements" class="requirements">${printer.requirementsTable(false)}</div>
         </div>
         <div id="assigned-aliens">
             <div>
@@ -592,7 +598,7 @@ function drawBuildingScreen(){
         upgradesHTML += `   
         <div>
             <img id="biopsy_room-upgrade" class="build-button" src="./assets/images/biopsy_room.svg" alt="">
-            <div id="biopsy_room-requirements">${biopsyRoom.requirementsTable(false)}</div>
+            <div id="biopsy_room-requirements" class="requirements">${biopsyRoom.requirementsTable(false)}</div>
         </div>
         <div id="abduction-progress-area">
             <p id="abduction-stage">${abduction.phase[abduction.currentPhase]}</p>
@@ -622,12 +628,13 @@ function drawBuildingScreen(){
         upgradesHTML += `   
         <div>
         <img id="nursery-upgrade" class="build-button" src="./assets/images/nursery.svg" alt="">
-        <div id="nursery-requirements">${nursery.requirementsTable(false)}</div>
+        <div id="nursery-requirements" class="requirements">${nursery.requirementsTable(false)}</div>
         </div>
         <div>
         <div class="sq-button">     
         
         <canvas id="hatchery-canvas-1"></canvas>
+        
      
         </div>
         <p id="egg-requirements">${hatchery.dnaCost} DNA</p> 
