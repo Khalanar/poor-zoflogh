@@ -1,7 +1,15 @@
 let gameManager = {
-    testmode: false,
+    testmode: true,
     currentScreen: "",
     updateMillis: 10,
+}
+
+function saveGame(){
+    //Save object to json in localstorage
+}
+
+function loadGame(){
+    //get json in localstorage if any and fill up certain globals
 }
 
 let gameMessages = [
@@ -68,7 +76,7 @@ let resources = {
 let abduction = {
     inProgress: false,
     progress: 0,
-    totalTime: 1,
+    totalDuration: 1,
     currentPhase: 0,
     maxYield: 5,
     gameLog: "Abduction complete, head over to the biopsy room to harvest DNA samples",
@@ -92,9 +100,8 @@ let abduction = {
     begin: function(){
         if(!this.inProgress){
             this.inProgress = true
-            this.totalTime = biopsyRoom.resourceGeneration[biopsyRoom.level]
-
-            console.log("abduct!" + this.totalTime)
+            this.totalDuration = biopsyRoom.resourceGeneration[biopsyRoom.level]
+            console.log("abduct!" + this.totalDuration)
         }else{
             console.log("Abduction already in progress")
         }
@@ -124,7 +131,7 @@ let abduction = {
 
     calculateAbductionProgress: function(){
         if (this.inProgress && this.progress < 100){
-            this.progress += 1000/gameManager.updateMillis/this.totalTime/100
+            this.progress += 1000/gameManager.updateMillis/this.totalDuration/100
 
             if (document.getElementById("abduction-progress-bar")){
                 document.getElementById("abduction-progress-bar").style.width = `${this.progress}%`
@@ -180,7 +187,9 @@ class Building{
                     this.upgradeRequirements[this.level].dna)
                 this.level++;
                 console.log("Upgraded this building to " + this.level)
-                if (this.level>1)updateGameLog("Upgrade successful")
+                if (this.level>1){
+                    // updateGameLog("Upgrade successful")
+                }
             }else{
                 let msg = `Not enough resources to upgrade the ${this.name}, poor Zoflogh`
                 updateGameLog(msg)
@@ -310,6 +319,58 @@ let nursery = new Building("nursery", 0,
 ])
 nursery.buildMessage = `Nursery built. No time to waste, get some eggs in the hatchery to grow your workforce!`
 
+let hatchery = {
+    running: false,
+    totalTime: 10,
+    currentProgress: 0,
+    dnaCost: 10,
+
+    start: function(){
+        if (!this.running){
+            console.log("Hatchery Start")
+            this.running = true;
+            this.currentProgress = 0;
+        }else{
+            if (this.currentProgress > 2){
+                this.reset()
+            }
+        }
+    },
+    
+    getProgress: function(){
+        if (this.running){
+            this.currentProgress += (gameManager.updateMillis / 1000) / this.totalTime 
+        }
+        // this.currentProgress += 1/100
+        return this.currentProgress
+    },
+
+    reset: function() {
+        console.log("RESET")
+        this.running = false
+        this.currentProgress = 0
+    },
+
+    drawProgress: function(){
+        if (document.getElementById("hatchery-button-1")){
+            let c = document.getElementById("hatchery-button-1");
+            let ctx = c.getContext("2d");
+
+            ctx.clearRect(0, 0, c.width, c.height);
+            ctx.rotate(270 * (Math.PI / 180));
+            ctx.beginPath();
+            ctx.arc(-35, 35, 25, 0 * Math.PI, this.getProgress() * Math.PI);
+            console.log(this.getProgress() * Math.PI)
+            ctx.lineWidth = 7
+            // let col = Math.floor(Math.random() * 255)
+            // let col2 = Math.floor(Math.random() * 255)
+            ctx.strokeStyle = `rgba(${col}, ${col2}, 0, 0.3)`;
+            ctx.stroke();
+        }
+    }
+}
+
+
 let radio = new Building("radio", 0, [{energy: 5000, metamaterials: 5000, dna:20}], 0)
 radio.buildMessage = `Radio built! You're one step closer to getting your message out. Hopefully mother ship will pick your communication!`
 
@@ -355,60 +416,6 @@ function buildIcons(building, name){
         document.getElementById(buttonId).addEventListener("click", function(){build(building)})
         document.getElementById(buttonId).addEventListener("mouseenter", function(){ document.getElementById(reqId).innerHTML = building.requirementsTable(true) })
         document.getElementById(buttonId).addEventListener("mouseleave", function(){ document.getElementById(reqId).innerHTML = building.requirementsTable(false) })
-    }
-}
-
-let hatchery = {
-    running: false,
-    totalTime: 10,
-    currentProgress: 0,
-    dnaCost: 10,
-
-    start: function(){
-        if (!this.running){
-            console.log("Hatchery Start")
-            this.running = true;
-            this.currentProgress = 0;
-        }else{
-            if (this.currentProgress > 2){
-                this.reset()
-            }
-        }
-    },
-    
-    getProgress: function(){
-        if (this.running){
-            this.currentProgress += (gameManager.updateMillis / 1000) / this.totalTime 
- 
-        }
-        // this.currentProgress += 1/100
-        return this.currentProgress
-    },
-
-    reset: function() {
-        console.log("RESET")
-        this.running = false
-        this.currentProgress = 0
-    },
-
-    drawProgress: function(){
-        if (document.getElementById("hatchery-button-1")){
-        
-            let c = document.getElementById("hatchery-button-1");
-            let ctx = c.getContext("2d");
-
-            ctx.clearRect(0, 0, c.width, c.height);
-            ctx.rotate(270 * (Math.PI / 180));
-            ctx.beginPath();
-            ctx.arc(-35, 35, 25, 0 * Math.PI, this.getProgress() * Math.PI);
-            console.log(this.getProgress() * Math.PI)
-            ctx.lineWidth = 7
-            let col = Math.floor(Math.random() * 255)
-            let col2 = Math.floor(Math.random() * 255)
-            ctx.strokeStyle = `rgba(${col}, ${col2}, 0, 0.3)`;
-            ctx.stroke();
-            
-        }
     }
 }
 
@@ -532,18 +539,30 @@ function drawBuildingScreen(){
         //redraw progress bar   
     }else if(gameManager.currentScreen == "nursery"){
         showBuildingDescription()
-        // <div class="sq-button"></div>
         upgradesHTML += `   
+        <div>
+        <img id="nursery-upgrade" class="build-button" src="./assets/images/nursery.svg" alt="">
+        <div id="nursery-requirements">${nursery.requirementsTable(false)}</div>
+        </div>
         <div class="sq-button">      
         <canvas id="hatchery-button-1">
-    
         </div>
         `
+        document.getElementById("building-upgrades").innerHTML = upgradesHTML
+
+        document.getElementById("nursery-upgrade").addEventListener("click", function(){upgradeBuilding(nursery)})
+        
+        document.getElementById("nursery-upgrade").addEventListener("mouseenter", function(){
+            document.getElementById("nursery-requirements").innerHTML = nursery.requirementsTable(true)
+        })
+        document.getElementById("nursery-upgrade").addEventListener("mouseleave", function(){
+            document.getElementById("nursery-requirements").innerHTML = nursery.requirementsTable(false)
+        })
+
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
         document.getElementById("hatchery-button-1").addEventListener("click", function(){
             hatchery.start()
         })
-        
 
     }else if(gameManager.currentScreen == "radio"){
         showBuildingDescription()
