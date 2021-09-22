@@ -29,6 +29,16 @@ h1 {
     height:37px;
 }
 
+#sos-button{
+    /* background-color: red; */
+    color:red;
+    border: 1px solid red;
+    border-radius: 5px;
+    margin: 60px auto;
+    width: 100px;
+    text-align: center;
+}
+
 #radio-screen{
     grid-column: span 5;
     display: grid;

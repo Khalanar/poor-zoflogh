@@ -4,6 +4,7 @@ let gameManager = {
     currentScreen: "",
     updateMillis: 10,
     slowUpdateMillis: 100,
+    winCondition: false,
 }
 
 let saveData = {
@@ -69,11 +70,11 @@ let resources = {
 
     loadResources(){
         if (saveData != null){
-            this.energy                 = saveData.savedResources.energy
-            this.energyConsumed         = saveData.savedResources.energyConsumed
-            this.metamaterials          = saveData.savedResources.metamaterials
-            this.dna                    = saveData.savedResources.dna
-            this.availableAliens        = saveData.savedResources.availableAliens
+            this.energy          = saveData.savedResources.energy
+            this.energyConsumed  = saveData.savedResources.energyConsumed
+            this.metamaterials   = saveData.savedResources.metamaterials
+            this.dna             = saveData.savedResources.dna
+            this.availableAliens = saveData.savedResources.availableAliens
         }
     },
 
@@ -90,8 +91,6 @@ let resources = {
     },
 
 }
-
-
 
 function resetGameData(){
     console.log("RESET")
@@ -323,48 +322,93 @@ class Building{
     }
 }
 
-let printer = new Building("printer", 0,
-    [   {energy: 10, metamaterials: 10, dna:0}, //Upgrade from 0 to 1
-        {energy: 50, metamaterials: 100, dna:0}, //Upgrade from 1 to 2
-        {energy: 100, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
-        {energy: 200, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
-        {energy: 400, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
-    ],  [0, 5, 10, 50, 100, 200])
-printer.buildMessage = `With what little was to be found in the cargo bay, you managed to build a recycler.<br><br>  
-Upgrade building or assign an idle alien to this device to increase the output.`
+let printer, generator, biopsyRoom, nursery, radio
 
-let generator = new Building("generator", 0,
-    [   {energy: 0, metamaterials: 5, dna:0}, //Upgrade from 0 to 1
-        {energy: 0, metamaterials: 15, dna:0}, //Upgrade from 1 to 2
-        {energy: 0, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
-        {energy: 0, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
-        {energy: 0, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
-    ],  [0, 10, 50, 500, 2000, 7500])
-generator.buildMessage = `You managed to salvage the ship's energy generator.<br><br>It's in a sorry state but it has got enough juice to kickstart the <i>3D Recycler</i>`
+function createBuildings(){
+    printer = new Building("printer", 0,
+        [   {energy: 10, metamaterials: 10, dna:0}, //Upgrade from 0 to 1
+            {energy: 50, metamaterials: 100, dna:0}, //Upgrade from 1 to 2
+            {energy: 100, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
+            {energy: 200, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
+            {energy: 400, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
+        ],  [0, 5, 10, 50, 100, 200])
+    printer.buildMessage = `With what little was to be found in the cargo bay, you managed to build a recycler.<br><br>  
+    Upgrade building or assign an idle alien to this device to increase the output.`
 
-let biopsyRoom = new Building("biopsy_room", 0, 
-[
-    {energy: 200,   metamaterials: 500,      dna:0}, //Upgrade from 0 to 1
-    {energy: 400,   metamaterials: 1000,     dna:5}, //Upgrade from 1 to 2
-    {energy: 800,   metamaterials: 2000,     dna:5}, //Upgrade from 2 to 3
-    {energy: 1500,  metamaterials: 5000,     dna:5}, //Upgrade from 3 to 4
-    {energy: 2000,  metamaterials: 10000,    dna:5}, //Upgrade from 4 to 5
-], [999, 30, 25, 15, 10, 5])
-biopsyRoom.buildMessage = `Sweet biopsy room built, go abduce some stuff!`
+    generator = new Building("generator", 0,
+        [   {energy: 0, metamaterials: 5, dna:0}, //Upgrade from 0 to 1
+            {energy: 0, metamaterials: 15, dna:0}, //Upgrade from 1 to 2
+            {energy: 0, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
+            {energy: 0, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
+            {energy: 0, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
+        ],  [0, 10, 50, 500, 2000, 7500])
+    generator.buildMessage = `You managed to salvage the ship's energy generator.<br><br>It's in a sorry state but it has got enough juice to kickstart the <i>3D Recycler</i>`
 
-let nursery = new Building("nursery", 0, 
-[
-    {energy: 500,   metamaterials: 600,     dna:5}, //Upgrade from 0 to 1
-    {energy: 650,   metamaterials: 1000,    dna:5}, //Upgrade from 1 to 2
-    {energy: 1000,  metamaterials: 1500,    dna:5}, //Upgrade from 2 to 3
-    {energy: 1250,  metamaterials: 3200,    dna:5}, //Upgrade from 3 to 4
-    {energy: 2000,  metamaterials: 9000,    dna:5}, //Upgrade from 4 to 5
-], [999, 20, 15, 10, 5, 2, 1])
-nursery.buildMessage = `Nursery built. No time to waste, get some eggs in the hatchery to grow your workforce!`
+    biopsyRoom = new Building("biopsy_room", 0, 
+        [   {energy: 200,   metamaterials: 500,      dna:0}, //Upgrade from 0 to 1
+            {energy: 400,   metamaterials: 1000,     dna:5}, //Upgrade from 1 to 2
+            {energy: 800,   metamaterials: 2000,     dna:5}, //Upgrade from 2 to 3
+            {energy: 1500,  metamaterials: 5000,     dna:5}, //Upgrade from 3 to 4
+            {energy: 2000,  metamaterials: 10000,    dna:5}, //Upgrade from 4 to 5
+        ], [999, 30, 25, 15, 10, 5])
+    biopsyRoom.buildMessage = `Sweet biopsy room built, go abduce some stuff!`
 
-let radio = new Building("radio", 0, [{energy: 5000, metamaterials: 5000, dna:20}], 0)
-radio.buildMessage = `Radio built! You're one step closer to getting your message out. Hopefully mother ship will pick your communication!`
+    nursery = new Building("nursery", 0, 
+        [   {energy: 500,   metamaterials: 600,     dna:5}, //Upgrade from 0 to 1
+            {energy: 650,   metamaterials: 1000,    dna:5}, //Upgrade from 1 to 2
+            {energy: 1000,  metamaterials: 1500,    dna:5}, //Upgrade from 2 to 3
+            {energy: 1250,  metamaterials: 3200,    dna:5}, //Upgrade from 3 to 4
+            {energy: 2000,  metamaterials: 9000,    dna:5}, //Upgrade from 4 to 5
+        ], [999, 20, 15, 10, 5, 2, 1])
+    nursery.buildMessage = `Nursery built. No time to waste, get some eggs in the hatchery to grow your workforce!`
 
+    radio = new Building("radio", 0, [{energy: 5000, metamaterials: 5000, dna:20}], 0)
+    radio.buildMessage = `Radio built! You're one step closer to getting your message out. Hopefully mother ship will pick your communication!`
+    radio.attachEvents = function(){
+        document.getElementById("radio-slider0").addEventListener("mousemove", function(){
+            document.getElementById("radio-value0").innerText = String.fromCharCode(document.getElementById("radio-slider0").value)
+        })
+        document.getElementById("radio-slider1").addEventListener("mousemove", function(){
+            document.getElementById("radio-value1").innerText = String.fromCharCode(document.getElementById("radio-slider1").value)
+        })
+        document.getElementById("radio-slider2").addEventListener("mousemove", function(){
+            document.getElementById("radio-value2").innerText = String.fromCharCode(document.getElementById("radio-slider2").value)
+        })
+        document.getElementById("radio-slider3").addEventListener("mousemove", function(){
+            document.getElementById("radio-value3").innerText = String.fromCharCode(document.getElementById("radio-slider3").value)
+        })
+        document.getElementById("radio-slider4").addEventListener("mousemove", function(){
+            document.getElementById("radio-value4").innerText = String.fromCharCode(document.getElementById("radio-slider4").value)
+        })
+        document.getElementById("radio-slider5").addEventListener("mousemove", function(){
+            document.getElementById("radio-value5").innerText = String.fromCharCode(document.getElementById("radio-slider5").value)
+        })
+        document.getElementById("radio-slider6").addEventListener("mousemove", function(){
+            document.getElementById("radio-value6").innerText = String.fromCharCode(document.getElementById("radio-slider6").value)
+        })
+    }
+    radio.gameEndCheck = function(){
+        if (gameManager.currentScreen == "radio"){
+            let correctLetters = 0
+            correctLetters = document.getElementById("radio-value0").innerText == "Z" ? correctLetters+1 : correctLetters
+            correctLetters = document.getElementById("radio-value1").innerText == "O" ? correctLetters+1 : correctLetters
+            correctLetters = document.getElementById("radio-value2").innerText == "F" ? correctLetters+1 : correctLetters
+            correctLetters = document.getElementById("radio-value3").innerText == "L" ? correctLetters+1 : correctLetters
+            correctLetters = document.getElementById("radio-value4").innerText == "O" ? correctLetters+1 : correctLetters
+            correctLetters = document.getElementById("radio-value5").innerText == "G" ? correctLetters+1 : correctLetters
+            correctLetters = document.getElementById("radio-value6").innerText == "H" ? correctLetters+1 : correctLetters
+            console.log (correctLetters)
+        
+            if(correctLetters >= 7 && !gameManager.winCondition){
+                gameManager.winCondition = true
+                document.getElementById("sos-button").classList.remove("disabled")
+                document.getElementById("sos-button").classList.add("enabled")
+                console.log ("YOU WIN PAPA")
+            }
+        }
+        
+    }
+}
 
 let hatchery = {
     running: false,
@@ -663,46 +707,25 @@ function drawBuildingScreen(){
         for (let i=0; i<7; i++){
             slidersHtml += `
             <div class="slider-container">
-                <input type="range" min="65" max="90" value="50" class="slider" id="radio-slider${i}">
+                <input type="range" min="65" max="90" value="65" class="slider" id="radio-slider${i}">
             </div>`
 
             radioLettersHtml += `<div id="radio-value${i}" class="radio-value">A</div>`
         }   
-        
-        
         
         upgradesHTML += `
         <div id="radio-screen">
             ${slidersHtml}
             <div id="radio-letters">
                 ${radioLettersHtml}
+                <div id="sos-button" class="disabled">SEND S.O.S</div>
             </div>            
         </div>
         </div>
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
-
-        document.getElementById("radio-slider0").addEventListener("mousemove", function(){
-            document.getElementById("radio-value0").innerText = String.fromCharCode(document.getElementById("radio-slider0").value)
-        })
-        document.getElementById("radio-slider1").addEventListener("mousemove", function(){
-            document.getElementById("radio-value1").innerText = String.fromCharCode(document.getElementById("radio-slider1").value)
-        })
-        document.getElementById("radio-slider2").addEventListener("mousemove", function(){
-            document.getElementById("radio-value2").innerText = String.fromCharCode(document.getElementById("radio-slider2").value)
-        })
-        document.getElementById("radio-slider3").addEventListener("mousemove", function(){
-            document.getElementById("radio-value3").innerText = String.fromCharCode(document.getElementById("radio-slider3").value)
-        })
-        document.getElementById("radio-slider4").addEventListener("mousemove", function(){
-            document.getElementById("radio-value4").innerText = String.fromCharCode(document.getElementById("radio-slider4").value)
-        })
-        document.getElementById("radio-slider5").addEventListener("mousemove", function(){
-            document.getElementById("radio-value5").innerText = String.fromCharCode(document.getElementById("radio-slider5").value)
-        })
-        document.getElementById("radio-slider6").addEventListener("mousemove", function(){
-            document.getElementById("radio-value6").innerText = String.fromCharCode(document.getElementById("radio-slider6").value)
-        })
+        radio.attachEvents()
+        
         
     }
 }
@@ -777,8 +800,6 @@ function setHelpHover(){
     })
 }
 
-document.addEventListener("DOMContentLoaded", start())
-
 function setupButtons(){
     document.getElementById("reset-data").addEventListener("click", function(){
         resetGameData()
@@ -831,8 +852,9 @@ function loadGame(){
     resources.loadResources()
 }
 
+document.addEventListener("DOMContentLoaded", start())
 function start(){
-    console.log("start")
+    createBuildings()
     loadGame()
     setupButtons()
     setHelpHover()
@@ -840,7 +862,7 @@ function start(){
     getBuildings()
     setInterval(fastUpdate, gameManager.updateMillis)
     setInterval(slowUpdate, gameManager.slowUpdateMillis)
-
+    
     if (gameManager.testmode) {
         resources.setTestModeValues()
         console.log(`Test Mode ON: Resources reset `)
@@ -850,10 +872,10 @@ function start(){
 function slowUpdate(){
     resources.generateMetamaterials()
     saveGame()
+    radio.gameEndCheck()
 }
 
 function fastUpdate(){
-    
     abduction.calculateAbductionProgress()
     hatchery.drawProgress()
 }
