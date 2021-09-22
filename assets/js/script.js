@@ -659,24 +659,51 @@ function drawBuildingScreen(){
     }else if(gameManager.currentScreen == "radio"){
         showBuildingDescription()
         let slidersHtml = ""
+        let radioLettersHtml = ""
         for (let i=0; i<7; i++){
             slidersHtml += `
             <div class="slider-container">
-                <input type="range" min="1" max="100" value="50" class="slider" id="myRange${i}">
+                <input type="range" min="65" max="90" value="50" class="slider" id="radio-slider${i}">
             </div>`
-        }
+
+            radioLettersHtml += `<div id="radio-value${i}" class="radio-value">A</div>`
+        }   
+        
+        
         
         upgradesHTML += `
         <div id="radio-screen">
             ${slidersHtml}
             <div id="radio-letters">
-                
-            </div>
+                ${radioLettersHtml}
+            </div>            
+        </div>
         </div>
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
 
-
+        document.getElementById("radio-slider0").addEventListener("mousemove", function(){
+            document.getElementById("radio-value0").innerText = String.fromCharCode(document.getElementById("radio-slider0").value)
+        })
+        document.getElementById("radio-slider1").addEventListener("mousemove", function(){
+            document.getElementById("radio-value1").innerText = String.fromCharCode(document.getElementById("radio-slider1").value)
+        })
+        document.getElementById("radio-slider2").addEventListener("mousemove", function(){
+            document.getElementById("radio-value2").innerText = String.fromCharCode(document.getElementById("radio-slider2").value)
+        })
+        document.getElementById("radio-slider3").addEventListener("mousemove", function(){
+            document.getElementById("radio-value3").innerText = String.fromCharCode(document.getElementById("radio-slider3").value)
+        })
+        document.getElementById("radio-slider4").addEventListener("mousemove", function(){
+            document.getElementById("radio-value4").innerText = String.fromCharCode(document.getElementById("radio-slider4").value)
+        })
+        document.getElementById("radio-slider5").addEventListener("mousemove", function(){
+            document.getElementById("radio-value5").innerText = String.fromCharCode(document.getElementById("radio-slider5").value)
+        })
+        document.getElementById("radio-slider6").addEventListener("mousemove", function(){
+            document.getElementById("radio-value6").innerText = String.fromCharCode(document.getElementById("radio-slider6").value)
+        })
+        
     }
 }
 
