@@ -658,6 +658,25 @@ function drawBuildingScreen(){
 
     }else if(gameManager.currentScreen == "radio"){
         showBuildingDescription()
+        let slidersHtml = ""
+        for (let i=0; i<7; i++){
+            slidersHtml += `
+            <div class="slider-container">
+                <input type="range" min="1" max="100" value="50" class="slider" id="myRange${i}">
+            </div>`
+        }
+        
+        upgradesHTML += `
+        <div id="radio-screen">
+            ${slidersHtml}
+            <div id="radio-letters">
+                
+            </div>
+        </div>
+        `
+        document.getElementById("building-upgrades").innerHTML = upgradesHTML
+
+
     }
 }
 
