@@ -3,72 +3,19 @@ let gameManager = {
     forcedBuildingLevel: 2,
     currentScreen: "",
     updateMillis: 10,
+    slowUpdateMillis: 100,
 }
 
 let saveData = {
-    // buildingLevel: {
-        // "generator": 1,
-        // "printer": 1,
-        // "biopsyRoom": 1,
-        // "nursery": 1,
-        // "radio": 1,
-    // },
-}
-
-function saveGame(){
-    //Save object to json in localstorage
-    if (Object.keys(saveData).length > 0){
-        console.log("saveData is not empty")
-        localStorage.setItem("save_data", JSON.stringify(saveData))
-        console.log(`Game saved`)
-    }else{
-        console.log("saveData is empty")
-    }
-
-}
-
-function loadGame(){
-    if (Object.keys(saveData).length <= 0){
-        let level = gameManager.testmode ? gameManager.forcedBuildingLevel : 0
-        saveData.buildingLevel = {
-            "generator":    level,
-            "printer":      level,
-            "biopsyRoom":   level,
-            "nursery":      level,
-            "radio":        level,
-        }
-        saveGame()
-        console.log("GAMEDATA WRITTEN")
-    }else{
-        //get json in localstorage if any and fill up certain globals
-        saveData = JSON.parse(localStorage.getItem("save_data"))
-        console.log("GAMEDATA LOADED")
-    }
-
-    generator.setLevel(saveData.buildingLevel["generator"])
-    printer.setLevel(saveData.buildingLevel["printer"])
-    biopsyRoom.setLevel(saveData.buildingLevel["biopsyRoom"])
-    nursery.setLevel(saveData.buildingLevel["nursery"])
-    radio.setLevel(saveData.buildingLevel["radio"])
-
-}
-
-function resetGameData(){
-    console.log("RESET")
-    localStorage.clear()
-}
-
-let gameMessages = [
-    "Oh no... an alien has crashed into Planet Earth.<br><br>Zoflogh is counting on you to get him out of this planet.<br><br><i>Poor Zoflogh...",
-]
-
-let buildingDescriptions = {
-    ship: "Zoflogh's crashed ship.<br><br>Luckily some parts can be salvaged with creativity and spare time.<br><br>Build your way out of this planet!",
-    generator: "Solar Power Generator.<br><br>Salvaged off some spare parts of Zoflogh's ship, this generator transforms photons into energy.<br><br>Can be upgraded for better energy output",
-    nursery: "Nursery and Incubator.<br><br>Froongkians edited their genome for asexual reproduction centuries ago<br><br>Use DNA to lay eggs, and energy to incubate them.",
-    printer: "A Recycler and 3D Printer by Uglog Industries.<br><br>Insert any type of matter to be recycled into metamaterial, the only material used in planet Froongk. For walls and electronics to clothing, it is incredibly poisonous, do not ingest.",
-    biopsy_room:"Biopsy Room.<br><br>Start abduction missions to collect DNA samples from creatures around the planet.<br><br>Froongkian laws strongly advise against bonding with abductees, however it's not forbidden.",
-    radio:"A makeshift radio. Rudimentary and objectively ugly, but it works.<br><br>Get Zoflogh to send an S.O.S and hope for the best!!",
+    buildingLevel: {
+        "generator": 0,
+        "printer": 0,
+        "biopsyRoom": 0,
+        "nursery": 0,
+        "radio": 0,
+    },
+    savedResources: 0,
+    printerAliens: 0
 }
 
 let resources = {
@@ -85,21 +32,13 @@ let resources = {
         document.getElementById("aliens").innerText = this.availableAliens
     },
     
-    setTestModeValues: function(){
-        this.energy = 10000
-        this.metamaterials = 5000
-        this.dna = 50
-        this.availableAliens = 10
-        this.reload()
-    },
-
     recalculateEnergyOutput: function (){
         this.energy = generator.resourceGeneration[generator.level]
         this.reload()
     },
     
     generateMetamaterials: function (){
-        let generated = printer.resourceGeneration[printer.level]*(printer.assignedWorkers+1)/1000*gameManager.updateMillis
+        let generated = printer.resourceGeneration[printer.level]*(printer.assignedWorkers+1)/1000*gameManager.slowUpdateMillis
         this.metamaterials += generated;
         this.reload()
     },
@@ -128,8 +67,48 @@ let resources = {
         this.reload()
     },
 
+    loadResources(){
+        if (saveData != null){
+            this.energy                 = saveData.savedResources.energy
+            this.energyConsumed         = saveData.savedResources.energyConsumed
+            this.metamaterials          = saveData.savedResources.metamaterials
+            this.dna                    = saveData.savedResources.dna
+            this.availableAliens        = saveData.savedResources.availableAliens
+        }
+    },
+
+    setTestModeValues: function(){
+        if (saveData == null){
+            this.energy = 10000
+            this.metamaterials = 5000
+            this.dna = 50
+            this.availableAliens = 10
+            this.reload()
+        }else{
+            this.loadResources()
+        }
+    },
+
+}
 
 
+
+function resetGameData(){
+    console.log("RESET")
+    localStorage.clear()
+}
+
+let gameMessages = [
+    "Oh no... an alien has crashed into Planet Earth.<br><br>Zoflogh is counting on you to get him out of this planet.<br><br><i>Poor Zoflogh...",
+]
+
+let buildingDescriptions = {
+    ship: "Zoflogh's crashed ship.<br><br>Luckily some parts can be salvaged with creativity and spare time.<br><br>Build your way out of this planet!",
+    generator: "Solar Power Generator.<br><br>Salvaged off some spare parts of Zoflogh's ship, this generator transforms photons into energy.<br><br>Can be upgraded for better energy output",
+    nursery: "Nursery and Incubator.<br><br>Froongkians edited their genome for asexual reproduction centuries ago<br><br>Use DNA to lay eggs, and energy to incubate them.",
+    printer: "A Recycler and 3D Printer by Uglog Industries.<br><br>Insert any type of matter to be recycled into metamaterial, the only material used in planet Froongk. For walls and electronics to clothing, it is incredibly poisonous, do not ingest.",
+    biopsy_room:"Biopsy Room.<br><br>Start abduction missions to collect DNA samples from creatures around the planet.<br><br>Froongkian laws strongly advise against bonding with abductees, however it's not forbidden.",
+    radio:"A makeshift radio. Rudimentary and objectively ugly, but it works.<br><br>Get Zoflogh to send an S.O.S and hope for the best!!",
 }
 
 let abduction = {
@@ -499,7 +478,7 @@ function buildIcons(building, name){
 function drawBuildingScreen(){
     let upgradesHTML = ""
     let alienicon =""
-    console.log("draw buildings")
+    // console.log("draw buildings")
     document.getElementById("building-upgrades").innerHTML = ""
     if (gameManager.currentScreen == "ship"){
         showBuildingDescription()
@@ -760,6 +739,52 @@ function setupButtons(){
     })
 }
 
+function saveGame(){
+    //Save object to json in localstorage
+        saveData = {
+            buildingLevel: {
+                "generator": generator.level,
+                "printer": printer.level,
+                "biopsyRoom": biopsyRoom.level,
+                "nursery": nursery.level,
+                "radio": radio.level,
+            },
+            savedResources: resources,
+            printerAliens: printer.assignedWorkers
+        }
+        localStorage.setItem("save_data", JSON.stringify(saveData))
+        // console.log(`Game saved ${JSON.stringify(saveData.savedResources)}`)    
+}
+
+function loadGame(){
+    saveData = JSON.parse(localStorage.getItem("save_data"))
+    if (saveData != null){
+        saveData.buildingLevel = {
+            "generator":    saveData.buildingLevel["generator"],
+            "printer":      saveData.buildingLevel["printer"],
+            "biopsyRoom":   saveData.buildingLevel["biopsyRoom"],
+            "nursery":      saveData.buildingLevel["nursery"],
+            "radio":        saveData.buildingLevel["radio"],
+        }
+        generator.setLevel( saveData.buildingLevel["generator"])
+        printer.setLevel(   saveData.buildingLevel["printer"])
+        biopsyRoom.setLevel(saveData.buildingLevel["biopsyRoom"])
+        nursery.setLevel(   saveData.buildingLevel["nursery"])
+        radio.setLevel(     saveData.buildingLevel["radio"])
+
+        printer.assignedWorkers = saveData.printerAliens
+    }
+    if (gameManager.testmode){
+        generator.setLevel( gameManager.forcedBuildingLevel)
+        printer.setLevel(   gameManager.forcedBuildingLevel)
+        biopsyRoom.setLevel(gameManager.forcedBuildingLevel)
+        nursery.setLevel(   gameManager.forcedBuildingLevel)
+        radio.setLevel(     gameManager.forcedBuildingLevel)
+    }
+    console.log("LoadGame || GAMEDATA WRITTEN")
+    resources.loadResources()
+}
+
 function start(){
     console.log("start")
     loadGame()
@@ -767,7 +792,8 @@ function start(){
     setHelpHover()
     updateGameLog()
     getBuildings()
-    setInterval(update, gameManager.updateMillis)
+    setInterval(fastUpdate, gameManager.updateMillis)
+    setInterval(slowUpdate, gameManager.slowUpdateMillis)
 
     if (gameManager.testmode) {
         resources.setTestModeValues()
@@ -775,8 +801,13 @@ function start(){
     }
 }
 
-function update(){
+function slowUpdate(){
     resources.generateMetamaterials()
+    saveGame()
+}
+
+function fastUpdate(){
+    
     abduction.calculateAbductionProgress()
     hatchery.drawProgress()
 }
