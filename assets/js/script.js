@@ -718,7 +718,7 @@ function drawBuildingScreen(){
             ${slidersHtml}
             <div id="radio-letters">
                 ${radioLettersHtml}
-                <div id="sos-button" class="disabled">SEND S.O.S</div>
+                <div id="sos-button" class="enabled">SEND S.O.S</div>
             </div>            
         </div>
         </div>
