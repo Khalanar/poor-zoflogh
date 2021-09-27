@@ -5,6 +5,18 @@ let gameManager = {
     updateMillis: 10,
     slowUpdateMillis: 100,
     winCondition: false,
+    showGameOverAlert: function(){
+        // alert("Thank you for calling\nHow are you?");
+        document.getElementById("game-log").innerHTML = ""
+        document.getElementById("game-screen").innerHTML = ""
+        document.getElementById("game-log").style.width = `${document.getElementById("game-area").offsetWidth}px`
+        gameManager.currentScreen = ""
+        console.log(gameMessages)
+
+        updateRadioConversation()
+    }
+
+
 }
 
 let saveData = {
@@ -22,15 +34,16 @@ let saveData = {
 let resources = {
     energy: 0,
     energyConsumed: 0,
-    metamaterials: 30.0,
+    metamaterials: 30000.0,
     dna: 0,
     availableAliens: 1,
 
     reload: function(){
+        if (document.getElementById("resource-box")){
         document.getElementById("energy").innerText = this.energy - this.energyConsumed
         document.getElementById("metamaterials").innerText = parseInt(this.metamaterials)
         document.getElementById("dna").innerText = this.dna
-        document.getElementById("aliens").innerText = this.availableAliens
+        document.getElementById("aliens").innerText = this.availableAliens}
     },
     
     recalculateEnergyOutput: function (){
@@ -80,8 +93,8 @@ let resources = {
 
     setTestModeValues: function(){
         if (saveData == null){
-            this.energy = 10000
-            this.metamaterials = 5000
+            this.energy = 0
+            this.metamaterials = 50000
             this.dna = 50
             this.availableAliens = 10
             this.reload()
@@ -96,6 +109,21 @@ function resetGameData(){
     console.log("RESET")
     localStorage.clear()
 }
+/**
+ * Holds details for the game over conversation
+ *| 0 - Messsage
+ *| 1 - Speaker
+ *| 2 - Timestamp since conversation started
+ */
+let gameOverConversation = [
+    ["Thank you for calling AAAAA my name is Frongkh how can I helo you today?", "other", 0],
+    ["I crashed into a class 4 planet, I need a lift", "zoflogh", 1000],
+    ["CCCCCCC", "other", 2000],
+    ["DDDDDDD", "other", 3000],
+    ["EEEEEEE", "other", 4000],
+    ["GGGGGGG", "zoflogh", 5000],
+    ["HHHHHHH", "other",    6000],
+]
 
 let gameMessages = [
     "Oh no... an alien has crashed into Planet Earth.<br><br>Zoflogh is counting on you to get him out of this planet.<br><br><i>Poor Zoflogh...",
@@ -386,6 +414,7 @@ function createBuildings(){
         document.getElementById("radio-slider6").addEventListener("mousemove", function(){
             document.getElementById("radio-value6").innerText = String.fromCharCode(document.getElementById("radio-slider6").value)
         })
+        document.getElementById("sos-button").addEventListener("click", function(){gameManager.showGameOverAlert()})
     }
     radio.gameEndCheck = function(){
         if (gameManager.currentScreen == "radio"){
@@ -403,10 +432,10 @@ function createBuildings(){
                 gameManager.winCondition = true
                 document.getElementById("sos-button").classList.remove("disabled")
                 document.getElementById("sos-button").classList.add("enabled")
+
                 console.log ("YOU WIN PAPA")
             }
         }
-        
     }
 }
 
@@ -718,7 +747,7 @@ function drawBuildingScreen(){
             ${slidersHtml}
             <div id="radio-letters">
                 ${radioLettersHtml}
-                <div id="sos-button" class="enabled">SEND S.O.S</div>
+                <div id="sos-button" class="enabled"><div>S.O.S</span></div>
             </div>            
         </div>
         </div>
@@ -759,6 +788,7 @@ function upgradeBuilding(building){
     building.upgrade()
     resources.recalculateEnergyOutput()
     drawBuildingScreen()
+    redrawScreen()
 }
 
 function showBuildingDescription(b){
@@ -781,6 +811,20 @@ function updateGameLog(m){
             index++
         }
         document.getElementById("game-log").innerHTML = msgLog
+    }
+}
+
+function updateRadioConversation(){
+    for (let i=0; i < gameOverConversation.length; i++){
+        let color = gameOverConversation[i][1] == "zoflogh" ? "highlight" : "normal";
+        let formattedMessage = `<p class="${color}">${gameOverConversation[i][0]}</p>`
+        console.log("DELAY - " + gameOverConversation[i][2])
+
+        setTimeout(function(){
+            document.getElementById("game-log").innerHTML += formattedMessage
+        }, gameOverConversation[i][2])
+
+        
     }
 }
 
