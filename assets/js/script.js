@@ -15,8 +15,6 @@ let gameManager = {
 
         updateRadioConversation()
     }
-
-
 }
 
 let saveData = {
@@ -113,16 +111,22 @@ function resetGameData(){
  * Holds details for the game over conversation
  *| 0 - Messsage
  *| 1 - Speaker
- *| 2 - Timestamp since conversation started
+ *| 2 - Message delay in ms
  */
 let gameOverConversation = [
-    ["Thank you for calling AAAAA my name is Frongkh how can I helo you today?", "other", 0],
-    ["I crashed into a class 4 planet, I need a lift", "zoflogh", 1000],
-    ["CCCCCCC", "other", 2000],
-    ["DDDDDDD", "other", 3000],
-    ["EEEEEEE", "other", 4000],
-    ["GGGGGGG", "zoflogh", 5000],
-    ["HHHHHHH", "other",    6000],
+    ["Thank you for calling Fuffleigh Beam Solutions, my name is Frongkh how can I help you today?", "other", 1000],
+    ["I crashed into a class 4 planet, I need a beam back to Mothership", "zoflogh", 1000],
+    ["Can I please have your name and ID number?", "other", 1000],
+    ["My name is Zoflogh but I don't have my ID number. My wallet was destroyed on the crash", "zoflogh", 1000],
+    ["Ooooh I see sir, I'm sorry about that", "other", 1000],
+    ["Unfortunatelly we need the ID number to verify you identity before we beam you back to...", "other", 1000],
+    ["Look I've spent enough time in this hole, just beam me, yes?", "zoflogh", 1000],
+    ["Unfortunately we're unable to do that sir", "other", 1000],
+    ["Can I please have your name and DOB", "other", 1000],
+    ["But I don't have my...", "zoflogh", 1000],
+    ["Sorry Mr Zoflogh but without your ID number we're unable to help you today... Is there anything else I can help you with today?", "other",    1000],
+    ["AAAAAAAAAAARGH... <i>beep... beep... beeeeeeeep</i>", "zoflogh",    1000],
+    ["Poor Zoflogh", "other",    1000],
 ]
 
 let gameMessages = [
@@ -747,15 +751,13 @@ function drawBuildingScreen(){
             ${slidersHtml}
             <div id="radio-letters">
                 ${radioLettersHtml}
-                <div id="sos-button" class="enabled"><div>S.O.S</span></div>
+                <div id="sos-button" class="disabled"><div>S.O.S</span></div>
             </div>            
         </div>
         </div>
         `
         document.getElementById("building-upgrades").innerHTML = upgradesHTML
         radio.attachEvents()
-        
-        
     }
 }
 
@@ -815,16 +817,16 @@ function updateGameLog(m){
 }
 
 function updateRadioConversation(){
+    let totaltime = 0
     for (let i=0; i < gameOverConversation.length; i++){
-        let color = gameOverConversation[i][1] == "zoflogh" ? "highlight" : "normal";
+        totaltime += gameOverConversation[i][2]
+        let color = gameOverConversation[i][1] == "zoflogh" ? "zoflogh-speech" : "cs-agent-speech";
         let formattedMessage = `<p class="${color}">${gameOverConversation[i][0]}</p>`
         console.log("DELAY - " + gameOverConversation[i][2])
 
         setTimeout(function(){
             document.getElementById("game-log").innerHTML += formattedMessage
-        }, gameOverConversation[i][2])
-
-        
+        }, gameOverConversation[i][2] + totaltime)        
     }
 }
 

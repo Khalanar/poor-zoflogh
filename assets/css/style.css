@@ -490,6 +490,14 @@ table{
     display: none;
 }
 
+.zoflogh-speech{
+    color:rgb(170, 170, 170);
+}
+
+.cs-agent-speech{
+    color: rgba(255, 166, 0, 0.795)
+}
+
 .enabled{
     display: block;
 }
