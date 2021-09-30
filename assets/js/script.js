@@ -6,13 +6,11 @@ let gameManager = {
     slowUpdateMillis: 100,
     winCondition: false,
     showGameOverAlert: function(){
-        // alert("Thank you for calling\nHow are you?");
         document.getElementById("game-log").innerHTML = ""
         document.getElementById("game-screen").innerHTML = ""
         document.getElementById("game-log").style.width = `${document.getElementById("game-area").offsetWidth}px`
         gameManager.currentScreen = ""
         console.log(gameMessages)
-
         updateRadioConversation()
     }
 }
@@ -26,7 +24,11 @@ let saveData = {
         "radio": 0,
     },
     savedResources: 0,
-    printerAliens: 0
+    printerAliens: 0,
+    reset: function(){
+        console.log("Reset data witin SaveData")
+        localStorage.clear()
+    }
 }
 
 let resources = {
@@ -38,11 +40,11 @@ let resources = {
 
     reload: function(){
         if (document.getElementById("resource-box")){
-        document.getElementById("energy").innerText = this.energy - this.energyConsumed
-        document.getElementById("metamaterials").innerText = parseInt(this.metamaterials)
-        document.getElementById("dna").innerText = this.dna
-        document.getElementById("aliens").innerText = this.availableAliens}
-    },
+            document.getElementById("energy").innerText = this.energy - this.energyConsumed
+            document.getElementById("metamaterials").innerText = parseInt(this.metamaterials)
+            document.getElementById("dna").innerText = this.dna
+            document.getElementById("aliens").innerText = this.availableAliens}
+        },
     
     recalculateEnergyOutput: function (){
         this.energy = generator.resourceGeneration[generator.level]
@@ -848,7 +850,8 @@ function setHelpHover(){
 
 function setupButtons(){
     document.getElementById("reset-data").addEventListener("click", function(){
-        resetGameData()
+        // resetGameData()
+        saveData.reset()
     })
 }
 
@@ -863,7 +866,13 @@ function saveGame(){
                 "radio": radio.level,
             },
             savedResources: resources,
-            printerAliens: printer.assignedWorkers
+            printerAliens: printer.assignedWorkers,
+            
+            reset: function(){
+                console.log("Reset data witin SaveData")
+                localStorage.clear()
+            }
+
         }
         localStorage.setItem("save_data", JSON.stringify(saveData))
         // console.log(`Game saved ${JSON.stringify(saveData.savedResources)}`)    
