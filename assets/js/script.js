@@ -1,5 +1,5 @@
 let gameManager = {
-    testmode: true,
+    testmode: false,
     forcedBuildingLevel: 2,
     currentScreen: "",
     updateMillis: 10,
@@ -35,7 +35,7 @@ let resources = {
     energy: 0,
     energyConsumed: 0,
     metamaterials: 30000.0,
-    dna: 0,
+    dna: 500,
     availableAliens: 1,
 
     reload: function(){
@@ -116,19 +116,19 @@ function resetGameData(){
  *| 2 - Message delay in ms
  */
 let gameOverConversation = [
-    ["Thank you for calling Fuffleigh Beam Solutions, my name is Frongkh how can I help you today?", "other", 1000],
-    ["I crashed into a class 4 planet, I need a beam back to Mothership", "zoflogh", 1000],
-    ["Can I please have your name and ID number?", "other", 1000],
-    ["My name is Zoflogh but I don't have my ID number. My wallet was destroyed on the crash", "zoflogh", 1000],
-    ["Ooooh I see sir, I'm sorry about that", "other", 1000],
-    ["Unfortunatelly we need the ID number to verify you identity before we beam you back to...", "other", 1000],
-    ["Look I've spent enough time in this hole, just beam me, yes?", "zoflogh", 1000],
-    ["Unfortunately we're unable to do that sir", "other", 1000],
-    ["Can I please have your name and DOB", "other", 1000],
-    ["But I don't have my...", "zoflogh", 1000],
-    ["Sorry Mr Zoflogh but without your ID number we're unable to help you today... Is there anything else I can help you with today?", "other",    1000],
-    ["AAAAAAAAAAARGH... <i>beep... beep... beeeeeeeep</i>", "zoflogh",    1000],
-    ["Poor Zoflogh", "other",    1000],
+    ["Thank you for calling Fuffleigh Beaming Solutions, my name is Frongkh how can I help you today?", "other", 0],
+    ["I crashed into a class 4 planet, I need a beam back to Mothership", "zoflogh", 3000],
+    ["No problem Sir, can I please have your name and ID number?", "other", 3000],
+    ["My name is Zoflogh but I don't have my ID number. My wallet was destroyed on the crash", "zoflogh", 2000],
+    ["Ooooh I see sir, I'm sorry about that", "other", 3500],
+    ["Unfortunately we need your ID number to verify you identity before we beam you back to...", "other", 2000],
+    ["Look I've spent enough time in this hole, just beam me, yes?", "zoflogh", 3500],
+    ["Unfortunately we're unable to do that sir", "other", 3000],
+    ["Can I please have your name and ID number?", "other", 2000],
+    ["But I don't have my...", "zoflogh", 2000],
+    ["Sorry sir but without your ID number we're unable to help you today... Is there anything else I can help you with today?", "other",    1000],
+    ["AAAAAAAAAAARGH... <i>beep... beep... beeeeeeeep</i>", "zoflogh",    4500],
+    ["Poor Zoflogh", "other",    2000],
 ]
 
 let gameMessages = [
@@ -186,7 +186,7 @@ let abduction = {
     },
     
     harvest: function(){
-        let harvestYield = Math.floor(Math.random() * this.maxYield)
+        let harvestYield = Math.floor(Math.random() * this.maxYield) + 1
         resources.addDNA(harvestYield)
         updateGameLog(`Harvest complete:<br><br>${harvestYield} DNA samples acquired.`)
         this.reset()
@@ -240,7 +240,7 @@ class Building{
     }
 
     updateRequirements(){
-        if(this.level + 1 < this.maxLevel){
+        if(this.level < this.maxLevel){
             this.enoughEnergy = this.upgradeRequirements[this.level].energy <= resources.energy - resources.energyConsumed
             this.enoughMetamaterials = this.upgradeRequirements[this.level].metamaterials <= resources.metamaterials
             this.enoughDna = this.upgradeRequirements[this.level].dna <= resources.dna
@@ -375,16 +375,16 @@ function createBuildings(){
             {energy: 0, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
             {energy: 0, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
             {energy: 0, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
-        ],  [0, 10, 50, 500, 2000, 7500])
+        ],  [0, 10, 50, 7500, 5000, 15060])
     generator.buildMessage = `You managed to salvage the ship's energy generator.<br><br>It's in a sorry state but it has got enough juice to kickstart the <i>3D Recycler</i>`
 
     biopsyRoom = new Building("biopsy_room", 0, 
         [   {energy: 200,   metamaterials: 500,      dna:0}, //Upgrade from 0 to 1
             {energy: 400,   metamaterials: 1000,     dna:5}, //Upgrade from 1 to 2
             {energy: 800,   metamaterials: 2000,     dna:5}, //Upgrade from 2 to 3
-            {energy: 1500,  metamaterials: 5000,     dna:5}, //Upgrade from 3 to 4
-            {energy: 2000,  metamaterials: 10000,    dna:5}, //Upgrade from 4 to 5
-        ], [999, 30, 25, 15, 10, 5])
+            {energy: 1000,  metamaterials: 5000,     dna:5}, //Upgrade from 3 to 4
+            {energy: 1500,  metamaterials: 7500,    dna:5}, //Upgrade from 4 to 5
+        ], [999, 20, 15, 10, 5, 2])
     biopsyRoom.buildMessage = `Sweet biopsy room built, go abduce some stuff!`
 
     nursery = new Building("nursery", 0, 
@@ -396,7 +396,7 @@ function createBuildings(){
         ], [999, 20, 15, 10, 5, 2, 1])
     nursery.buildMessage = `Nursery built. No time to waste, get some eggs in the hatchery to grow your workforce!`
 
-    radio = new Building("radio", 0, [{energy: 5000, metamaterials: 5000, dna:20}], 0)
+    radio = new Building("radio", 0, [{energy: 5000, metamaterials: 10000, dna:20}], 0)
     radio.buildMessage = `Radio built! You're one step closer to getting your message out. Hopefully mother ship will pick your communication!`
     radio.attachEvents = function(){
         document.getElementById("radio-slider0").addEventListener("mousemove", function(){
@@ -536,7 +536,7 @@ function clearUpgradeArea(){
  * @returns html tags for the button
  */
 function buildIcons(building, name){
-    let icon = building.level == 0 ? `${name}.svg` : `${name}_built.svg`
+    let icon = building.level == 0 ? `${name}.svg` : `checkmark.svg`
     let tooltip = building.level == 0 ? building.requirementsTable(false) : "Construction complete"
     let buttonId = `${name}-build`
     let reqId = `${name}-build-requirements`
@@ -572,11 +572,10 @@ function drawBuildingScreen(){
 
     }else if(gameManager.currentScreen == "generator"){
         showBuildingDescription()
-
         //Show Buttons
         upgradesHTML += `   
         <div>
-            <img id="generator-upgrade" class="build-button" src="./assets/images/generator.svg" alt="">
+            <img id="generator-upgrade" class="build-button" src="./assets/images/generator-upgrade.svg" alt="">
             <div id="generator-requirements" class="requirements">${generator.requirementsTable(false)}</div>
         </div>
         <div></div><div></div>
@@ -611,7 +610,7 @@ function drawBuildingScreen(){
         // src="./assets/images/assign_alien.svg"
         upgradesHTML += `   
         <div>
-            <img id="printer-upgrade" class="build-button" src="./assets/images/printer.svg" alt="">
+            <img id="printer-upgrade" class="build-button" src="./assets/images/printer-upgrade.svg" alt="">
             <div id="printer-requirements" class="requirements">${printer.requirementsTable(false)}</div>
         </div>
         <div id="assigned-aliens">
@@ -658,7 +657,7 @@ function drawBuildingScreen(){
         let abductionButtonName = abduction.inProgress ? "Harvest" : "Abduct"
         upgradesHTML += `   
         <div>
-            <img id="biopsy_room-upgrade" class="build-button" src="./assets/images/biopsy_room.svg" alt="">
+            <img id="biopsy_room-upgrade" class="build-button" src="./assets/images/biopsy_room-upgrade.svg" alt="">
             <div id="biopsy_room-requirements" class="requirements">${biopsyRoom.requirementsTable(false)}</div>
         </div>
         <div id="abduction-progress-area">
@@ -688,7 +687,7 @@ function drawBuildingScreen(){
         showBuildingDescription()
         upgradesHTML += `   
         <div>
-        <img id="nursery-upgrade" class="build-button" src="./assets/images/nursery.svg" alt="">
+        <img id="nursery-upgrade" class="build-button" src="./assets/images/nursery-upgrade.svg" alt="">
         <div id="nursery-requirements" class="requirements">${nursery.requirementsTable(false)}</div>
         </div>
         <div>
@@ -753,7 +752,7 @@ function drawBuildingScreen(){
             ${slidersHtml}
             <div id="radio-letters">
                 ${radioLettersHtml}
-                <div id="sos-button" class="disabled"><div>S.O.S</span></div>
+                <div id="sos-button" class="enabled"><div>S.O.S</span></div>
             </div>            
         </div>
         </div>
@@ -820,15 +819,21 @@ function updateGameLog(m){
 
 function updateRadioConversation(){
     let totaltime = 0
+    let timestamp = 0
     for (let i=0; i < gameOverConversation.length; i++){
-        totaltime += gameOverConversation[i][2]
+        
+        console.log(totaltime)
         let color = gameOverConversation[i][1] == "zoflogh" ? "zoflogh-speech" : "cs-agent-speech";
         let formattedMessage = `<p class="${color}">${gameOverConversation[i][0]}</p>`
         console.log("DELAY - " + gameOverConversation[i][2])
-
+        timestamp = Date.now()
+       
         setTimeout(function(){
+            let ts = timestamp - Date.now()
             document.getElementById("game-log").innerHTML += formattedMessage
-        }, gameOverConversation[i][2] + totaltime)        
+            console.log("NOW " + ts)
+        }, gameOverConversation[i][2] + totaltime)  
+        totaltime += gameOverConversation[i][2]      
     }
 }
 

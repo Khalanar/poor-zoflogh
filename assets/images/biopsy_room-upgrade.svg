@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 417 417" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.5;">
+    <g id="biopsy-room" transform="matrix(1,0,0,1,2,-22)">
+        <g transform="matrix(1.07792,0,0,1.07792,-1.19481,-75.7013)">
+            <path d="M41,290.081L41,423.28C41,431.697 47.833,438.53 56.25,438.53L333.75,438.53C342.167,438.53 349,431.697 349,423.28L349,290.081C349,245.331 312.669,209 267.919,209L122.081,209C77.331,209 41,245.331 41,290.081Z" style="fill:white;stroke:rgb(166,166,166);stroke-width:14.69px;"/>
+        </g>
+        <g transform="matrix(0.83294,0,0,0.936445,46.5767,-53.678)">
+            <path d="M41,290.081L41,353.75C41,362.167 47.833,369 56.25,369L333.75,369C342.167,369 349,362.167 349,353.75L349,290.081C349,245.331 312.669,209 267.919,209L122.081,209C77.331,209 41,245.331 41,290.081Z" style="fill:white;stroke:rgb(166,166,166);stroke-width:17.87px;"/>
+        </g>
+        <g transform="matrix(0.926511,2.93106,-2.70229,0.854196,817.172,-470.399)">
+            <circle cx="158.5" cy="248.5" r="5.5" style="fill:rgb(222,222,222);stroke:rgb(222,222,222);stroke-width:2.11px;"/>
+            <path d="M169,264.25C169,261.352 166.648,259 163.75,259L153.25,259C150.352,259 148,261.352 148,264.25L148,278.75C148,281.648 150.352,284 153.25,284L163.75,284C166.648,284 169,281.648 169,278.75L169,264.25Z" style="fill:rgb(222,222,222);stroke:rgb(222,222,222);stroke-width:2.11px;"/>
+            <g transform="matrix(1,0,0,1.25806,0,-81.2903)">
+                <path d="M163.75,286.136C163.75,284.957 162.546,284 161.063,284L155.688,284C154.204,284 153,284.957 153,286.136L153,312.864C153,314.043 154.204,315 155.688,315L161.063,315C162.546,315 163.75,314.043 163.75,312.864L163.75,286.136Z" style="fill:rgb(222,222,222);stroke:rgb(222,222,222);stroke-width:1.88px;"/>
+            </g>
+        </g>
+        <g transform="matrix(1.58514,0,0,1.58514,-400.521,-100.232)">
+            <circle cx="324.746" cy="281.526" r="14.526" style="fill:white;stroke:rgb(166,166,166);stroke-width:5.26px;stroke-linejoin:round;stroke-miterlimit:5;"/>
+        </g>
+        <g transform="matrix(0.636924,0,0,0.636924,-92.5923,166.716)">
+            <circle cx="324.746" cy="281.526" r="14.526" style="fill:white;stroke:rgb(166,166,166);stroke-width:13.08px;stroke-linejoin:round;stroke-miterlimit:5;"/>
+        </g>
+        <g transform="matrix(1,0,0,1,11.0929,57)">
+            <g transform="matrix(1,0,0,1,33,-34)">
+                <circle cx="270.198" cy="327.5" r="17.5" style="fill:none;stroke:rgb(166,166,166);stroke-width:6.25px;"/>
+            </g>
+            <g transform="matrix(0.485714,0,0,0.485714,171.959,134.429)">
+                <circle cx="270.198" cy="327.5" r="17.5" style="fill:none;stroke:rgb(166,166,166);stroke-width:12.87px;"/>
+            </g>
+            <g transform="matrix(1,0,0,1,30,-28)">
+                <path d="M273.198,321.5L285.57,309.128" style="fill:none;stroke:rgb(166,166,166);stroke-width:6.25px;"/>
+            </g>
+            <g transform="matrix(1,0,0,1,78.6921,-46)">
+                <circle cx="150.028" cy="322.657" r="7.343" style="fill:none;stroke:rgb(166,166,166);stroke-width:6.25px;"/>
+            </g>
+        </g>
+    </g>
+    <g id="upgrade-arrow" transform="matrix(0.348338,0,0,0.348338,136.256,0.213556)">
+        <path d="M105.536,235.493L105.536,317.5C105.536,326.245 112.624,333.333 121.369,333.333L292.631,333.333C301.376,333.333 308.464,326.245 308.464,317.5L308.464,235.493C308.464,235.493 361.5,235.493 361.5,235.493C367.852,235.493 373.589,231.697 376.073,225.85C378.557,220.004 377.306,213.239 372.895,208.667L218.395,48.507C215.411,45.414 211.298,43.667 207,43.667C202.702,43.667 198.589,45.414 195.605,48.507L41.105,208.667C36.694,213.239 35.443,220.004 37.927,225.85C40.411,231.697 46.148,235.493 52.5,235.493L105.536,235.493ZM292.631,219.66L361.5,219.66L292.631,219.66Z" style="fill:rgb(126,230,192);"/>
+    </g>
+</svg>

@@ -173,7 +173,7 @@ i{
 }
 
 .requirements{
-    margin-left:20px;
+    /* margin-left:20px; */
 }
 
 .j-right{
@@ -235,6 +235,7 @@ i{
 
 #abduction-stage{
     margin-bottom: 15px;
+    text-align: left;
 }
 
 .abduction-button{
@@ -255,6 +256,12 @@ i{
 #hatchery-canvas-1{
     height: 70px;
     background-image: url("../images/egg.svg");
+    background-repeat: no-repeat;
+}
+
+.upgrade{
+    height: 30px;
+    background-image: url("../images/upgrade-arrow.svg");
     background-repeat: no-repeat;
 }
 
@@ -315,6 +322,7 @@ i{
     display: grid;
     grid-template-columns: repeat(5, 20%);
     align-items:start;
+    text-align: center;
 }
 /* #building-upgrades>div{
     margin: 0 auto;
@@ -417,6 +425,7 @@ table{
 
 #assigned-aliens-board{
     margin: 7px 10px;
+    text-align: left;
 }
 
 .alien-icon{
