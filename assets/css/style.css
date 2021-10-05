@@ -593,7 +593,7 @@ hr{
     
     #logo{
         font-size: 2em;
- 
+        margin: 5px 20px;
     }
 
     #game-area{
