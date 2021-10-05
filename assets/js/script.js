@@ -105,10 +105,10 @@ let resources = {
 
 }
 
-function resetGameData(){
-    console.log("RESET")
-    localStorage.clear()
-}
+// function resetGameData(){
+//     console.log("RESET")
+//     localStorage.clear()
+// }
 /**
  * Holds details for the game over conversation
  *| 0 - Messsage
@@ -132,7 +132,7 @@ let gameOverConversation = [
 ]
 
 let gameMessages = [
-    "Oh no... an alien has crashed into Planet Earth.<br><br>Zoflogh is counting on you to get him out of this planet.<br><br><i>Poor Zoflogh...",
+    "Oh no... an alien has crashed into Planet Earth.<br><br>Zoflogh is counting on you to get him out of here.<br><br><i>Poor Zoflogh...",
 ]
 
 let buildingDescriptions = {
@@ -855,7 +855,6 @@ function setHelpHover(){
 
 function setupButtons(){
     document.getElementById("reset-data").addEventListener("click", function(){
-        // resetGameData()
         saveData.reset()
     })
 }
