@@ -7,8 +7,10 @@ let gameManager = {
     winCondition: false,
     showGameOverAlert: function(){
         document.getElementById("game-log").innerHTML = ""
+        document.getElementById("game-log").style = ""
+        document.getElementById("game-log").classList.remove("gl-game")
+        document.getElementById("game-log").classList.add("gl-gameend")
         document.getElementById("game-screen").innerHTML = ""
-        document.getElementById("game-log").style.width = `${document.getElementById("game-area").offsetWidth}px`
         gameManager.currentScreen = ""
         console.log(gameMessages)
         updateRadioConversation()
@@ -136,7 +138,7 @@ let gameMessages = [
 ]
 
 let buildingDescriptions = {
-    ship: "Zoflogh's crashed ship.<br><br>Luckily some parts can be salvaged with creativity and spare time.<br><br>Build your way out of this planet!",
+    ship: "Zoflogh's crashed ship.<br><br>Luckily some parts can be salvaged with creativity and spare time.<br><br>More buildings become available as you upgrade your old ones. Build your way out of this planet!",
     generator: "Solar Power Generator.<br><br>Salvaged off some spare parts of Zoflogh's ship, this generator transforms photons into energy.<br><br>Can be upgraded for better energy output",
     nursery: "Nursery and Incubator.<br><br>Froongkians edited their genome for asexual reproduction centuries ago<br><br>Use DNA to lay eggs, and energy to incubate them.",
     printer: "A Recycler and 3D Printer by Uglog Industries.<br><br>Insert any type of matter to be recycled into metamaterial, the only material used in planet Froongk. For walls and electronics to clothing, it is incredibly poisonous, do not ingest.",
@@ -317,7 +319,7 @@ class Building{
         if (resources.availableAliens > 0){
             this.assignedWorkers ++
             resources.availableAliens --
-            updateGameLog(`Alien assigned to the ${this.name}, output close to optimal performance`)
+            updateGameLog(`Alien assigned to the ${this.name}, output increased`)
          
         }else{
             updateGameLog(`Not enough aliens to help at the ${this.name}<br><br>Poor Zoflogh`)
