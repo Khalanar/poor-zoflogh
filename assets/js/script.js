@@ -937,4 +937,5 @@ function slowUpdate(){
 function fastUpdate(){
     abduction.calculateAbductionProgress()
     hatchery.drawProgress()
+    console.log("update")
 }
