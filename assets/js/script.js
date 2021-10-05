@@ -399,25 +399,22 @@ function createBuildings(){
     radio = new Building("radio", 0, [{energy: 5000, metamaterials: 10000, dna:20}], 0)
     radio.buildMessage = `Radio built! You're one step closer to getting your message out. Hopefully mother ship will pick your communication!`
     radio.attachEvents = function(){
-        document.getElementById("radio-slider0").addEventListener("mousemove", function(){
+        document.getElementById("radio-screen").addEventListener("mousemove", function(){
             document.getElementById("radio-value0").innerText = String.fromCharCode(document.getElementById("radio-slider0").value)
-        })
-        document.getElementById("radio-slider1").addEventListener("mousemove", function(){
             document.getElementById("radio-value1").innerText = String.fromCharCode(document.getElementById("radio-slider1").value)
-        })
-        document.getElementById("radio-slider2").addEventListener("mousemove", function(){
             document.getElementById("radio-value2").innerText = String.fromCharCode(document.getElementById("radio-slider2").value)
-        })
-        document.getElementById("radio-slider3").addEventListener("mousemove", function(){
             document.getElementById("radio-value3").innerText = String.fromCharCode(document.getElementById("radio-slider3").value)
-        })
-        document.getElementById("radio-slider4").addEventListener("mousemove", function(){
             document.getElementById("radio-value4").innerText = String.fromCharCode(document.getElementById("radio-slider4").value)
-        })
-        document.getElementById("radio-slider5").addEventListener("mousemove", function(){
             document.getElementById("radio-value5").innerText = String.fromCharCode(document.getElementById("radio-slider5").value)
+            document.getElementById("radio-value6").innerText = String.fromCharCode(document.getElementById("radio-slider6").value)
         })
-        document.getElementById("radio-slider6").addEventListener("mousemove", function(){
+        document.getElementById("radio-screen").addEventListener("touchmove", function(){
+            document.getElementById("radio-value0").innerText = String.fromCharCode(document.getElementById("radio-slider0").value)
+            document.getElementById("radio-value1").innerText = String.fromCharCode(document.getElementById("radio-slider1").value)
+            document.getElementById("radio-value2").innerText = String.fromCharCode(document.getElementById("radio-slider2").value)
+            document.getElementById("radio-value3").innerText = String.fromCharCode(document.getElementById("radio-slider3").value)
+            document.getElementById("radio-value4").innerText = String.fromCharCode(document.getElementById("radio-slider4").value)
+            document.getElementById("radio-value5").innerText = String.fromCharCode(document.getElementById("radio-slider5").value)
             document.getElementById("radio-value6").innerText = String.fromCharCode(document.getElementById("radio-slider6").value)
         })
         document.getElementById("sos-button").addEventListener("click", function(){gameManager.showGameOverAlert()})
@@ -537,7 +534,7 @@ function clearUpgradeArea(){
  */
 function buildIcons(building, name){
     let icon = building.level == 0 ? `${name}.svg` : `checkmark.svg`
-    let tooltip = building.level == 0 ? building.requirementsTable(false) : "Construction complete"
+    let tooltip = building.level == 0 ? building.requirementsTable(false) : "Built"
     let buttonId = `${name}-build`
     let reqId = `${name}-build-requirements`
     let iconHTML = `<img id="${buttonId}" class="build-button" src="./assets/images/${icon}" alt="">
@@ -937,5 +934,4 @@ function slowUpdate(){
 function fastUpdate(){
     abduction.calculateAbductionProgress()
     hatchery.drawProgress()
-    console.log("update")
 }
