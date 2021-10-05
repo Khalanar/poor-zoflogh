@@ -151,6 +151,7 @@ i{
     bottom: 10px;
     display: block;
     border-right: 1px solid rgb(90, 90, 90);
+    overflow: hidden;
 }
 #game-log p{
     padding: 5px 0px 20px 0px;
@@ -563,6 +564,99 @@ hr{
     
     #radio{
         grid-column: 4;
+        grid-row: 2;
+    }
+
+    #radio-letters{
+
+    }
+
+    .radio-value{
+        width: 15px;
+    }
+
+  }
+
+  @media only screen and (max-width: 750px) {
+    #game-area{
+        width: 350px;
+   
+    }
+
+    #resource-box{
+        width:270px;
+    }
+
+    #game-log {
+        top: 340px;
+        height: 140px;
+        width: 100%;
+        box-sizing: border-box;
+        border: 0px solid;
+        font-size: 0.85em;
+        
+    }
+
+    #game-screen{
+        left: 0px;
+    }
+
+    #game-grid{
+        height:350px;
+        grid-template-columns: 33% 33% 33%;
+    }
+
+    #upgrade-area{
+        top:500px;
+        width: auto;
+        box-sizing: border-box;
+        display: block;
+        font-size: 0.8em;
+    }
+
+    #building-description{
+        padding-bottom: 0px;
+    }
+
+    .build-button{
+        height: 55px;
+    }
+
+    #radio-screen {
+        grid-template-columns: repeat(7, 30px) auto;
+    }
+
+    #ship{
+        grid-column: 2;
+        grid-row: 3;
+    }
+    
+    #generator{
+        grid-column: 1;
+        grid-row: 3;
+    }
+    
+    #nursery{
+        grid-column: 3;
+        grid-row: 3;
+    }
+    
+    table{
+        margin:auto;
+    }
+    
+    #printer{
+        grid-column: 1;
+        grid-row: 2;
+    }
+    
+    #biopsy_room{
+        grid-column: 3;
+        grid-row: 2;
+    }
+    
+    #radio{
+        grid-column: 2;
         grid-row: 2;
     }
 
