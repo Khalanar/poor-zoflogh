@@ -577,7 +577,9 @@ hr{
     
     #logo{
         font-size: 1.8em;
+        color:Red;
     }
+
     #game-area{
         width: 350px;
    
