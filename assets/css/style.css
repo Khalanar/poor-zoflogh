@@ -17,16 +17,12 @@ body{
     font-weight: 600;
 }
 
-h1 {
+#logo {
     font-family: 'alien';
     color: rgb(165, 165, 165);
     font-size: 3em;
     text-align: center;
     margin: 20px;
-}
-
-#logo{
-    height:37px;
 }
 
 
@@ -578,6 +574,10 @@ hr{
   }
 
   @media only screen and (max-width: 750px) {
+    
+    #logo{
+        font-size: 1.8em;
+    }
     #game-area{
         width: 350px;
    
