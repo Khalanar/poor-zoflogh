@@ -21,12 +21,12 @@ View the live project [here](https://khalanar.github.io/poor-zoflogh/)
 
 ## Design
 - Colour Scheme
-    - The two main colours used are reminiscent of a umeboshi and a green shiso leaves, japanese food which inspired this bot's name
-    - Roboto and variations provide a clean but modern aesthetic to the page.
+    - A minimalistic approach to colors matches what we as humans expect of a highly advanced interstellar race.
 - Typography
-    - XXX
+    - Montserrat and variations provide a clean but modern aesthetic to the page.
+    - We Are Aliens font for the logo gives strong 80s Sci Fi vibes
 - Imagery
-    - Big hero images are placed in each screen to make them visually engaging and provide information on what the page contains
+    - Clean SVG graphics for buildings help reinforce the idea of a highly advanced society. Why deal with *huge pixels* when you can *bezier* your way out of them? 
 
 ## Wireframes
 - Home
