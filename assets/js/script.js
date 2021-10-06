@@ -8,8 +8,8 @@ let gameManager = {
     showGameOverAlert: function(){
         document.getElementById("game-log").innerHTML = ""
         document.getElementById("game-log").style = ""
-        document.getElementById("game-log").classList.remove("gl-game")
-        document.getElementById("game-log").classList.add("gl-gameend")
+        document.getElementById("game-log").classList.remove("gamelog-main")
+        document.getElementById("game-log").classList.add("gamelog-end")
         document.getElementById("game-screen").innerHTML = ""
         gameManager.currentScreen = ""
         console.log(gameMessages)
@@ -283,7 +283,7 @@ class Building{
             let energyRow = reqEnergy > 0 ? `
                 <tr class="${colorClass}">
                     <td><i class="fas fa-bolt"></i></td>
-                    <td class="j-right">${this.upgradeRequirements[this.level].energy}</td>
+                    <td class="justify-r">${this.upgradeRequirements[this.level].energy}</td>
                 </tr>` : ""
 
             colorClass = this.enoughMetamaterials ? "green" : "red"
@@ -291,7 +291,7 @@ class Building{
             let metaRow = reqMetamaterials > 0 ? `
                 <tr class="${colorClass}">
                     <td><i class="fas fa-tools"></i></td>
-                    <td class="j-right">${this.upgradeRequirements[this.level].metamaterials}</td>
+                    <td class="justify-r">${this.upgradeRequirements[this.level].metamaterials}</td>
                 </tr>` : ""
 
             colorClass = this.enoughDna ? "green" : "red"
@@ -299,7 +299,7 @@ class Building{
             let dnaRow = reqDNA > 0 ? `
                 <tr class="${colorClass}">
                     <td><i class="fas fa-dna"></i></td>
-                    <td class="j-right">${this.upgradeRequirements[this.level].dna}</td>
+                    <td class="justify-r">${this.upgradeRequirements[this.level].dna}</td>
                 </tr>` : ""
 
             let reqTable = 
@@ -578,7 +578,7 @@ function drawBuildingScreen(){
             <div id="generator-requirements" class="requirements">${generator.requirementsTable(false)}</div>
         </div>
         <div></div><div></div>
-        <div class="double-col-span">
+        <div class="fa-question-circle">
             <p>Total output:</p>
             <p>${resources.energy}</p>
             <p>Total consumed:</p>
