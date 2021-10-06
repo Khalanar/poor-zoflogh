@@ -33,10 +33,30 @@ hr{
 
 #logo {
     font-family: 'alien';
-    color: rgb(165, 165, 165);
+    color: rgb(125, 125, 125);
     font-size: 3em;
     text-align: center;
     margin: 20px;
+}
+
+#social ul{
+    list-style: none;
+    text-align: center;
+    padding: 20px 0px;
+    font-size: 1.2em;
+}
+
+#social li{
+    display: inline;
+}
+
+#social a{
+    color: rgb(125, 125, 125);
+    margin: 10px;
+}
+
+#social a:hover{
+    color:rgb(79, 206, 172);
 }
 
 #reset-data{

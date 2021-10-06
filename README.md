@@ -36,9 +36,7 @@ View the live project [here](https://khalanar.github.io/poor-zoflogh/)
 - Platforms
     - Hero
     - Platform table with bot features
-- Contact
-    - Hero
-        - Form
+
 
 ### Index
 ![Wireframe image 1](assets/images/index-wireframes.png)
