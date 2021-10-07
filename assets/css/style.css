@@ -126,7 +126,7 @@ hr{
 /* GENERAL - Buttons  */
 .sq-button{
     display: block;
-    margin: 10px auto;
+    margin: 10px 10px;
     height: 70px;
     width: 70px;
     transition: all 0.1s;
@@ -381,7 +381,8 @@ hr{
 }
 
 #egg-requirements{
-    margin: 13px 35px;
+    margin: 13px 0px;
+    width: 100px;
 }
 
 /* SCREENS - Biopsy Room */
@@ -439,7 +440,7 @@ hr{
     box-sizing: border-box;
     height: 180px;
     width: 97%;
-    margin-left: 10px;
+   
     border: 1px solid rgb(151, 151, 151);
     border-radius: 10px;
     padding: 10px;
@@ -455,20 +456,21 @@ hr{
 .slider-container{
     transform: rotate(-90deg);
     margin: 120px 0px;    
+    width: 20px;
 }
 
-.slider{
+.slider {
     -webkit-appearance: none;
-    height: 10px;
+    height: 15px;
     background: rgb(240, 240, 240);
-    border-radius: 5px;
+    border-radius: 55px;
     border: 1px solid rgb(189, 189, 189);
 }
 
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
     background: rgb(152, 207, 195);;
     border-radius: 50%;
     border: 1px solid rgb(139, 182, 173);
@@ -620,8 +622,13 @@ hr{
     }
 
     #building-description{
-        padding-bottom: 0px;
+        padding: 5px;
     }
+
+    #building-upgrades{
+        padding: 10px;
+    }
+
 
     .build-button{
         height: 55px;
@@ -668,7 +675,7 @@ hr{
 
     #radio-letters {
         height: 152px;
-        width: 94%;
+        width: 105px;
     }
   
 

@@ -37,7 +37,7 @@ let resources = {
     energy: 0,
     energyConsumed: 0,
     metamaterials: 30000.0,
-    dna: 0,
+    dna: 50,
     availableAliens: 1,
 
     reload: function(){
@@ -142,7 +142,7 @@ let buildingDescriptions = {
     generator: "Solar Power Generator.<br><br>Salvaged off some spare parts of Zoflogh's ship, this generator transforms photons into energy.<br><br>Can be upgraded for better energy output",
     nursery: "Nursery and Incubator.<br><br>Froongkians edited their genome for asexual reproduction centuries ago<br><br>Use DNA to lay eggs, and energy to incubate them.",
     printer: "A Recycler and 3D Printer by Uglog Industries.<br><br>Insert any type of matter to be recycled into metamaterial, the only material used in planet Froongk. For walls and electronics to clothing, it is incredibly poisonous, do not ingest.",
-    biopsy_room:"Biopsy Room.<br><br>Start abduction missions to collect DNA samples from creatures around the planet.<br><br>Froongkian laws strongly advise against bonding with abductees, however it's not forbidden.",
+    biopsy_room:"Biopsy Room.<br><br>Start abduction missions to collect DNA samples.<br><br>Froongkian laws strongly advise against bonding with abductees, however it's not forbidden.",
     radio:"A makeshift radio. Rudimentary and objectively ugly, but it works.<br><br>Get Zoflogh to send an S.O.S and hope for the best!!",
 }
 
@@ -583,11 +583,11 @@ function drawBuildingScreen(){
         </div>
         <div></div><div></div>
         <div class="double-col-span">
-            <p>Total output:</p>
+            <p>Output:</p>
             <p>${resources.energy}</p>
-            <p>Total consumed:</p>
+            <p>Consumed:</p>
             <p>${resources.energyConsumed}</p><br>
-            <p>Available energy:</p>
+            <p>Available:</p>
             <p>${resources.energy-resources.energyConsumed}</p>
         </div>
         `
