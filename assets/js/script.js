@@ -95,16 +95,14 @@ let resources = {
         if (saveData == null){
             this.energy = 0
             this.metamaterials = 50000
-            this.dna = 50
+            this.dna = 2
             this.availableAliens = 10
             this.reload()
         }else{
             this.loadResources()
         }
     },
-
 }
-
 
 /**
  * Holds details for the game over conversation
@@ -860,7 +858,6 @@ function setupButtons(){
     })
     document.getElementById("reset-data").addEventListener("click", function(){
         saveData.reset()
-    
     })
 
 
@@ -920,8 +917,8 @@ function loadGame(){
 }
 
 document.addEventListener("DOMContentLoaded", start())
+
 function start(){
-    console.log("start")
     createBuildings()
     loadGame()
     setupButtons()

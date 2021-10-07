@@ -185,3 +185,7 @@ Click [Here](https://help.github.com/en/github/creating-cloning-and-archiving-re
 ---
 ## Changelog
 - Fully deployed on 07 Sept 2021
+---
+## SPOILER ALERT
+Check this [screenshot](assets/images/readme_images/radio-password.png) if you can't get past the radio screen!
+
