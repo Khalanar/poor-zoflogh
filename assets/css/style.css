@@ -576,8 +576,12 @@ hr{
     }
 
     #game-area{
-        width: 350px;
+        width: 330px;
    
+    }
+
+    .building{
+        height: 70px;
     }
 
     #resource-box{
