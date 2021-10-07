@@ -36,8 +36,8 @@ let saveData = {
 let resources = {
     energy: 0,
     energyConsumed: 0,
-    metamaterials: 30000.0,
-    dna: 500,
+    metamaterials: 30.0,
+    dna: 0,
     availableAliens: 1,
 
     reload: function(){

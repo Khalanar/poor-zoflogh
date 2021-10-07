@@ -171,9 +171,17 @@ Click [Here](https://help.github.com/en/github/creating-cloning-and-archiving-re
 
 ---
 
+## Known Issues
+
+## Future Improvements
+- Refactor code further
+- Change how the *Radio* works to be more user friendly on touch devices
+
+---
 ## Credits
 ### Media
 - [We Are Alien](https://fontmeme.com/fonts/we-are-alien-font/) Font
 
+---
 ## Changelog
 - Fully deployed on 14 Aug 2021
