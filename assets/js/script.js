@@ -28,15 +28,15 @@ let saveData = {
     savedResources: 0,
     printerAliens: 0,
     reset: function(){
-        console.log("Reset data witin SaveData");
-        localStorage.clear();
-    }
+        console.log("Reset data witin SaveData")
+        localStorage.clear()
+    },
 };
 
 let resources = {
     energy: 0,
     energyConsumed: 0,
-    metamaterials: 30000.0,
+    metamaterials: 30.0,
     dna: 50,
     availableAliens: 1,
 
@@ -65,9 +65,7 @@ let resources = {
     },
 
     useDNA: function (n){
-        console.log(`Current DNA: ${this.dna} | spend: ${n}`)
         this.dna -= n
-        console.log(`Current DNA: ${this.dna}`)
         this.reload()
     },
     
@@ -107,10 +105,7 @@ let resources = {
 
 }
 
-// function resetGameData(){
-//     console.log("RESET")
-//     localStorage.clear()
-// }
+
 /**
  * Holds details for the game over conversation
  *| 0 - Messsage
@@ -174,9 +169,6 @@ let abduction = {
         if(!this.inProgress){
             this.inProgress = true
             this.totalDuration = biopsyRoom.resourceGeneration[biopsyRoom.level]
-            console.log("abduct!" + this.totalDuration)
-        }else{
-            console.log("Abduction already in progress")
         }
     },
     
@@ -259,7 +251,7 @@ class Building{
                     this.upgradeRequirements[this.level].metamaterials,
                     this.upgradeRequirements[this.level].dna)
                 this.level++;
-                console.log("Upgraded this building to " + this.level)
+      
                 if (this.level>1){
                     // updateGameLog("Upgrade successful")
                 }
@@ -435,14 +427,11 @@ function createBuildings(){
             correctLetters = document.getElementById("radio-value4").innerText == "O" ? correctLetters+1 : correctLetters
             correctLetters = document.getElementById("radio-value5").innerText == "G" ? correctLetters+1 : correctLetters
             correctLetters = document.getElementById("radio-value6").innerText == "H" ? correctLetters+1 : correctLetters
-            console.log (correctLetters)
         
             if(correctLetters >= 7 && !gameManager.winCondition){
                 gameManager.winCondition = true
                 document.getElementById("sos-button").classList.remove("disabled")
                 document.getElementById("sos-button").classList.add("enabled")
-
-                console.log ("YOU WIN PAPA")
             }
         }
     }
@@ -487,7 +476,6 @@ let hatchery = {
     },
 
     reset: function() {
-        console.log("RESET")
         this.running = false
         this.currentProgress = 0
     },
@@ -560,7 +548,6 @@ function buildIcons(building, name){
 function drawBuildingScreen(){
     let upgradesHTML = ""
     let alienicon =""
-    // console.log("draw buildings")
     document.getElementById("building-upgrades").innerHTML = ""
     if (gameManager.currentScreen == "ship"){
         showBuildingDescription()
@@ -725,7 +712,6 @@ function drawBuildingScreen(){
         })
 
         document.getElementById("nursery-upgrade").addEventListener("mouseenter", function(){
-            console.log("mouseenter nursery")
             document.getElementById("nursery-requirements").innerHTML = nursery.requirementsTable(true)
             
         })
@@ -755,7 +741,7 @@ function drawBuildingScreen(){
             ${slidersHtml}
             <div id="radio-letters">
                 ${radioLettersHtml}
-                <div id="sos-button" class="enabled"><div>S.O.S</span></div>
+                <div id="sos-button" class="disabled"><div>S.O.S</span></div>
             </div>            
         </div>
         </div>
@@ -825,16 +811,13 @@ function updateRadioConversation(){
     let timestamp = 0
     for (let i=0; i < gameOverConversation.length; i++){
         
-        console.log(totaltime)
         let color = gameOverConversation[i][1] == "zoflogh" ? "zoflogh-speech" : "cs-agent-speech";
         let formattedMessage = `<p class="${color}">${gameOverConversation[i][0]}</p>`
-        console.log("DELAY - " + gameOverConversation[i][2])
         timestamp = Date.now()
        
         setTimeout(function(){
             let ts = timestamp - Date.now()
             document.getElementById("game-log").innerHTML += formattedMessage
-            console.log("NOW " + ts)
         }, gameOverConversation[i][2] + totaltime)  
         totaltime += gameOverConversation[i][2]      
     }
@@ -857,9 +840,30 @@ function setHelpHover(){
 }
 
 function setupButtons(){
+    document.getElementById("testmode").addEventListener("click", function(){
+        saveData.setTestMode()
+        generator.level = 5
+        printer.level = 5
+        biopsyRoom.level = 5
+        nursery.level = 5
+        radio.level = 1
+
+        resources.metamaterials = 5000
+        resources.dna = 5000
+        resources.availableAliens = 50
+
+        saveGame()
+        loadGame()
+        console.log(printer.level)
+    
+
+    })
     document.getElementById("reset-data").addEventListener("click", function(){
         saveData.reset()
+    
     })
+
+
 }
 
 function saveGame(){
@@ -876,13 +880,15 @@ function saveGame(){
             printerAliens: printer.assignedWorkers,
             
             reset: function(){
-                console.log("Reset data witin SaveData")
                 localStorage.clear()
+            },
+            setTestMode: function(){
+                console.log("TEST")
+                this.buildingLevel.generator = 5
             }
 
         }
         localStorage.setItem("save_data", JSON.stringify(saveData))
-        // console.log(`Game saved ${JSON.stringify(saveData.savedResources)}`)    
 }
 
 function loadGame(){
@@ -910,12 +916,12 @@ function loadGame(){
         nursery.setLevel(   gameManager.forcedBuildingLevel)
         radio.setLevel(     gameManager.forcedBuildingLevel)
     }
-    console.log("LoadGame || GAMEDATA WRITTEN")
     resources.loadResources()
 }
 
 document.addEventListener("DOMContentLoaded", start())
 function start(){
+    console.log("start")
     createBuildings()
     loadGame()
     setupButtons()
@@ -927,7 +933,6 @@ function start(){
     
     if (gameManager.testmode) {
         resources.setTestModeValues()
-        console.log(`Test Mode ON: Resources reset `)
     }
 }
 

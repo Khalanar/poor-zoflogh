@@ -31,6 +31,10 @@ hr{
     border-top: 1px solid rgb(241, 241, 241);
 }
 
+li{
+    list-style: none;
+}
+
 #logo {
     font-family: 'alien';
     color: rgb(125, 125, 125);
@@ -60,11 +64,14 @@ hr{
     color:rgb(79, 206, 172);
 }
 
-#reset-data{
+#footer-list{
     float: right;
     font-size: 0.8em;
     margin-right: 20px;
 }
+
+
+
 
 #help-card{
     font-family: montserrat;
