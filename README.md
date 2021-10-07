@@ -20,10 +20,10 @@ Play the game [here](https://khalanar.github.io/poor-zoflogh/)
 
 ## Design
 - Colour Scheme
-    - A minimalistic approach to colors matches what we as humans expect of a highly advanced interstellar race.
+    - A minimalistic approach to colors matches what we expect of a highly advanced interstellar race.
 - Typography
     - Montserrat and variations provide a clean but modern aesthetic to the page.
-    - We Are Aliens font for the logo gives strong 80s Sci Fi vibes
+    - *We Are Aliens* font for the logo gives strong 90s Sci Fi vibes
 - Imagery
     - Clean SVG graphics for buildings help reinforce the idea of a highly advanced alien race. Why deal with *huge pixels* when you can *bezier* your way out of them? 
 
@@ -45,9 +45,9 @@ Play the game [here](https://khalanar.github.io/poor-zoflogh/)
 
 
 ### Main Wireframe
-![Wireframe image 1](assets/images/readme_images/main-wf.svg)
+![Wireframe image 1](assets/images/readme_images/main-wf.png)
 ### Mobile Wireframe
-![Wireframe image 2](assets/images/readme_images/mobile-wf.svg)
+![Wireframe image 2](assets/images/readme_images/mobile-wf.png)
 
 ---
 
