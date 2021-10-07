@@ -1,22 +1,21 @@
-we are alien font:
-
 <!-- Using HTML tag to edit width of the logo -->
 <img src="assets/images/_logo.svg" width="150">
 
 # Poor Zoflogh
 
-Play [here](https://khalanar.github.io/poor-zoflogh/)
+Play the game [here](https://khalanar.github.io/poor-zoflogh/)
 
 **Poor Zoflogh** is a browser based game in which the player has to rescue Zoflogh,  an alien who has crashed its spaceship into earth, by building a small colony on earth to reach out to its mother-ship, to get him rescued.
 
 ## User Experience (UX)
 - User Stories
     - First Time Visitor Goals
-        - As a First Time Visitor, I want to easily understand the main purpose of the site and learn more about the organisation.
-        - As a First Time Visitor, I want to be able to easily navigate throughout the site to find content.
+        - As a First Time Visitor, I want to understand how to play.
+        - As a First Time Visitor, I want to help rescue Zoflogh the alien.
+        - As a First Time Visitor, I want the game to save my progress.
     - Returning Visitor Goals
-        - As a Returning Visitor, I want to find information about the bot
-        - As a Returning Visitor, I want to find the best way to get in contact with the organisation with any questions I may have.
+        - As a Returning Visitor, I want the game load my last progress to continue helping Zoflogh
+        - As a Returning Visitor, I want to be able to reset the game to wipe out my progress
         - As a Returning Visitor, I want to find Social Media links.
 
 ## Design
@@ -28,35 +27,41 @@ Play [here](https://khalanar.github.io/poor-zoflogh/)
 - Imagery
     - Clean SVG graphics for buildings help reinforce the idea of a highly advanced alien race. Why deal with *huge pixels* when you can *bezier* your way out of them? 
 
+---
+
 ## Wireframes
-- Home
-    - Hero
-    - What is ume
+- Game Sections
+    - Main Game Area
+    - Game Log
+    - Upgrade area
     - Testimonials
-- Platforms
-    - Hero
-    - Platform table with bot features
+- Screens - visible through the upgrade area
+    - Ship
+    - Generator
+    - Printer
+    - Biopsy Room
+    - Nursery
+    - Radio
 
 
-### Index
-![Wireframe image 1](assets/images/index-wireframes.png)
-### Platforms
-![Wireframe image 2](assets/images/platforms-wireframes.png)
-### Contact
-![Wireframe image 3](assets/images/contact-wireframes.png)
-### Mobile
-![mobile](assets/images/mobile-wireframes.png)
+### Main Wireframe
+![Wireframe image 1](assets/images/readme_images/main-wf.svg)
+### Mobile Wireframe
+![Wireframe image 2](assets/images/readme_images/mobile-wf.svg)
+
+---
 
 ## Features
-This fully responsive website shows information for:
-- What is **ume** and why should you use it
-- Testimonials
-- Functionality by Platform
-- Social Media linkss
+- Text / icon based incremental web-game
+- Story based
+- Fully responsive
+- Save and Load data to continue your game at any time
 
+---
 
-### Relevant Social Links
-
+## Relevant Social Links
+- Github
+- Twitter
  
 ---
 
@@ -95,40 +100,32 @@ This fully responsive website shows information for:
 - #### Desktop | Laptop | Tablet | Smartphone
     ![index](assets/images/readme_images/amiresponsive.png)
 
-
 ### Further Testing
 Tested on Google Chrome, Internet Explorer, Microsoft Edge, Safari, Opera, Firefox and Brave.
 Viewed on Desktop, Laptop, iPhone12, Nexus5X, Microsoft Surface Pro 4, Sony Xperia Z2.
 Friends and family members were asked to review the site and documentation to point out any bugs and/or user experience issues.
 
 ### Testing User Stories from User Experience (UX) Section
--   #### First Time Visitor Goals
-    1. As a First Time Visitor, I want to easily understand the main purpose of the site and learn more about the bot.
-        1. Upon entering the site, users are greeted with a clean and readable navigation bar to go to the page of their choice. Underneath there is a Hero Image with a quick 5cent of what this bot is about.
-        2. The main points are made immediately below the hero image
-        3. The user can scroll down to see testimonials or navigate to the other pages
+1. First Time Visitor Goals
+    - As a First Time Visitor, I want to understand how to play.
+        - Upon entering the site, users are greeted with a clean and readable message that points them into next steps
+        - A help icon is clearly visible should they require further assistance.
+    - As a First Time Visitor, I want to help rescue Zoflogh the alien.
+        - Through playing the game, the user gets closer to help Zoflogh.
+    - As a First Time Visitor, I want the game to save my progress
+        - Progress is saved after certain actions and every x milliseconds
 
-    2. As a First Time Visitor, I want to be able to easily be able to navigate throughout the site to find content.
-        1. The site has been designed to be fluid and never to entrap the user. At the top of each page there is a clean navigation bar, each link describes what the page they will end up at clearly.
-
--   #### Returning Visitor Goals
-
-    1.  As a Returning Visitor, I want to find information about the bot
-        1. Link to platforms is clearly shown in the banner message.
-
-    2. As a Returning Visitor, I want to find the best way to get in contact with the organisation with any questions I may have.
-        1. The navigation bar clearly highlights the "Contact Us" Page.
-        2. Here they can fill out the form on the page or are told that alternatively they can message the organisation on social media.
-        3. The footer contains links to the organisations Facebook, Twitter and Instagram page as well as the organization's email.
-        4. Whichever link they click, it will be open up in a new tab to ensure the user can easily get back to the website.
-
-    3. As a Returning Visitor, I want to find Social Media links.
-        1. Social Links can be found at the footer of every page and will open a new tab for the user and more information can be found in them.
+2. Returning Visitor Goals
+    - As a Returning Visitor, I want the game load my last progress to continue helping Zoflogh
+        - The game loads save data automatically when the page is loaded
+    - As a Returning Visitor, I want to be able to reset the game to wipe out my progress
+        - A *reset game data* button is available for players to clear all progress
+    - As a Returning Visitor, I want to find Social Media links.
+        - Social Media links are available in the footer
 
 ---
 
 ## Deployment
-
 ### GitHub Pages
 
 The project was deployed to GitHub Pages using the following steps...
@@ -176,10 +173,9 @@ Click [Here](https://help.github.com/en/github/creating-cloning-and-archiving-re
 ---
 
 ## Known Issues
-
+- None
 ## Future Improvements
-- Refactor code further
-- Change how the *Radio* works to be more user friendly on touch devices
+- Refactor JS code further
 
 ---
 ## Credits
@@ -188,4 +184,4 @@ Click [Here](https://help.github.com/en/github/creating-cloning-and-archiving-re
 
 ---
 ## Changelog
-- Fully deployed on 14 Aug 2021
+- Fully deployed on 07 Sept 2021

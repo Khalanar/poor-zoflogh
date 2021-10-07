@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 417 417" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <rect x="10" y="13" width="399" height="307" style="fill:white;"/>
+    <path d="M390,32.423C390,29.43 387.57,27 384.577,27L34.423,27C31.43,27 29,29.43 29,32.423L29,297.577C29,300.57 31.43,303 34.423,303L384.577,303C387.57,303 390,300.57 390,297.577L390,32.423Z" style="fill:none;"/>
+    <clipPath id="_clip1">
+        <path d="M390,32.423C390,29.43 387.57,27 384.577,27L34.423,27C31.43,27 29,29.43 29,32.423L29,297.577C29,300.57 31.43,303 34.423,303L384.577,303C387.57,303 390,300.57 390,297.577L390,32.423Z"/>
+    </clipPath>
+    <g clip-path="url(#_clip1)">
+        <rect x="13" y="16" width="391" height="304" style="fill:white;"/>
+    </g>
+    <path d="M390,32.423C390,29.43 387.57,27 384.577,27L34.423,27C31.43,27 29,29.43 29,32.423L29,297.577C29,300.57 31.43,303 34.423,303L384.577,303C387.57,303 390,300.57 390,297.577L390,32.423Z" style="fill:none;stroke:rgb(197,197,197);stroke-width:1.06px;"/>
+    <g transform="matrix(0.227147,0,0,0.187713,293.413,29.9317)">
+        <path d="M390,32.423C390,29.43 387.992,27 385.519,27L33.481,27C31.008,27 29,29.43 29,32.423L29,297.577C29,300.57 31.008,303 33.481,303L385.519,303C387.992,303 390,300.57 390,297.577L390,32.423Z" style="fill:none;stroke:rgb(197,197,197);stroke-width:5.1px;"/>
+    </g>
+    <path d="M29,225L390,225" style="fill:none;stroke:rgb(197,197,197);stroke-width:1.06px;"/>
+    <path d="M100,27L100,225" style="fill:none;stroke:rgb(197,197,197);stroke-width:1.06px;"/>
+    <g transform="matrix(0.328283,0,0,0.328283,67.1717,222.136)">
+        <path d="M100,27L100,225" style="fill:none;stroke:rgb(197,197,197);stroke-width:3.24px;"/>
+    </g>
+    <text x="310px" y="46.477px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:6.25px;">resources</text>
+    <text x="38px" y="46.477px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:6.25px;">game log</text>
+    <g transform="matrix(1,0,0,1,89,0)">
+        <text x="38px" y="46.477px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:6.25px;">main game</text>
+        <text x="38px" y="52.931px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:6.25px;">area</text>
+    </g>
+    <g transform="matrix(1,0,0,1,-62,-7)">
+        <text x="178.409px" y="246.477px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:6.25px;">upgrade area</text>
+    </g>
+    <g transform="matrix(1,0,0,1,-138,-7)">
+        <text x="170.247px" y="246.477px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:6.25px;">building description</text>
+    </g>
+    <g transform="matrix(1,0,0,1,44,-41)">
+        <text x="191.267px" y="246.477px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:6.25px;">ship</text>
+    </g>
+    <g transform="matrix(1,0,0,1,-16,-41)">
+        <text x="183.623px" y="246.477px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:6.25px;">generator</text>
+    </g>
+    <g transform="matrix(1,0,0,1,-16,-95)">
+        <text x="188.142px" y="246.477px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:6.25px;">printer</text>
+    </g>
+    <g transform="matrix(1,0,0,1,44,-95)">
+        <text x="190.051px" y="246.477px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:6.25px;">radio</text>
+    </g>
+    <g transform="matrix(1,0,0,1,108,-95)">
+        <text x="179.979px" y="246.477px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:6.25px;">biopsy room</text>
+    </g>
+    <g transform="matrix(1,0,0,1,108,-41)">
+        <text x="186.58px" y="246.477px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:6.25px;">nursery</text>
+    </g>
+    <g transform="matrix(1,0,0,1,9,-1)">
+        <rect x="216" y="164" width="34" height="30" style="fill:none;stroke:rgb(197,197,197);stroke-width:1.06px;"/>
+    </g>
+    <g transform="matrix(1,0,0,1,9,-50)">
+        <rect x="216" y="164" width="34" height="30" style="fill:none;stroke:rgb(197,197,197);stroke-width:1.06px;"/>
+    </g>
+    <g transform="matrix(1,0,0,1,-53,-1)">
+        <rect x="216" y="164" width="34" height="30" style="fill:none;stroke:rgb(197,197,197);stroke-width:1.06px;"/>
+    </g>
+    <g transform="matrix(1,0,0,1,-53,-50)">
+        <rect x="216" y="164" width="34" height="30" style="fill:none;stroke:rgb(197,197,197);stroke-width:1.06px;"/>
+    </g>
+    <g transform="matrix(1,0,0,1,71,-1)">
+        <rect x="216" y="164" width="34" height="30" style="fill:none;stroke:rgb(197,197,197);stroke-width:1.06px;"/>
+    </g>
+    <g transform="matrix(1,0,0,1,71,-50)">
+        <rect x="216" y="164" width="34" height="30" style="fill:none;stroke:rgb(197,197,197);stroke-width:1.06px;"/>
+    </g>
+</svg>
