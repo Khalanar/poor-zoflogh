@@ -5,9 +5,9 @@ we are alien font:
 
 # Poor Zoflogh
 
-View the live project [here](https://khalanar.github.io/poor-zoflogh/)
+Play [here](https://khalanar.github.io/poor-zoflogh/)
 
-**Poor Zoflogh** is a browser text-based game in which the player has to rescue Zoflogh, an alien who has crashed its spaceship into earth. You must help our alien friend build a small colony on earth and reach out to the mother ship, to get him rescued.
+**Poor Zoflogh** is a browser based game in which the player has to rescue Zoflogh,  an alien who has crashed its spaceship into earth, by building a small colony on earth to reach out to its mother-ship, to get him rescued.
 
 ## User Experience (UX)
 - User Stories

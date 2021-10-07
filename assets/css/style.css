@@ -108,6 +108,7 @@ hr{
     height: 90%;
     grid-column-end: span 2;
     padding:10px 30px; 
+    text-align: left;
 }
 
 .far{

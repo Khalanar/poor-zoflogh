@@ -36,7 +36,7 @@ let saveData = {
 let resources = {
     energy: 0,
     energyConsumed: 0,
-    metamaterials: 30.0,
+    metamaterials: 30000.0,
     dna: 0,
     availableAliens: 1,
 
@@ -578,7 +578,7 @@ function drawBuildingScreen(){
             <div id="generator-requirements" class="requirements">${generator.requirementsTable(false)}</div>
         </div>
         <div></div><div></div>
-        <div class="fa-question-circle">
+        <div class="double-col-span">
             <p>Total output:</p>
             <p>${resources.energy}</p>
             <p>Total consumed:</p>
