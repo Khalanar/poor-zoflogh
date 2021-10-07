@@ -26,7 +26,7 @@ Play [here](https://khalanar.github.io/poor-zoflogh/)
     - Montserrat and variations provide a clean but modern aesthetic to the page.
     - We Are Aliens font for the logo gives strong 80s Sci Fi vibes
 - Imagery
-    - Clean SVG graphics for buildings help reinforce the idea of a highly advanced society. Why deal with *huge pixels* when you can *bezier* your way out of them? 
+    - Clean SVG graphics for buildings help reinforce the idea of a highly advanced alien race. Why deal with *huge pixels* when you can *bezier* your way out of them? 
 
 ## Wireframes
 - Home
@@ -52,7 +52,7 @@ This fully responsive website shows information for:
 - What is **ume** and why should you use it
 - Testimonials
 - Functionality by Platform
-- Social Media links
+- Social Media linkss
 
 
 ### Relevant Social Links
@@ -64,9 +64,11 @@ This fully responsive website shows information for:
 ### Languages
 - [HTML5](https://en.wikipedia.org/wiki/HTML5)
 - [CSS3](https://en.wikipedia.org/wiki/CSS)
+- [JS](https://en.wikipedia.org/wiki/JavaScript)
+
 
 ### Other Programs
-- [Affinity Designer](https://affinity.serif.com/en-gb/) - Vectorial logos
+- [Affinity Designer](https://affinity.serif.com/en-gb/) - Vector graphics
 - [Git](https://git-scm.com/) - Version control and deployment
 - [Balsamiq](https://balsamiq.com/) - Design wireframes
 - [Visual Studio Code](https://code.visualstudio.com/) - IDE
@@ -76,15 +78,18 @@ This fully responsive website shows information for:
 ## Testing
 
 ### HTML
-[HTML validator](https://validator.w3.org/)
+- [HTML validator](https://validator.w3.org/)
     - No errors were found
-    - 1 Warnings ignored - Hero-platforms does not have h1, which is intentional
+    - 1 Warnings ignored - Lack of h1 under main-game-section is intentional
 ### CSS
-[CSS Validator](https://jigsaw.w3.org/css-validator/)
+- [CSS Validator](https://jigsaw.w3.org/css-validator/)
+    - No errors were found
+### JavaScript
+- [JS Validator](https://jshint.com/)
     - No errors were found
 ### Accessibility
-Lighthouse
-![lighthouse-screen](assets/images/lighthouse-acc.png)
+- #### Lighthouse
+    ![lighthouse-screen](assets/images/readme_images/lighthouse.png)
 
 ### Responsiveness
 - #### Desktop | Laptop | Tablet | Smartphone

@@ -12,10 +12,10 @@ let gameManager = {
         document.getElementById("game-log").classList.add("gamelog-end")
         document.getElementById("game-screen").innerHTML = ""
         gameManager.currentScreen = ""
-        console.log(gameMessages)
-        updateRadioConversation()
+        console.log(gameMessages);
+        updateRadioConversation();
     }
-}
+};
 
 let saveData = {
     buildingLevel: {
@@ -28,10 +28,10 @@ let saveData = {
     savedResources: 0,
     printerAliens: 0,
     reset: function(){
-        console.log("Reset data witin SaveData")
-        localStorage.clear()
+        console.log("Reset data witin SaveData");
+        localStorage.clear();
     }
-}
+};
 
 let resources = {
     energy: 0,
@@ -230,15 +230,15 @@ let abduction = {
 }
 
 class Building{
-    #buildMessage;
-    assignedWorkers = 0;
+    buildMessage
+    assignedWorkers = 0
     
     constructor(name, level, upgradeRequirements, resourceGeneration){
-        this.name = name;
-        this.level = level;
-        this.maxLevel = 5;
-        this.upgradeRequirements = upgradeRequirements;
-        this.resourceGeneration = resourceGeneration;
+        this.name = name
+        this.level = level
+        this.maxLevel = 5
+        this.upgradeRequirements = upgradeRequirements
+        this.resourceGeneration = resourceGeneration
     }
 
     updateRequirements(){
@@ -347,17 +347,17 @@ class Building{
     }
 
     get buildMessage(){
-        return this.#buildMessage
+        return this.buildMessage
     }
 
     set buildMessage(m){
         if (m != ""){
-            this.#buildMessage = m;
+            this.buildMessage = m
         }
     }
 
     setLevel(level){
-        this.level = level;
+        this.level = level
         if (level > 0) this.showBuilding()
     }
 }
@@ -458,7 +458,7 @@ let hatchery = {
         if (!this.running){
             if (resources.dna - this.dnaCost >= 0){
                 resources.useDNA(this.dnaCost)
-                resources.dna
+                // resources.dna
                 this.totalTime = nursery.resourceGeneration[nursery.level]
                 this.running = true;
                 this.currentProgress = 0;
@@ -889,17 +889,17 @@ function loadGame(){
     saveData = JSON.parse(localStorage.getItem("save_data"))
     if (saveData != null){
         saveData.buildingLevel = {
-            "generator":    saveData.buildingLevel["generator"],
-            "printer":      saveData.buildingLevel["printer"],
-            "biopsyRoom":   saveData.buildingLevel["biopsyRoom"],
-            "nursery":      saveData.buildingLevel["nursery"],
-            "radio":        saveData.buildingLevel["radio"],
+            "generator":    saveData.buildingLevel.generator,
+            "printer":      saveData.buildingLevel.printer,
+            "biopsyRoom":   saveData.buildingLevel.biopsyRoom,
+            "nursery":      saveData.buildingLevel.nursery,
+            "radio":        saveData.buildingLevel.radio,
         }
-        generator.setLevel( saveData.buildingLevel["generator"])
-        printer.setLevel(   saveData.buildingLevel["printer"])
-        biopsyRoom.setLevel(saveData.buildingLevel["biopsyRoom"])
-        nursery.setLevel(   saveData.buildingLevel["nursery"])
-        radio.setLevel(     saveData.buildingLevel["radio"])
+        generator.setLevel( saveData.buildingLevel.generator)
+        printer.setLevel(   saveData.buildingLevel.printer)
+        biopsyRoom.setLevel(saveData.buildingLevel.biopsyRoom)
+        nursery.setLevel(   saveData.buildingLevel.nursery)
+        radio.setLevel(     saveData.buildingLevel.radio)
 
         printer.assignedWorkers = saveData.printerAliens
     }
