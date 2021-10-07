@@ -87,10 +87,9 @@ Lighthouse
 ![lighthouse-screen](assets/images/lighthouse-acc.png)
 
 ### Responsiveness
-#### Desktop
-![index](assets/images/responsive-index.png)
-![platforms](assets/images/responsive-platforms.png)
-![contact](assets/images/responsive-contact.png)
+- #### Desktop | Laptop | Tablet | Smartphone
+    ![index](assets/images/readme_images/amiresponsive.png)
+
 
 ### Further Testing
 Tested on Google Chrome, Internet Explorer, Microsoft Edge, Safari, Opera, Firefox and Brave.
