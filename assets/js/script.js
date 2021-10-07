@@ -281,6 +281,7 @@ class Building{
             colorClass = this.enoughEnergy ? "green" : "red"
             colorClass = c ? colorClass : ""
             let energyRow = reqEnergy > 0 ? `
+              
                 <tr class="${colorClass}">
                     <td><i class="fas fa-bolt"></i></td>
                     <td class="justify-r">${this.upgradeRequirements[this.level].energy}</td>
@@ -304,6 +305,9 @@ class Building{
 
             let reqTable = 
             `<table>
+                <tr>
+                    <td colspan="2">Level ${this.level}</td>
+                </tr>
                 ${energyRow}
                 ${metaRow}
                 ${dnaRow}
