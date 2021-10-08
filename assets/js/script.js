@@ -1,6 +1,5 @@
+/**Controls key aspects of the game */
 let gameManager = {
-    testmode: false,
-    forcedBuildingLevel: 2,
     currentScreen: "",
     updateMillis: 10,
     slowUpdateMillis: 100,
@@ -17,6 +16,7 @@ let gameManager = {
     }
 };
 
+/**Contains information of the current game stats*/
 let saveData = {
     buildingLevel: {
         "generator": 0,
@@ -31,8 +31,24 @@ let saveData = {
         console.log("Reset data witin SaveData")
         localStorage.clear()
     },
-};
+    setTestMode: function(){
+        console.log("TEST")
+        generator.level = 5
+        printer.level = 5
+        biopsyRoom.level = 5
+        nursery.level = 5
+        radio.level = 1
 
+        resources.metamaterials = 5000
+        resources.dna = 5000
+        resources.availableAliens = 50
+
+        saveGame()
+        loadGame()
+    }
+}
+
+/**Contains information and functionality specific to ingame resources  */
 let resources = {
     energy: 0,
     energyConsumed: 0,
@@ -40,6 +56,7 @@ let resources = {
     dna: 50,
     availableAliens: 1,
 
+    /**Reloads resources into the resource box in the screen */
     reload: function(){
         if (document.getElementById("resource-box")){
             document.getElementById("energy").innerText = this.energy - this.energyConsumed
@@ -48,11 +65,13 @@ let resources = {
             document.getElementById("aliens").innerText = this.availableAliens}
         },
     
+    /**Recalculates the output of energy total minus consumed. Called each time a new building is built or improved */    
     recalculateEnergyOutput: function (){
         this.energy = generator.resourceGeneration[generator.level]
         this.reload()
     },
     
+    /**Generate mmaterials. Called each update */
     generateMetamaterials: function (){
         let generated = printer.resourceGeneration[printer.level]*(printer.assignedWorkers+1)/1000*gameManager.slowUpdateMillis
         this.metamaterials += generated;
@@ -74,13 +93,14 @@ let resources = {
         this.reload()
     },
 
-    spend: function (energy, metamaterials, dna){
+    consumeResources: function (energy, metamaterials, dna){
         this.energyConsumed += energy
         this.metamaterials -= metamaterials
         this.dna -= dna
         this.reload()
     },
 
+    /**load resources from savedata into the this object */
     loadResources(){
         if (saveData != null){
             this.energy          = saveData.savedResources.energy
@@ -88,18 +108,6 @@ let resources = {
             this.metamaterials   = saveData.savedResources.metamaterials
             this.dna             = saveData.savedResources.dna
             this.availableAliens = saveData.savedResources.availableAliens
-        }
-    },
-
-    setTestModeValues: function(){
-        if (saveData == null){
-            this.energy = 0
-            this.metamaterials = 50000
-            this.dna = 2
-            this.availableAliens = 10
-            this.reload()
-        }else{
-            this.loadResources()
         }
     },
 }
@@ -126,10 +134,31 @@ let gameOverConversation = [
     ["Poor Zoflogh", "other",    2000],
 ]
 
+/**Holds all ingame messages shown in the GameLog */
 let gameMessages = [
     "Oh no... an alien has crashed into Planet Earth.<br><br>Zoflogh is counting on you to get him out of here.<br><br><i>Poor Zoflogh...",
 ]
 
+/**Update gameMessages variable with the m parameter and display on the GameLog div */
+function updateGameLog(m){
+    if (m != gameMessages[0]){
+        let msgLog = ""
+        if (m){
+            gameMessages.unshift(m)
+        }
+        let index = 0
+        for (let msg of gameMessages){
+            let color = index == 0 ? "highlight" : "normal";
+            msgLog += `
+            <p class="${color}">${msg}</p><hr>
+            `
+            index++
+        }
+        document.getElementById("game-log").innerHTML = msgLog
+    }
+}
+
+/**Holds all building descriptions for ease of access */
 let buildingDescriptions = {
     ship: "Zoflogh's crashed ship.<br><br>Luckily some parts can be salvaged with creativity and spare time.<br><br>More buildings become available as you upgrade your old ones. Build your way out of this planet!",
     generator: "Solar Power Generator.<br><br>Salvaged off some spare parts of Zoflogh's ship, this generator transforms photons into energy.<br><br>Can be upgraded for better energy output",
@@ -139,6 +168,7 @@ let buildingDescriptions = {
     radio:"A makeshift radio. Rudimentary and objectively ugly, but it works.<br><br>Get Zoflogh to send an S.O.S and hope for the best!!",
 }
 
+/**Controls all aspects of the abduction feature */
 let abduction = {
     inProgress: false,
     progress: 0,
@@ -154,15 +184,16 @@ let abduction = {
         "Complete, harvest DNA samples",
     ],
 
+    /**Check if an abduction is already running to change what the button does */
     abductionCheck: function(){
         if(document.getElementById("abduct").innerText == "Harvest"){
             this.harvest()
-            
         }else{
             this.begin()
         }
     },
 
+    /**Start an abduction */
     begin: function(){
         if(!this.inProgress){
             this.inProgress = true
@@ -170,6 +201,7 @@ let abduction = {
         }
     },
     
+    /**Change the status of the abduction and set its corresponding sentence in the screen */
     changeAbductionStatus: function(n) {
         if (document.getElementById("abduction-stage")){
             this.currentPhase = n
@@ -177,6 +209,7 @@ let abduction = {
         }
     },
     
+    /**Harvest DNA samples acquired from the abduction */
     harvest: function(){
         let harvestYield = Math.floor(Math.random() * this.maxYield) + 1
         resources.addDNA(harvestYield)
@@ -184,6 +217,7 @@ let abduction = {
         this.reset()
     },
     
+    /**Resets the visuals of the abduction, progress bar and button label */
     reset: function(){
         this.inProgress = false;
         this.progress = 0;
@@ -192,6 +226,8 @@ let abduction = {
         this.changeAbductionStatus(0)
     },
 
+    /**Ran each frame, calculate percentage of completion for the current abduction and change status
+     * according to it */
     calculateAbductionProgress: function(){
         if (this.inProgress && this.progress < 100){
             this.progress += 1000/gameManager.updateMillis/this.totalDuration/100
@@ -219,6 +255,7 @@ let abduction = {
     }
 }
 
+/**Base class for all buildings */
 class Building{
     buildMessage
     assignedWorkers = 0
@@ -231,6 +268,7 @@ class Building{
         this.resourceGeneration = resourceGeneration
     }
 
+    /**Check if there are enough resources for an upgrade */
     updateRequirements(){
         if(this.level < this.maxLevel){
             this.enoughEnergy = this.upgradeRequirements[this.level].energy <= resources.energy - resources.energyConsumed
@@ -241,11 +279,12 @@ class Building{
         }
     }
 
+    /**Upgrade the level of the building */
     upgrade(){
         this.updateRequirements()
         if (this.level < this.maxLevel){
             if (this.enoughResources){
-                resources.spend(this.upgradeRequirements[this.level].energy,
+                resources.consumeResources(this.upgradeRequirements[this.level].energy,
                     this.upgradeRequirements[this.level].metamaterials,
                     this.upgradeRequirements[this.level].dna)
                 this.level++;
@@ -260,6 +299,7 @@ class Building{
         }
     }
 
+    /**Draw a table showing requirements, and colorise them if criteria are met or not */
     requirementsTable(c){
         this.updateRequirements()
         if(this.level + 1 <= this.maxLevel){
@@ -309,51 +349,57 @@ class Building{
         }
     }
 
+    /**Add a worker to a building. This is in preparation for the printer */
     assignWorker(){
         if (resources.availableAliens > 0){
             this.assignedWorkers ++
             resources.availableAliens --
             updateGameLog(`Alien assigned to the ${this.name}, output increased`)
-         
         }else{
             updateGameLog(`Not enough aliens to help at the ${this.name}<br><br>Poor Zoflogh`)
         }
     }
 
+    /**Remove a worker to a building. This is in preparation for the printer */
     removeWorker(){
         if (this.assignedWorkers > 0){
             this.assignedWorkers --
             resources.availableAliens ++
-            // updateGameLog(`An alien left the ${this.name}<br><br>Reassign it soon!`)
+            updateGameLog(`Alien unassigned from the ${this.name}<br><br>Reassign it soon!`)
         }else{
             updateGameLog(`No one is working at the ${this.name}`)
         }
     }
 
+    /**Enable the view of the building in the main screen */
     showBuilding(){
         document.getElementById(this.name).classList.remove("disabled")
         document.getElementById(this.name).classList.add("enabled")
-
     }
 
+    /**Get the message to be shown when a building is built */
     get buildMessage(){
         return this.buildMessage
     }
 
+    /**Set the message to be shown when a building is built */
     set buildMessage(m){
         if (m != ""){
             this.buildMessage = m
         }
     }
 
+    /**Set this building's level */
     setLevel(level){
         this.level = level
         if (level > 0) this.showBuilding()
     }
 }
 
+/**Create variables for all buildings */
 let printer, generator, biopsyRoom, nursery, radio
 
+/**Function creates all buildings according to is various stats */
 function createBuildings(){
     printer = new Building("printer", 0,
         [   {energy: 10, metamaterials: 10, dna:0}, //Upgrade from 0 to 1
@@ -435,17 +481,18 @@ function createBuildings(){
     }
 }
 
+/**Controls all aspects of the nursery egg-hatching feature */
 let hatchery = {
     running: false,
     totalTime: 10,
     currentProgress: 0,
     dnaCost: 10,
 
+    /**start incubating an egg */
     start: function(){
         if (!this.running){
             if (resources.dna - this.dnaCost >= 0){
                 resources.useDNA(this.dnaCost)
-                // resources.dna
                 this.totalTime = nursery.resourceGeneration[nursery.level]
                 this.running = true;
                 this.currentProgress = 0;
@@ -460,10 +507,10 @@ let hatchery = {
         }
     },
     
+    /**Calculate the completeness progress */
     getProgress: function(){
         if (this.running){
             this.currentProgress += (gameManager.updateMillis/1000) / this.totalTime * 2
-
             if(this.currentProgress > 2){
                 if (document.getElementById("hatchery-canvas-1")){
                     document.getElementById("hatchery-canvas-1").style.backgroundImage="url('assets/images/egg-ready.svg')"
@@ -473,11 +520,13 @@ let hatchery = {
         return this.currentProgress
     },
 
+    /**Set the progress back to 0 */
     reset: function() {
         this.running = false
         this.currentProgress = 0
     },
 
+    /**Draw egg completion progress in a canvas */
     drawProgress: function(){
         let progress = this.getProgress()
         if (document.getElementById("hatchery-canvas-1")){
@@ -485,19 +534,18 @@ let hatchery = {
             let context = canvas.getContext("2d");
 
             context.clearRect(0, 0, canvas.width, canvas.height);
-            // context.drawImage("/assets/images/egg.svg", 0, 0)
             context.rotate(270 * (Math.PI / 180));
             context.beginPath();
             context.arc(-75, 75, 60, 0 * Math.PI, progress * Math.PI);
 
             context.lineWidth = 15
-            // context.strokeStyle = "rgba(0, 0, 0, 0.2)";
             context.strokeStyle = "rgba(152, 207, 195, 0.7)";
             context.stroke();
         }
     }
 }
 
+/**Find all buildings on screen */
 function getBuildings(){
     let buildings = document.getElementsByClassName("building");
     
@@ -508,11 +556,13 @@ function getBuildings(){
     }
 }
 
+/**Change currentscreen in gamemanager and redraw the screen */
 function clickBuilding(b){
     gameManager.currentScreen = b.id
     redrawScreen()
 }
 
+/**Part of redraw screen, clears all html on upgrade area */
 function clearUpgradeArea(){
     document.getElementById("building-description").innerHTML = ""
     document.getElementById("building-upgrades").innerHTML = ""
@@ -543,6 +593,9 @@ function buildIcons(building, name){
     }
 }
 
+/**Draw the upgrade section of each building when one is clicked
+ * This code needs to be heavily refactored
+ */
 function drawBuildingScreen(){
     let upgradesHTML = ""
     let alienicon =""
@@ -551,7 +604,7 @@ function drawBuildingScreen(){
         showBuildingDescription()
 
         buildIcons(generator,   "generator")
-        //REQUIREMENTS This code needs to be refactored
+
         if (generator.level > 1){   buildIcons(printer,   "printer") }
         if (printer.level > 1){     buildIcons(biopsyRoom,"biopsy_room")}
         if (biopsyRoom.level > 1){  buildIcons(nursery,   "nursery")}
@@ -560,7 +613,6 @@ function drawBuildingScreen(){
 
     }else if(gameManager.currentScreen == "generator"){
         showBuildingDescription()
-        //Show Buttons
         upgradesHTML += `   
         <div>
             <img id="generator-upgrade" class="build-button" src="./assets/images/generator-upgrade.svg" alt="">
@@ -783,27 +835,9 @@ function upgradeBuilding(building){
 
 function showBuildingDescription(b){
     document.getElementById("building-description").innerHTML = buildingDescriptions[gameManager.currentScreen]
-    // document.getElementById("building-description").innerHTML = b.description
 }
 
-function updateGameLog(m){
-    if (m != gameMessages[0]){
-        let msgLog = ""
-        if (m){
-            gameMessages.unshift(m)
-        }
-        let index = 0
-        for (let msg of gameMessages){
-            let color = index == 0 ? "highlight" : "normal";
-            msgLog += `
-            <p class="${color}">${msg}</p><hr>
-            `
-            index++
-        }
-        document.getElementById("game-log").innerHTML = msgLog
-    }
-}
-
+/**Update the game end conversation */
 function updateRadioConversation(){
     let totaltime = 0
     let timestamp = 0
@@ -826,6 +860,7 @@ function redrawScreen(){
     drawBuildingScreen()
 }
 
+/**Show help section */
 function setHelpHover(){
     document.getElementById("help-icon").addEventListener("mouseenter", function(){
         document.getElementById("help-card").classList.add("enabled")
@@ -837,57 +872,53 @@ function setHelpHover(){
     })
 }
 
+/**Setup general html buttons */
 function setupButtons(){
     document.getElementById("testmode").addEventListener("click", function(){
         saveData.setTestMode()
-        generator.level = 5
-        printer.level = 5
-        biopsyRoom.level = 5
-        nursery.level = 5
-        radio.level = 1
-
-        resources.metamaterials = 5000
-        resources.dna = 5000
-        resources.availableAliens = 50
-
-        saveGame()
-        loadGame()
-        console.log(printer.level)
-    
-
     })
     document.getElementById("reset-data").addEventListener("click", function(){
         saveData.reset()
     })
-
-
 }
 
+/**Save Game */
 function saveGame(){
     //Save object to json in localstorage
-        saveData = {
-            buildingLevel: {
-                "generator": generator.level,
-                "printer": printer.level,
-                "biopsyRoom": biopsyRoom.level,
-                "nursery": nursery.level,
-                "radio": radio.level,
-            },
-            savedResources: resources,
-            printerAliens: printer.assignedWorkers,
-            
-            reset: function(){
-                localStorage.clear()
-            },
-            setTestMode: function(){
-                console.log("TEST")
-                this.buildingLevel.generator = 5
-            }
-
+    saveData = {
+        buildingLevel: {
+            "generator": generator.level,
+            "printer": printer.level,
+            "biopsyRoom": biopsyRoom.level,
+            "nursery": nursery.level,
+            "radio": radio.level,
+        },
+        savedResources: resources,
+        printerAliens: printer.assignedWorkers,
+        
+        reset: function(){
+            localStorage.clear()
+        },
+        setTestMode: function(){
+            console.log("TEST")
+            generator.level = 5
+            printer.level = 5
+            biopsyRoom.level = 5
+            nursery.level = 5
+            radio.level = 1
+    
+            resources.metamaterials = 5000
+            resources.dna = 5000
+            resources.availableAliens = 50
+    
+            saveGame()
+            loadGame()
         }
-        localStorage.setItem("save_data", JSON.stringify(saveData))
+    }
+    localStorage.setItem("save_data", JSON.stringify(saveData))
 }
 
+/**Load Game */
 function loadGame(){
     saveData = JSON.parse(localStorage.getItem("save_data"))
     if (saveData != null){
@@ -906,18 +937,13 @@ function loadGame(){
 
         printer.assignedWorkers = saveData.printerAliens
     }
-    if (gameManager.testmode){
-        generator.setLevel( gameManager.forcedBuildingLevel)
-        printer.setLevel(   gameManager.forcedBuildingLevel)
-        biopsyRoom.setLevel(gameManager.forcedBuildingLevel)
-        nursery.setLevel(   gameManager.forcedBuildingLevel)
-        radio.setLevel(     gameManager.forcedBuildingLevel)
-    }
     resources.loadResources()
 }
 
+/**Call Start() once dom is loaded */
 document.addEventListener("DOMContentLoaded", start())
 
+/**Game Setup */
 function start(){
     createBuildings()
     loadGame()
@@ -927,18 +953,16 @@ function start(){
     getBuildings()
     setInterval(fastUpdate, gameManager.updateMillis)
     setInterval(slowUpdate, gameManager.slowUpdateMillis)
-    
-    if (gameManager.testmode) {
-        resources.setTestModeValues()
-    }
 }
 
+/**Slow update takes care of generating materials, saving, and checking for gameend condition  */
 function slowUpdate(){
     resources.generateMetamaterials()
     saveGame()
     radio.gameEndCheck()
 }
 
+/**fast update takes care of calculating progress for abductions and hatching eggs */
 function fastUpdate(){
     abduction.calculateAbductionProgress()
     hatchery.drawProgress()

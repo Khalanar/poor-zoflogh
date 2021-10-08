@@ -523,7 +523,7 @@ li{
 @media only screen and (max-width: 1000px) {
     #game-area{
         width: 700px;
-        height:700px;
+        height:800px;
     }
 
     .gamelog-main{
@@ -578,7 +578,6 @@ li{
     }
   }
 
-  
   @media only screen and (max-width: 750px) {
     
     #logo{
