@@ -52,7 +52,7 @@ let saveData = {
 let resources = {
     energy: 0,
     energyConsumed: 0,
-    metamaterials: 30.0,
+    metamaterials: 50.0,
     dna: 50,
     availableAliens: 1,
 
@@ -403,21 +403,21 @@ let printer, generator, biopsyRoom, nursery, radio
 function createBuildings(){
     printer = new Building("printer", 0,
         [   {energy: 10, metamaterials: 10, dna:0}, //Upgrade from 0 to 1
-            {energy: 50, metamaterials: 100, dna:0}, //Upgrade from 1 to 2
+            {energy: 40, metamaterials: 100, dna:0}, //Upgrade from 1 to 2
             {energy: 100, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
             {energy: 200, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
             {energy: 400, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
-        ],  [0, 5, 10, 50, 100, 200])
+        ],  [0, 7, 14, 50, 100, 200])
     printer.buildMessage = `With what little was to be found in the cargo bay, you managed to build a recycler.<br><br>  
     Upgrade building or assign an idle alien to this device to increase the output.`
 
     generator = new Building("generator", 0,
         [   {energy: 0, metamaterials: 5, dna:0}, //Upgrade from 0 to 1
             {energy: 0, metamaterials: 15, dna:0}, //Upgrade from 1 to 2
-            {energy: 0, metamaterials: 200, dna:0}, //Upgrade from 2 to 3
+            {energy: 0, metamaterials: 100, dna:0}, //Upgrade from 2 to 3
             {energy: 0, metamaterials: 500, dna:0}, //Upgrade from 3 to 4
             {energy: 0, metamaterials: 1000, dna:0}, //Upgrade from 4 to 5
-        ],  [0, 10, 50, 7500, 5000, 15060])
+        ],  [0, 10, 150, 750, 5000, 15060])
     generator.buildMessage = `You managed to salvage the ship's energy generator.<br><br>It's in a sorry state but it has got enough juice to kickstart the <i>3D Recycler</i>`
 
     biopsyRoom = new Building("biopsy_room", 0, 
